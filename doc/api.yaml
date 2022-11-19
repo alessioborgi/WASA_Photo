@@ -36,10 +36,11 @@ paths:
         - If the user exists, the "unique" user identifier is returned (uuid).
         RETURN:
         It will then return back in both the two cases above mentioned, the uuid 
-        generated iff succesful.
+        generated iff successful.
         RESTRICTIONS:
         Note that this action is allowed ALWAYS, without any restriction and any need
-        to pass for uuid parameter, since it is the place where it is actually created. 
+        to pass for uuid parameter, since it is the place where it is actually created
+        a new username(profile) or logged-in a present username. 
       requestBody:
         content:
           application/json:
@@ -80,11 +81,12 @@ paths:
         RETURN:
         The returned value is an array of Usernames. 
         RESTRICTIONS:
-        Note that this action is allowed to EVERY USER. The restriction reside on the 
-        effect of this. Indeed, the reason for which here you need the uuid for doing this 
-        action, resides in the fact that, you should be first registered/logged-in in order
-        to obtain the whole list of users. This list will return all the users except for
-        the ones that have banned the user that is requesting this list.
+        Note that this action is allowed to EVERY USER that is logged in. The reason for
+        which we need to provide for the uuid, reside in the fact that, you should be 
+        first registered/logged-in in order to obtain the whole list of users. This list 
+        be filtered by returning all the users that are registered in WASAPhoto that you
+        are allowed to see (i.e., except for the ones that have banned the user that is
+        requesting this list).
       parameters:
         - $ref : "#/components/parameters/uuid"
 
@@ -110,8 +112,8 @@ paths:
   /users/{username}:
     summary: Specific Username Profile of the User Collection.
     parameters: 
-      #I need to provide for both a Username and a uuid of the person that wants to 
-      #perform these actions below.
+      #I need to provide for both a Username of the person I am looking for and an 
+      #uuid of the person that wants to perform these actions below. 
       - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/uuid"
 
@@ -191,12 +193,13 @@ paths:
       summary: Return the User Profile.
       description: |
         HOW IT WORKS:
-        Return the current User Profile given in input the Username and the uuid of the person
-        who is requesting the action.
+        Return the current User Profile given in input the Username and the uuid of the
+        person who is requesting the action.
         RETURN:
         The returned value is the requested User's profile object. 
         RESTRICTIONS:
-        Note that this action is allowed to EVERY USER. 
+        Note that this action is allowed NOT to EVERY USER. Indeed, you can do this only
+        if you are not banned by this user.
       responses:
         "200":
           description: Ok! User Profile Returned Successfully!.
@@ -217,10 +220,11 @@ paths:
   ### REMARK #
 
   #Notice that I decided to implement the project going also through subfolders. Notice that
-  #I could have opted for a 'better' version, suggested by Microsoft's Best Practices, for which we
-  #have that a long path should be splitted into smaller parts in order to be easier to mantain
-  #and more flexible. 
+  #I could have opted for a 'better' version, suggested by Microsoft's Best Practices, for
+  #which we have that a long path should be splitted into smaller parts in order to be
+  #easier to mantain and more flexible. This is the resource:
   #(https://learn.microsoft.com/en-us/azure/architecture/.#best-practicesapi-design
+  
   #However, I have decided to go for the more straightforward way. 
 
   ### PHOTO PUBLICATION #
@@ -244,7 +248,7 @@ paths:
         the person that wants to add the photo, it will post a new photo on this profile. 
         Note that this action correspond as making a post on Instagram. 
         However, I opted for the nomenclature photos, in such a way of avoiding to confuse 
-        the Post on instagram with the post Http method.
+        the Post on instagram with the post HTTP method.
         RETURN:
         It will then return back in output the photoid iff succesful.
         RESTRICTIONS:
@@ -309,7 +313,7 @@ paths:
     - $ref: "#/components/parameters/uuid"
     - $ref: "#/components/parameters/photoid"
 
-    #To Upload or Sobstitute a Photo.
+    #To Modify the Photo's Location or the Photo's Phrase.
     put:
       security:
         - bearerAuthentication: []
@@ -328,8 +332,8 @@ paths:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of photo can be done by ONLY if the user that is changing the photo
         is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot.
-        This means that, the uuid should be the unique user identifier of the username given in
-        input.
+        This means that, the uuid should be the unique user identifier of the username 
+        given in input.
       
       parameters:
         - name: newLocation
@@ -495,10 +499,10 @@ paths:
         HOW IT WORKS:
         Change a photo's comment given a specific username that is the owner of the photo to
         which the comment has been added, given a uuid which is of the user that is going to 
-        perform the action, given the uphoto id that indicates the photo on which the comment 
+        perform the action, given the photoid that indicates the photo on which the comment 
         has been added, and given a specific commentid.
-        Note that as additional parameter, we ask, in a mandatorial way, for a new phrase that 
-        will sobstitute the one present for the comment.
+        Note that as additional parameter, we ask, in a mandatorial way, for a new phrase 
+        that will sobstitute the one present for the comment.
         RETURN:
         Return the commentid iff the comment change is successful.
         RESTRICTIONS:
@@ -699,7 +703,7 @@ paths:
       description: |
         HOW IT WORKS:
         Given in input the Banner uuid, the banner username, and a ban object in the Request
-        Body thta includes the username that we want to Ban, add the latter to the list of 
+        Body that includes the username that we want to Ban, add the latter to the list of 
         banned user of the former.
         RETURN:
         It will then return back in output the banid(that corresponds to the username of the 
@@ -775,9 +779,9 @@ paths:
       summary: Remove a User Ban.
       description: |
         HOW IT WORKS:
-        Remove a ban from the account given the username of the account, the uuid of the person
-        that is requesting the action, and a third parameter that is the the username(banID) of 
-        the person I want to unban.  
+        Remove a ban from the account given the username of the account, the uuid of the
+        person that is requesting the action, and a third parameter that is the the username
+        (banID) of the person I want to unban.  
         
         RETURN:
         Return the banID(username of unbanned user) iff the successful deletion.
@@ -786,8 +790,9 @@ paths:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the ban can be done ONLY if the user that is deleting the ban
         is the actual ORIGINAL BAN ADDER. Otherwise, it cannot. Thus, only the user that
-        has actually banned a user, can also delete it, whenever it wants. This means that
-        , of course, uuid must be the unique identifier of the username parameter passed in input.
+        has actually banned a user, can also delete the ban, whenever it wants. This means
+        that, of course, uuid must be the unique identifier of the username parameter passed
+        in input.
       
       responses:
         "200": 
@@ -823,7 +828,7 @@ paths:
       description: |
         HOW IT WORKS:
         Return the list of the Followers of a given username, given also the uuid of the 
-        person that is requesting the aciton. The list should be sorted w.r.t. the reverse
+        person that is requesting the action. The list should be sorted w.r.t. the reverse
         chronological order.  
         RETURN:
         The returned value is an array of follow objects.
@@ -986,16 +991,16 @@ paths:
       summary: Get the Stream.
       description: |
         HOW IT WORKS:
-        Return the list of the last posts belonging to the following people, given in input both
-        the username of the person I want to know this information, and the uuid of the person 
-        that is requesting this information. The list returned is in reverse chronological order, 
-        of course. 
+        Return the list of the last posts belonging to the following people, given in input
+        both the username of the person I want to know this information, and the uuid of the
+        person that is requesting this information. The list returned is in reverseù
+        chronological order, of course. 
         RETURN:
         The returned value is an array of Photo objects.
         RESTRICTIONS:
-        Note that this action is allowed NOT to EVERY USER. Indeed, this is only allowed to the 
-        owner of the profile, meaning that, only if username and the username of the uuid that 
-        is requesting this action coincide.
+        Note that this action is allowed NOT to EVERY USER. Indeed, this is only allowed to
+        the owner of the profile, meaning that, only if username and the username of the uuid
+        that is requesting this action coincide.
       responses:
         "200":
           description: List of Photo Objectof people I am following.
@@ -1059,12 +1064,14 @@ components:
       title: name
       type: string
       description: It is the User actual name.
+      default: ""
       example: Alessio
     
     surname:
       title: surname
       type: string
       description: It is the User actual surname.
+      default: ""
       example: Borgi
     
     dateOfBirth:
@@ -1072,6 +1079,7 @@ components:
       type: string
       description: Actual Date when the user was born.
       format: date
+      default: ""
       example: "2001-04-17"
 
     email:
@@ -1079,12 +1087,14 @@ components:
       type: string
       description:  It is the User Email.
       format: email
+      default: ""
       example: borgi.1952442@studenti.uniroma1.it
     
     nationality:
       title: nationality
       type: string
       description:  It is the User Nationality.
+      default: ""
       example: Italian
     
     gender:
@@ -1094,7 +1104,8 @@ components:
       enum:
       - male
       - female 
-      - I prefer to not insert this information
+      - do not specify
+      default: do not specify
       example: male
 
     personalInfo:
@@ -1130,31 +1141,36 @@ components:
     numberPhotos:
       title: numberPhotos
       type: integer
-      description: Current # of Photos(Posts).
+      description: Current number of Photos(Posts).
+      default: 0
       example: 120
 
     totNumberLikes:
       title: totNumberLikes
       type: integer
-      description: Current total # of likes.
+      description: Current total number of likes.
+      default: 0
       example: 1800
     
     totNumberComments:
       title: totNumberComments
       type: integer
-      description: Current total # of comments.
+      description: Current total number of comments.
+      default: 0
       example: 70
     
     numberFollowers:
       title: numberFollowers
       type: integer
-      description: Current # of Followers.
+      description: Current number of Followers.
+      default: 0
       example: 360
 
     numberFollowing:
       title: numberFollowing
       type: integer
-      description: Current # of Following.
+      description: Current number of Following.
+      default: 0
       example: 210
     
     arrayPhotos:
@@ -1163,6 +1179,7 @@ components:
       items: 
         $ref: "#/components/schemas/photo" 
       description: Array of Photos(Posts).
+      default: []
       example: [(1, photoWASA.png, "2022-11-03T09:12:28Z", (12.34, 56.78),Hello Guys! I am here at University to do WASA Lecture!, 180, 7)]
 
     
@@ -1203,11 +1220,8 @@ components:
         arrayPhotos:
           $ref: "#/components/schemas/arrayPhotos" 
 
-      example: (25f9f605-7cbb-4f02-9569-1d120e0580f7, Alessio_Instagram, 
-                (Alessio, Borgi, 2001-04-17, borgi.1952442@studenti.uniroma1.it,
-                Italian, male), 2021-04-17, 120, 1800, 70, 
-                [(1, photoWASA.png, 2022-11-03T09:12:28Z, (12.34, 56.78), 
-                Hello Guys! I am here at University to do WASA Lecture!, 180, 7), ...])
+      example: (25f9f605-7cbb-4f02-9569-1d120e0580f7, Alessio_Instagram, (Alessio, Borgi, 2001-04-17, borgi.1952442@studenti.uniroma1.it,Italian, male), 2021-04-17, 120, 1800, 70,
+        [(1, photoWASA.png, 2022-11-03T09:12:28Z, (12.34, 56.78),Hello Guys! I am here at  University to do WASA Lecture!, 180, 7)])
 
 
     ### SCHEMAS FOR ../PHOTO #
@@ -1269,18 +1283,21 @@ components:
       description: Phrase that will be used for descripting/commenting the photo.
       minLength: 5
       maxLength: 1000
+      default: ""
       example: Hello Guys! I am here at University to do WASA Lecture!
 
     numberLikes:
       title: numberLikes
       type: integer
       description: Current # of photo's likes.
+      default: 0
       example: 180
     
     numberComments:
       title: numberComments
       type: integer
       description: Current # of photo's comments.
+      default: 0
       example: 7
 
     photo:
@@ -1364,6 +1381,7 @@ components:
       - Spam
       - Bad Behaviour
       - Threats
+      default: Spam
       example: Spam
     
 
