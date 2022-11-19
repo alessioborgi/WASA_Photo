@@ -11,7 +11,7 @@ info:
     name: WASAPhoto APIs 
     url: https://github.com/alessioborgi/WASA_Project
     email: borgi.1952442@studenti.uniroma1.it
-  version: "1.0.0"
+  version: "1.0.1"
 
 # servers:
 # - url: http://localhost:3000
@@ -34,15 +34,12 @@ paths:
         - If the user does not exist, it will be created, and a "unique" user
           identifier is returned (uuid). 
         - If the user exists, the "unique" user identifier is returned (uuid).
-
         RETURN:
         It will then return back in both the two cases above mentioned, the uuid 
         generated iff succesful.
-
         RESTRICTIONS:
         Note that this action is allowed ALWAYS, without any restriction and any need
         to pass for uuid parameter, since it is the place where it is actually created. 
-
       requestBody:
         content:
           application/json:
@@ -80,17 +77,14 @@ paths:
       description: |
         HOW IT WORKS:
         Return the list of the Users registered to WASAPhoto.
-
         RETURN:
         The returned value is an array of Usernames. 
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER. The restriction reside on the 
         effect of this. Indeed, the reason for which here you need the uuid for doing this 
         action, resides in the fact that, you should be first registered/logged-in in order
         to obtain the whole list of users. This list will return all the users except for
         the ones that have banned the user that is requesting this list.
-
       parameters:
         - $ref : "#/components/parameters/uuid"
 
@@ -130,17 +124,14 @@ paths:
       description: |
         HOW IT WORKS:
         Change the Username with the new value passed in input (parameter newUsername). 
-
         RETURN:
         Return the uuid of the User in case of the change is successful.
-
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of User can be done by ONLY by the user that is the Profile Owner. 
         Otherwise, it cannot. 
         Note that the new Username is provided in query, but the old Username is inferred
         by both the uuid and the username that are provided in input.
-
       parameters: 
         - name: newUsername
           in: query
@@ -202,13 +193,10 @@ paths:
         HOW IT WORKS:
         Return the current User Profile given in input the Username and the uuid of the person
         who is requesting the action.
-
         RETURN:
         The returned value is the requested User's profile object. 
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER. 
-
       responses:
         "200":
           description: Ok! User Profile Returned Successfully!.
@@ -257,10 +245,8 @@ paths:
         Note that this action correspond as making a post on Instagram. 
         However, I opted for the nomenclature photos, in such a way of avoiding to confuse 
         the Post on instagram with the post Http method.
-
         RETURN:
-        It will then return back in output the uphotoid iff succesful.
-
+        It will then return back in output the photoid iff succesful.
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USERS that are both the Maker of the
         Post on the profile and the owner of the User Profile. 
@@ -276,7 +262,7 @@ paths:
           description: Created! Photo Posted Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/uphotoid' }
+              schema: { $ref: '#/components/schemas/photoid' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -293,16 +279,13 @@ paths:
         HOW IT WORKS:
         Return the list of the photos objects of the profile. The list should be sorted
         w.r.t. the reverse chronological order.
-
         RETURN:
         The returned value is an array of photo objects.
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
         means that the revision of photos action can be done by any user(thus both on 
         its photos and on other photos), except for the case where the user that wants 
         to revise photos, has been banned by the owner of the photo.
-
       responses:
         "200":
           description: List of Photos Returned.
@@ -319,12 +302,12 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
     
   #Particular Photo
-  /users/{username}/photos/{photoID}:
+  /users/{username}/photos/{photoid}:
     summary: Specific User Profile's photo.
     parameters:
     - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/uuid"
-    - $ref: "#/components/parameters/uphotoid"
+    - $ref: "#/components/parameters/photoid"
 
     #To Upload or Sobstitute a Photo.
     put:
@@ -337,12 +320,10 @@ paths:
         HOW IT WORKS:
         Change a user's photo content, given a specific username that is the owner of the 
         photo, a uuid that is the person who is trying to do this change and given a specific
-        uphotoid, that is the Id of the photo of which we want to change the content.
+        photoid, that is the Id of the photo of which we want to change the content.
         Note that the only two things that can be changed are the location and the phrase.
-
         RETURN:
-        Return the uphotoid iff the photo's content change is successful.
-
+        Return the photoid iff the photo's content change is successful.
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of photo can be done by ONLY if the user that is changing the photo
@@ -370,7 +351,7 @@ paths:
            description: An existing Photo has been substituted.
            content:
             application/json:
-              schema: { $ref: "#/components/schemas/uphotoid" }
+              schema: { $ref: "#/components/schemas/photoid" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -387,24 +368,23 @@ paths:
       description: |
         HOW IT WORKS:
         Remove a photo from the account given the username of the photo owner, the uuid of 
-        the person who is trying to remove the photo and the uphotoID, i.e. the photo id. 
+        the person who is trying to remove the photo and the photoID, i.e. the photo id. 
         Note that the removal of an image will also remove likes and comments related to it.
         
         RETURN:
-        Return the uphotoid iff the successful deletion.
+        Return the photoid iff the successful deletion.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the photo can be done by ONLY if the user that is deleting the photo
         is the actual ORIGINAL PHOTO ADDER. Otherwise, it cannot. Thus, only the user that
         has actually posted the photo can delete it. 
-
       responses:
         "200": 
           description: OK! Photo deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/uphotoid" }
+              schema: { $ref: "#/components/schemas/photoid" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -417,13 +397,13 @@ paths:
   ### PHOTO COMMENTS #
 
   #Comments Set.
-  /users/{username}/photos/{photoID}/comments:
+  /users/{username}/photos/{photoid}/comments:
     summary: Photo's Comments Collection.
     parameters: 
-      #I need to provide for a Commenter's uuid and a Photo's uphotoid.
+      #I need to provide for a Commenter's uuid and a Photo's photoid.
       - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/uuid"
-      - $ref : "#/components/parameters/uphotoid"
+      - $ref : "#/components/parameters/photoid"
 
     #Adding a new Comment.
     post:
@@ -436,12 +416,10 @@ paths:
         HOW IT WORKS:
         Given in input the Username owner of the photo on which we want to add the 
         comment, the uuid that is the person who wants to add the content and the Photo's
-        uphotoid, to indicate on which photo to add the comment, it will post a new photo's
+        photoid, to indicate on which photo to add the comment, it will post a new photo's
         comment. 
-
         RETURN:
         It will then return back in output the Commentid iff successful.
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
         means that the comment action can be done by any user(thus both on its photos 
@@ -473,17 +451,14 @@ paths:
       description: |-
         HOW IT WORKS:
         Return the list of the Photo's Comments on reverse chronological order.
-
         RETURN: 
         The returned value is an array of Comment Objects. 
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
         means that the retrieval of photo's comments can be done by any user(thus both 
         on its photos and on other photos), except for the case where the user that
         wants to retrieve the photo's comments has been banned by the owner of the photo.
         (Indeed, in this case, it should not be able to neither see its profile!)
-
       responses:
         "200":
           description: Ok! List of Photos' Comments Returned.
@@ -501,12 +476,12 @@ paths:
   
   
   #Particular Comment.
-  /users/{username}/photos/{photoID}/comments/{commentid}:
+  /users/{username}/photos/{photoid}/comments/{commentid}:
     summary: Specific Photo's Comment.
     parameters:
     - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/uuid"
-    - $ref: "#/components/parameters/uphotoid"
+    - $ref: "#/components/parameters/photoid"
     - $ref: "#/components/parameters/commentid"
 
     #To Sobstitute a Photo's Comment.
@@ -524,10 +499,8 @@ paths:
         has been added, and given a specific commentid.
         Note that as additional parameter, we ask, in a mandatorial way, for a new phrase that 
         will sobstitute the one present for the comment.
-
         RETURN:
         Return the commentid iff the comment change is successful.
-
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of comment can be done by ONLY if the user that is changing the comment
@@ -566,10 +539,8 @@ paths:
         which the comment has been added, given a uuid which is of the user that is going to 
         perform the action, given the uphoto id that indicates the photo on which the comment 
         has been added, and given a specific commentid. 
-
         RETURN:
         Return the comment commentid iff the comment has been deleted successfully.
-
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the comment can be done ONLY if the user that is deleting the comment
@@ -590,13 +561,13 @@ paths:
   ### PHOTO LIKES #
 
   #Likes Set.
-  /users/{username}/photos/{photoID}/likes:
+  /users/{username}/photos/{photoid}/likes:
     summary: Photo's Likes Collection.
     parameters: 
-      #I need to provide for a Photo's owner username, a Liker's uuid and a photo's uphotoid.
+      #I need to provide for a Photo's owner username, a Liker's uuid and a photo's photoid.
       - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/uuid"
-      - $ref : "#/components/parameters/uphotoid"
+      - $ref : "#/components/parameters/photoid"
 
     #Adding a new Comment.
     put:
@@ -607,7 +578,7 @@ paths:
       summary: Posting a new Photo's Like.
       description: |-
         HOW IT WORKS:
-        Given in input the Liker's uuid and the Photo's uphotoid, it will post a new
+        Given in input the Liker's uuid and the Photo's photoid, it will post a new
         photo's like to the photo of the username passed in input. 
         Notice that, given the fact that we can add only one like per person at each photo, 
         we directly add it with the put and not with the post. The specific likeid, then 
@@ -617,7 +588,6 @@ paths:
         RETURN:
         It will then return back in output the Likeid iff successful (it is actually the 
         username of the uuid that has added the like to the photo).
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES and 
         the PHOTO OWNER (since there is no sense of putting a self-like on a photo). 
@@ -651,19 +621,16 @@ paths:
       description: |-
         HOW IT WORKS:
         Given in input the username of the person which owns the photo on which uuid is 
-        putting like, and the Photo's uphotoid, it will return the list of the Photos'Likes 
+        putting like, and the Photo's photoid, it will return the list of the Photos'Likes 
         on reverse chronological order. 
-
         RETURN:
         The returned value is an array of Like Objects. 
-
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
         means that the retrieval of photo's likes can be done by any user(thus both 
         on its photos and on other photos), except for the case where the user that
         wants to retrieve the photo's likes has been banned by the owner of the photo.
         (Indeed, in this case, it shoudl not be able to neither see its profile!)
-
       responses:
         "200":
           description: Ok! List of Photos' Likes Returned.
@@ -689,14 +656,12 @@ paths:
       description: |
         HOW IT WORKS:
         Given in input the username of the photo owner that we want to unlike, the Liker's 
-        uuid and the Photo's uphotoid, it will remove a like from this photo. 
+        uuid and the Photo's photoid, it will remove a like from this photo. 
         Notice that, given the fact that we can add only one like per person at each photo, 
         we directly recognize as the Liker by the likeID. 
-
         RETURN:
         Return the likeID, i.e. the username of the Liker, inferred from the inserted uuid, 
         iff the like has been deleted successfully.
-
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the like can be done by ONLY if the user that is deleting the like
@@ -736,11 +701,9 @@ paths:
         Given in input the Banner uuid, the banner username, and a ban object in the Request
         Body thta includes the username that we want to Ban, add the latter to the list of 
         banned user of the former.
-
         RETURN:
         It will then return back in output the banid(that corresponds to the username of the 
         banned user) iff succesful.
-
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USERS that are both the Creators of the
         Ban and the Owner of the User Profile. Thus, we can only Ban people if we are the 
@@ -774,15 +737,12 @@ paths:
         Return the list of the Bans given the username of the person we want to know the list
         of banned user, and the uuid of the person who is requesting the action. 
         The list should be sorted w.r.t. the reverse chronological order.
-
         RETURN:
         The returned value is an array of Ban objects.
-
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USER OWNER of the PROFILE. This 
         means that the revision of banned users, can be done by only the owner of the 
         profile.
-
       responses:
         "200":
           description: List of Banned Users.
@@ -799,12 +759,12 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
     
   #Particular Ban
-  /users/{username}/bans/{banID}:
+  /users/{username}/bans/{banid}:
     summary: Specific User's Ban.
     parameters:
     - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/uuid"
-    - $ref: "#/components/parameters/username"
+    - $ref: "#/components/parameters/banid"
 
     #Deleting one particular ban that I added.
     delete:
@@ -865,14 +825,11 @@ paths:
         Return the list of the Followers of a given username, given also the uuid of the 
         person that is requesting the aciton. The list should be sorted w.r.t. the reverse
         chronological order.  
-
         RETURN:
         The returned value is an array of follow objects.
-
         RESTRICTIONS:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
         followers of anyone, provided that we are not banned by them.
-
       responses:
         "200":
           description: List of Followers Object.
@@ -909,11 +866,9 @@ paths:
         Given in input the username that is the account owner, the uuid of the person that 
         wants to add the follower, and the follow object passed in the request body, add this 
         last one on the collection of following users. 
-
         RETURN:
         It will then return back in output the followid(username of the account started to be
         followed) iff successful.
-
         RESTRICTIONS:
         Note that this action is allowed to ONLY users that are of course authenticated, meaning 
         that the actual uuid must be the uuid of the username passed in input. Moreover, in the 
@@ -948,14 +903,11 @@ paths:
         Return the list of the Following Users, given a username of the person I want to 
         know the Following Users and a uuid of the person that is requesting the action. 
         The list should be sorted w.r.t. the reverse chronological order.
-
         RETURN:
         The returned value is an array of Follow objects.
-
         RESTRICTIONS:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
         following Users of anyone, provided that we are not banned by them.
-
       responses:
         "200":
           description: List of Following Object.
@@ -973,13 +925,13 @@ paths:
     
 
     
-  /users/{username}/followers/{followerID}:
+  /users/{username}/followers/{followerid}:
     summary: Specific User's Ban.
     #I need to provide for the username, uuid and followID(username).
     parameters:
     - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/uuid"
-    - $ref: "#/components/parameters/username"
+    - $ref: "#/components/parameters/followerid"
 
     #Deleting one particular follow that I have added.
     delete:
@@ -1003,7 +955,6 @@ paths:
         is the actual ORIGINAL FOLLOW ADDER. Otherwise, it cannot. Thus, only the user that
         has actually followed a user, can also delete it, whenever it wants. This means that 
         the user that performs this action should be on its own profile.
-
       responses:
         "200": 
           description: OK! User Follow deleted successfully!
@@ -1039,15 +990,12 @@ paths:
         the username of the person I want to know this information, and the uuid of the person 
         that is requesting this information. The list returned is in reverse chronological order, 
         of course. 
-
         RETURN:
         The returned value is an array of Photo objects.
-
         RESTRICTIONS:
         Note that this action is allowed NOT to EVERY USER. Indeed, this is only allowed to the 
         owner of the profile, meaning that, only if username and the username of the uuid that 
         is requesting this action coincide.
-
       responses:
         "200":
           description: List of Photo Objectof people I am following.
@@ -1085,7 +1033,7 @@ components:
 
     ### SCHEMAS FOR /USER #
     uuid:
-      title: Uuid
+      title: uuid
       type: string
       description:  |-
         Here I will make use of an Universally Unique Identifier (UUID), i.e. a large 
@@ -1100,7 +1048,7 @@ components:
       
 
     username: 
-      title: Username
+      title: username
       type: string
       description: Username
       minLength: 3
@@ -1108,39 +1056,39 @@ components:
       example: Maria
     
     name:
-      title: Name
+      title: name
       type: string
       description: It is the User actual name.
       example: Alessio
     
     surname:
-      title: Surname
+      title: surname
       type: string
       description: It is the User actual surname.
       example: Borgi
     
     dateOfBirth:
-      title: DateOfBirth
+      title: dateOfBirth
       type: string
       description: Actual Date when the user was born.
       format: date
       example: "2001-04-17"
 
     email:
-      title: Email
+      title: email
       type: string
       description:  It is the User Email.
       format: email
       example: borgi.1952442@studenti.uniroma1.it
     
     nationality:
-      title: Nationality
+      title: nationality
       type: string
       description:  It is the User Nationality.
       example: Italian
     
     gender:
-      title: Gender
+      title: gender
       type: string
       description: User Gender.
       enum:
@@ -1150,7 +1098,7 @@ components:
       example: male
 
     personalInfo:
-      title: PersonalInfo
+      title: personalInfo
       type: object
       description: |
         This is the personalInfo object. This groups the set of personal information 
@@ -1173,50 +1121,49 @@ components:
                 Italian, male)
 
     dateOfCreation:
-      title: DateOfCreation
+      title: dateOfCreation
       type: string
       description: Actual Date Profile Creation.
       format: date
       example: "2021-04-17"
     
     numberPhotos:
-      title: NumberPhotos
+      title: numberPhotos
       type: integer
       description: Current # of Photos(Posts).
       example: 120
 
     totNumberLikes:
-      title: TotNumberLikes
+      title: totNumberLikes
       type: integer
       description: Current total # of likes.
       example: 1800
     
     totNumberComments:
-      title: TotNumberComments
+      title: totNumberComments
       type: integer
       description: Current total # of comments.
       example: 70
     
     numberFollowers:
-      title: NumberFollowers
+      title: numberFollowers
       type: integer
       description: Current # of Followers.
       example: 360
 
     numberFollowing:
-      title: NumberFollowing
+      title: numberFollowing
       type: integer
       description: Current # of Following.
       example: 210
     
     arrayPhotos:
-      title: ArrayPhotos
+      title: arrayPhotos
       type: array
       items: 
         $ref: "#/components/schemas/photo" 
       description: Array of Photos(Posts).
-      example: [(1, photoWASA.png, 2022-11-03T09:12:28Z, (12.34, 56.78), 
-                Hello Guys! I am here at University to do WASA Lecture!, 180, 7), ...]
+      example: [(1, photoWASA.png, "2022-11-03T09:12:28Z", (12.34, 56.78),Hello Guys! I am here at University to do WASA Lecture!, 180, 7)]
 
     
     #User Profile Including (uuid, username, (name, surname, personalInfo), 
@@ -1224,7 +1171,7 @@ components:
     #                        totNumberComments, numberFollowers, numberFollowing,
     #                        arrayPhotos).
     userProfile:
-      title: User
+      title: user
       type: object
       description: |
         This is the entire User object. I have built the project on the fact that we can
@@ -1265,15 +1212,15 @@ components:
 
     ### SCHEMAS FOR ../PHOTO #
     #Whole Photo Object   
-    uphotoid:
-      title: Uphotoid
+    photoid:
+      title: photoid
       type: integer
       description: ID of the Photo to be/that is posted.
       readOnly: true
       example: 1
     
     fileName:
-      title: Filename
+      title: filename
       type: string
       description: |-
         Actual Photo to be uploaded. 
@@ -1281,7 +1228,7 @@ components:
       example: photoWASA.png
     
     uploadDate:
-      title: UploadDate
+      title: uploadDate
       type: string
       description: |-
         Actual Date and Time of the moment when the photo is uploaded/commented/liked.
@@ -1289,7 +1236,7 @@ components:
       example: "2022-11-03T09:12:28Z"
 
     latitude:
-      title: Latitude
+      title: latitude
       type: number
       description: Location Latitude in decimal degrees format.
       format: float
@@ -1298,7 +1245,7 @@ components:
       example: 12.34
         
     longitude:
-      title: Longitude
+      title: longitude
       type: number
       description: Location Longitude in decimal degrees format.
       format: float
@@ -1308,7 +1255,7 @@ components:
     
     #Location Including (Longitude, Latitude)
     location: 
-      title: Location
+      title: location
       type: object
       description: Object including both Longitude and Latitude.
       properties:
@@ -1317,7 +1264,7 @@ components:
       example: (12.34, 56.78)
     
     phrase:
-      title: Phrase
+      title: phrase
       type: string
       description: Phrase that will be used for descripting/commenting the photo.
       minLength: 5
@@ -1325,19 +1272,19 @@ components:
       example: Hello Guys! I am here at University to do WASA Lecture!
 
     numberLikes:
-      title: NumberLikes
+      title: numberLikes
       type: integer
       description: Current # of photo's likes.
       example: 180
     
     numberComments:
-      title: NumberComments
+      title: numberComments
       type: integer
       description: Current # of photo's comments.
       example: 7
 
     photo:
-      title: Photo
+      title: photo
       type: object
       description: |-
         This object represent a single Photo that is going to be posted.
@@ -1346,8 +1293,8 @@ components:
         2022-11-03T09:12:28Z, (12.34, 56.78), Hello Guys! I am here at 
         University to do WASA Lecture!)
       properties:
-        uphotoid:
-          $ref: "#/components/schemas/uphotoid"
+        photoid:
+          $ref: "#/components/schemas/photoid"
         fileName:
           $ref: "#/components/schemas/fileName"
         uploadDate:
@@ -1365,14 +1312,14 @@ components:
     
     ### SCHEMAS FOR ../COMMENTS #
     commentid:
-      title: CommentID
+      title: commentID
       type: integer
       description: ID of the Photo's comment to be/that is posted.
       readOnly: true
       example: 1
 
     comment:
-      title: Comment
+      title: comment
       type: object
       description: |
         This is the entire Comment object. It will have the commentid, i.e. the 
@@ -1393,7 +1340,7 @@ components:
     
     ### SCHEMAS FOR ../LIKES #
     like:
-      title: Like
+      title: like
       type: object
       description: |
         This is the entire Like object. It will have the likeid, i.e. the 
@@ -1410,7 +1357,7 @@ components:
     
     ### SCHEMAS FOR ../BANS #    
     motivation:
-      title: Motivation
+      title: motivation
       type: string
       description: Ban Motivation.
       enum:
@@ -1418,9 +1365,10 @@ components:
       - Bad Behaviour
       - Threats
       example: Spam
+    
 
     ban:
-      title: Ban
+      title: ban
       type: object
       description: |
         This is the entire Ban object. It will have the banID, i.e. the 
@@ -1439,7 +1387,7 @@ components:
 
     ### SCHEMAS FOR ../FOLLOW #
     follow:
-      title: Follow
+      title: follow
       type: object
       description: |
         This is the entire Follow object. It will have the followid, i.e. the 
@@ -1460,7 +1408,7 @@ components:
   parameters:
     ### USER PARAMETERS#
     username:
-      name: Username
+      name: username
       in: path
       required: true
       description: Action requested by the following Username.
@@ -1468,7 +1416,7 @@ components:
         $ref: "#/components/schemas/username"
       
     uuid:
-      name: Uuid
+      name: uuid
       in: header
       required: true
       description: Action requested by the following Username (uuid).
@@ -1476,30 +1424,46 @@ components:
         $ref: '#/components/schemas/uuid'
 
     ### PHOTO PARAMETERS #
-    uphotoid:
-      name: Uphotoid
+    photoid:
+      name: photoid
       in: path
       required: true
       description: ID of the Photo to be/that is posted.
       schema:
-        $ref: '#/components/schemas/uphotoid'
+        $ref: '#/components/schemas/photoid'
     
+    ### BAN PARAMETERS #
+    banid:
+      name: banid
+      in: path
+      required: true
+      description: BanID coinciding with the banned Username.
+      schema:
+        $ref: '#/components/schemas/username'
+      
 
     ### PHOTO-FEAUTURES PARAMETERS #
     commentid:
-      name: Commentid
+      name: commentid
       in: path
       required: true
       description: ID of the Photo's Comment to be/that is posted.
       schema:
         $ref: '#/components/schemas/commentid'
+        
+    ### FOLLOWER-RELATED PARAMETERS #
+    followerid:
+      name: followerid
+      in: path
+      required: true
+      description: FollowerID coinciding with the follower Username.
+      schema:
+        $ref: '#/components/schemas/username'
     
 
   ##### SECURITY SCHEMES ##
   securitySchemes:
     bearerAuthentication: 
-      name: bearerAuthentication
-      in: header
       type: http
       scheme: bearer
 
@@ -1520,28 +1484,6 @@ components:
       
 
       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

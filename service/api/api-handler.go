@@ -4,13 +4,15 @@ import (
 	"net/http"
 )
 
-// Handler returns an instance of httprouter.Router that handle APIs registered here
+// Handler that returns an instance of httprouter.Router that handle APIs registered here.
 func (rt *_router) Handler() http.Handler {
-	// Register routes
+	//Register the getHelloWorld API.
 	rt.router.GET("/", rt.getHelloWorld)
-	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
-	// Special routes
+	//Register the listUsers API.
+	rt.router.GET("/users/", rt.listUsers)
+
+	//Special routes
 	rt.router.GET("/liveness", rt.liveness)
 
 	return rt.router
