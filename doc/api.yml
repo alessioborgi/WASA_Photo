@@ -573,48 +573,6 @@ paths:
       - $ref : "#/components/parameters/uuid"
       - $ref : "#/components/parameters/photoid"
 
-    #Adding a new Comment.
-    put:
-      security:
-        - bearerAuthentication: []
-      operationId: likePhoto
-      tags: ["Photo-Likes"]
-      summary: Posting a new Photo's Like.
-      description: |-
-        HOW IT WORKS:
-        Given in input the Liker's uuid and the Photo's photoid, it will post a new
-        photo's like to the photo of the username passed in input. 
-        Notice that, given the fact that we can add only one like per person at each photo, 
-        we directly add it with the put and not with the post. The specific likeid, then 
-        will simply coincide with the username of the uuid that has added the like to the 
-        photo. 
-        
-        RETURN:
-        It will then return back in output the Likeid iff successful (it is actually the 
-        username of the uuid that has added the like to the photo).
-        RESTRICTIONS:
-        Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES and 
-        the PHOTO OWNER (since there is no sense of putting a self-like on a photo). 
-        This means that the like action can be done by any user except for the case where  
-        the user that wants to put a like, has been banned by the owner of the photo, and 
-        when the liker is the owner of the photo.
-        
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/like"}
-
-      responses:
-        "201":
-          description: Created! Photo's Like Added Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/username'}
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-
-        '500': {$ref : '#/components/responses/InternalServerError'}
-    
     #Getting Photo's Likes.
     get:
       security:
@@ -650,6 +608,64 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
   
+  
+  
+  /users/{username}/photos/{photoid}/likes/{usernameliker}:
+    summary: Photo's Particular Like.
+    parameters: 
+      #I need to provide for a Photo's owner username, a Liker's uuid and a photo's photoid.
+      - $ref : "#/components/parameters/username"
+      - $ref : "#/components/parameters/uuid"
+      - $ref : "#/components/parameters/photoid"
+      - $ref : "#/components/parameters/usernameliker"
+
+    #Adding a new Like.
+    put:
+      security:
+        - bearerAuthentication: []
+      operationId: likePhoto
+      tags: ["Photo-Likes"]
+      summary: Posting a new Photo's Like.
+      description: |-
+        HOW IT WORKS:
+        Given in input the Liker's uuid and the Photo's photoid, it will post a new
+        photo's like to the photo of the username passed in input. 
+        Notice that, given the fact that we can add only one like per person at each photo, 
+        we directly add it with the put and not with the post. The specific likeid (that
+        I decided to call usernameliker), then will simply coincide with the username of 
+        the uuid that has added the like to the photo. 
+        I decided to provide also the username of the liker (in addition to its uuid). I 
+        could have decided to infer it from the uuid, but I decided to include it also, 
+        just for a matter of semplicity.
+        
+        RETURN:
+        It will then return back in output the usernameliker iff successful (i.e. the  
+        username of the uuid that has added the like to the photo).
+        
+        RESTRICTIONS:
+        Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES and 
+        the PHOTO OWNER (since there is no sense of putting a self-like on a photo). 
+        This means that the like action can be done by any user except for the case where  
+        the user that wants to put a like, has been banned by the owner of the photo, and 
+        when the liker is the owner of the photo. 
+        
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/like"}
+
+      responses:
+        "201":
+          description: Created! Photo's Like Added Successfully!
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/username'}
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+    
+    
     #Deleting one particular photo's like that I have put.
     delete:
       security:
@@ -660,12 +676,14 @@ paths:
       description: |
         HOW IT WORKS:
         Given in input the username of the photo owner that we want to unlike, the Liker's 
-        uuid and the Photo's photoid, it will remove a like from this photo. 
+        uuid and username and the Photo's photoid, it will remove a like from this photo. 
         Notice that, given the fact that we can add only one like per person at each photo, 
-        we directly recognize as the Liker by the likeID. 
+        we directly recognize as the Liker by the likeID(usernameliker). 
+        
         RETURN:
-        Return the likeID, i.e. the username of the Liker, inferred from the inserted uuid, 
-        iff the like has been deleted successfully.
+        Return the usernameliker, i.e. the username of the Liker, iff the like has been 
+        deleted successfully.
+        
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the like can be done by ONLY if the user that is deleting the like
@@ -682,6 +700,7 @@ paths:
         '404': {$ref : '#/components/responses/NotFound'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
+
   
   ### BANS PUBLICATION #
 
@@ -1449,6 +1468,15 @@ components:
       description: ID of the Photo to be/that is posted.
       schema:
         $ref: '#/components/schemas/photoid'
+        
+    ### LIKE PARAMETERS #
+    usernameliker:
+      name: usernameliker
+      in: path
+      required: true
+      description: ID of the Liker that is going to put like to the post.
+      schema:
+        $ref: '#/components/schemas/username'
     
     ### BAN PARAMETERS #
     banid:
