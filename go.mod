@@ -1,6 +1,5 @@
 module github.com/alessioborgi/WASA_Photo
 
-
 go 1.17
 
 require (
@@ -15,6 +14,10 @@ require (
 require (
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
+
+	//This will be used for generating a Uuid for the User.
+	github.com/google/uuid v1.3.0 // indirect
+
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	golang.org/x/sys v0.0.0-20220808155132-1c4a2a72c664 // indirect

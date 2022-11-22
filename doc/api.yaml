@@ -13,9 +13,36 @@ info:
     email: borgi.1952442@studenti.uniroma1.it
   version: "1.0.1"
 
-# servers:
-# - url: http://localhost:3000
+servers:
+ - url: http://localhost:3000
 
+tags:
+  - name: User-Session
+    description: User Session Stuffs.
+  
+  - name: User-Profile
+    description: User Profile Stuffs.
+  
+  - name: Photo-Uploading
+    description: Photo Uploading Stuffs.
+  
+  - name: Photo-Comments
+    description: Photo Comments Stuffs.
+  
+  - name: Photo-Likes
+    description: Photo Likes Stuffs.
+  
+  - name: User-Bans
+    description: User Bans Stuffs.
+  
+  - name: User-Following
+    description: User Following Stuffs.
+  
+  - name: User-Followers
+    description: User Followers Stuffs.
+  
+  - name: User-Stream
+    description: User Stream Stuffs.
 paths:
 
   ### USER LOGIN PART: #
@@ -45,7 +72,7 @@ paths:
         content:
           application/json:
             schema:
-              properties: 
+              properties:
                 schema: {$ref: "#/components/schemas/username"}
         required: true
 
@@ -97,6 +124,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: 
                   $ref: "#/components/schemas/username"
 
@@ -297,6 +326,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -470,6 +501,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/comment" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -600,6 +633,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/like" }
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -773,6 +808,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/ban" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -861,6 +898,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -939,6 +978,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -1027,6 +1068,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100000
                 items: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -1083,14 +1126,14 @@ components:
       title: name
       type: string
       description: It is the User actual name.
-      default: ""
+      default: "Not Inserted"
       example: Alessio
     
     surname:
       title: surname
       type: string
       description: It is the User actual surname.
-      default: ""
+      default: "Not Inserted"
       example: Borgi
     
     dateOfBirth:
@@ -1098,7 +1141,7 @@ components:
       type: string
       description: Actual Date when the user was born.
       format: date
-      default: ""
+      default: "0000-00-00"
       example: "2001-04-17"
 
     email:
@@ -1106,14 +1149,14 @@ components:
       type: string
       description:  It is the User Email.
       format: email
-      default: ""
+      default: "nome.matriculation@studenti.uniroma1.it"
       example: borgi.1952442@studenti.uniroma1.it
     
     nationality:
       title: nationality
       type: string
       description:  It is the User Nationality.
-      default: ""
+      default: "Not Inserted"
       example: Italian
     
     gender:
@@ -1147,14 +1190,13 @@ components:
         gender:
           $ref: "#/components/schemas/gender"
 
-      example: (Alessio, Borgi, 2001-04-17, borgi.1952442@studenti.uniroma1.it,
-                Italian, male)
 
     dateOfCreation:
       title: dateOfCreation
       type: string
       description: Actual Date Profile Creation.
       format: date
+      default: "0000-00-00"
       example: "2021-04-17"
     
     numberPhotos:
@@ -1198,8 +1240,9 @@ components:
       items: 
         $ref: "#/components/schemas/photo" 
       description: Array of Photos(Posts).
+      minItems: 0
+      maxItems: 100000
       default: []
-      example: [(1, photoWASA.png, "2022-11-03T09:12:28Z", (12.34, 56.78),Hello Guys! I am here at University to do WASA Lecture!, 180, 7)]
 
     
     #User Profile Including (uuid, username, (name, surname, personalInfo), 
@@ -1239,9 +1282,6 @@ components:
         arrayPhotos:
           $ref: "#/components/schemas/arrayPhotos" 
 
-      example: (25f9f605-7cbb-4f02-9569-1d120e0580f7, Alessio_Instagram, (Alessio, Borgi, 2001-04-17, borgi.1952442@studenti.uniroma1.it,Italian, male), 2021-04-17, 120, 1800, 70,
-        [(1, photoWASA.png, 2022-11-03T09:12:28Z, (12.34, 56.78),Hello Guys! I am here at  University to do WASA Lecture!, 180, 7)])
-
 
     ### SCHEMAS FOR ../PHOTO #
     #Whole Photo Object   
@@ -1266,7 +1306,8 @@ components:
       description: |-
         Actual Date and Time of the moment when the photo is uploaded/commented/liked.
       format: date-time
-      example: "2022-11-03T09:12:28Z"
+      default: "0000-00-00T00:00:00Z"
+      example: "2022-11-03T08:30:00Z"
 
     latitude:
       title: latitude
