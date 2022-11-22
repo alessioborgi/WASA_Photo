@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -11,26 +13,28 @@ import (
 func (rt *_router) listUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	//Create a slice of Fountains in such a way to have some examples to test.
-	var fountains = []Fountain{
-		{
-			ID:        1,
-			Latitude:  12.45,
-			Longitude: 56.78,
-			Status:    "faulty",
-		},
-		{
-			ID:        2,
-			Latitude:  87.4,
-			Longitude: 12.6,
-			Status:    "good",
-		},
-		{
-			ID:        3,
-			Latitude:  22.3,
-			Longitude: 11.9,
-			Status:    "good",
-		},
-	}
+	var fountains = []User{}
+	uuid := uuid.New()
+	fmt.Println(uuid.String())
+	// 	{
+	// 		ID:        1,
+	// 		Latitude:  12.45,
+	// 		Longitude: 56.78,
+	// 		Status:    "faulty",
+	// 	},
+	// 	{
+	// 		ID:        2,
+	// 		Latitude:  87.4,
+	// 		Longitude: 12.6,
+	// 		Status:    "good",
+	// 	},
+	// 	{
+	// 		ID:        3,
+	// 		Latitude:  22.3,
+	// 		Longitude: 11.9,
+	// 		Status:    "good",
+	// 	},
+	// }
 
 	//Remember to set the Header. Here should be changed from "text/plain" to "application/json".
 	//Notice that the Header is set before the encoding because the encoding should be set before w.

@@ -747,42 +747,6 @@ paths:
       - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/uuid"
 
-    #Adding a new Ban.
-    put:
-      security:
-        - bearerAuthentication: []
-      operationId: banUser
-      tags: ["User-Bans"]
-      summary: Banning a User.
-      description: |
-        HOW IT WORKS:
-        Given in input the Banner uuid, the banner username, and a ban object in the Request
-        Body that includes the username that we want to Ban, add the latter to the list of 
-        banned user of the former.
-        RETURN:
-        It will then return back in output the banid(that corresponds to the username of the 
-        banned user) iff succesful.
-        RESTRICTIONS:
-        Note that this action is allowed to ONLY the USERS that are both the Creators of the
-        Ban and the Owner of the User Profile. Thus, we can only Ban people if we are the 
-        account owners. 
-      
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/ban"}
-
-      responses:
-        "201":
-          description: Created! User Ban Added Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/username' }
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-
-        '500': {$ref : '#/components/responses/InternalServerError'}
-    
     #Getting the set of Banned Users.
     get:
       security:
@@ -826,6 +790,42 @@ paths:
     - $ref: "#/components/parameters/uuid"
     - $ref: "#/components/parameters/banid"
 
+    #Adding a new Ban.
+    put:
+      security:
+        - bearerAuthentication: []
+      operationId: banUser
+      tags: ["User-Bans"]
+      summary: Banning a User.
+      description: |
+        HOW IT WORKS:
+        Given in input the Banner uuid, the banner username, and a ban object in the Request
+        Body that includes the username that we want to Ban, add the latter to the list of 
+        banned user of the former.
+        RETURN:
+        It will then return back in output the banid(that corresponds to the username of the 
+        banned user) iff succesful.
+        RESTRICTIONS:
+        Note that this action is allowed to ONLY the USERS that are both the Creators of the
+        Ban and the Owner of the User Profile. Thus, we can only Ban people if we are the 
+        account owners. 
+      
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/ban"}
+
+      responses:
+        "201":
+          description: Created! User Ban Added Successfully!
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/username' }
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+        
     #Deleting one particular ban that I added.
     delete:
       security:
@@ -1120,6 +1120,7 @@ components:
       description: Username
       minLength: 3
       maxLength: 31
+      pattern: ^.*$
       example: Maria
     
     name:
@@ -1127,6 +1128,7 @@ components:
       type: string
       description: It is the User actual name.
       default: "Not Inserted"
+      pattern: ^.*$
       example: Alessio
     
     surname:
@@ -1134,6 +1136,7 @@ components:
       type: string
       description: It is the User actual surname.
       default: "Not Inserted"
+      pattern: ^.*$
       example: Borgi
     
     dateOfBirth:
@@ -1157,6 +1160,7 @@ components:
       type: string
       description:  It is the User Nationality.
       default: "Not Inserted"
+      pattern: ^.*$
       example: Italian
     
     gender:
@@ -1168,6 +1172,7 @@ components:
       - female 
       - do not specify
       default: do not specify
+      pattern: ^.*$
       example: male
 
     personalInfo:
@@ -1344,6 +1349,7 @@ components:
       minLength: 5
       maxLength: 1000
       default: ""
+      pattern: ^.*$
       example: Hello Guys! I am here at University to do WASA Lecture!
 
     numberLikes:
@@ -1441,6 +1447,7 @@ components:
       - Spam
       - Bad Behaviour
       - Threats
+      pattern: ^.*$
       default: Spam
       example: Spam
     
