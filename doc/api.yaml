@@ -78,9 +78,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              properties:
-                schema: {$ref: "#/components/schemas/username"}
+            schema: {$ref: "#/components/schemas/username"}
         required: true
 
       responses:
@@ -1169,6 +1167,8 @@ components:
       title: name
       type: string
       description: It is the User actual name.
+      minLength: 1
+      maxLength: 31
       default: "Not Inserted"
       pattern: ^.*$
       example: Alessio
@@ -1177,6 +1177,8 @@ components:
       title: surname
       type: string
       description: It is the User actual surname.
+      minLength: 1
+      maxLength: 31
       default: "Not Inserted"
       pattern: ^.*$
       example: Borgi
@@ -1186,7 +1188,7 @@ components:
       type: string
       description: Actual Date when the user was born.
       format: date
-      default: "0000-00-00"
+      default: "0000-01-01"
       example: "2001-04-17"
 
     email:
@@ -1243,7 +1245,7 @@ components:
       type: string
       description: Actual Date Profile Creation.
       format: date
-      default: "0000-00-00"
+      default: "0000-01-01"
       example: "2021-04-17"
     
     numberPhotos:
@@ -1353,7 +1355,7 @@ components:
       description: |-
         Actual Date and Time of the moment when the photo is uploaded/commented/liked.
       format: date-time
-      default: "0000-00-00T00:00:00Z"
+      default: "0000-01-01T00:00:00Z"
       example: "2022-11-03T08:30:00Z"
 
     latitude:
