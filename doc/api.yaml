@@ -134,6 +134,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 1000000
+                description: Array of Usernames of the WASAPhoto's Users.
                 items: 
                   $ref: "#/components/schemas/username"
 
@@ -175,8 +176,7 @@ paths:
           in: query
           required: true
           description: New Username for which we want to change our username with. 
-          schema:
-            $ref: "#/components/schemas/username"
+          schema: {$ref: "#/components/schemas/username"}
 
       responses:
         "200":
@@ -244,6 +244,7 @@ paths:
           content:
             application/json:
               schema:
+                description: Set of User Profile Components.
                 items: 
                   $ref: "#/components/schemas/userProfile"
 
@@ -342,6 +343,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Photo Returned.
                 items: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -387,15 +389,13 @@ paths:
           in: query
           required: false
           description: New Photo's Location. 
-          schema:
-            $ref: "#/components/schemas/location"
+          schema: {$ref: "#/components/schemas/location"}
         
         - name: newPhrase
           in: query
           required: false
           description: New Photo's Phrase. 
-          schema:
-            $ref: "#/components/schemas/phrase"
+          schema: {$ref: "#/components/schemas/phrase"}
         
       responses:
         "200": 
@@ -522,6 +522,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Photo's Comment.
                 items: { $ref: "#/components/schemas/comment" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -568,8 +569,7 @@ paths:
         in: query
         required: true
         description: Modified Comment's Phrase. 
-        schema:
-          $ref: '#/components/schemas/phrase'
+        schema: {$ref: '#/components/schemas/phrase'}
         
       responses:
         "200": 
@@ -657,6 +657,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Photo's Like.
                 items: { $ref: "#/components/schemas/like" }
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -794,6 +795,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of User's Bans.
                 items: { $ref: "#/components/schemas/ban" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -919,6 +921,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Followers.
                 items: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -964,6 +967,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Followers.
                 items: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -1091,6 +1095,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
+                description: Array of Stream Photos.
                 items: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
