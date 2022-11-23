@@ -171,19 +171,19 @@ paths:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of Username can be done by ONLY the user that is the Profile Owner. 
         Otherwise, it cannot. 
-      parameters: 
-        - name: newUsername
-          in: query
-          required: true
-          description: New Username for which we want to change our username with. 
-          schema: {$ref: "#/components/schemas/username"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/username"}
+        required: true
+      
 
       responses:
         "200":
           description: OK! Username Updated Successfully!.
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/username" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -215,7 +215,7 @@ paths:
           description: OK! Username deleted successfully! 
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/username" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -370,8 +370,8 @@ paths:
         HOW IT WORKS:
         Change a user's photo content, given a specific username that should the photo owner 
         and given a specific photoid, that is the Id of the photo of which we want to change 
-        the content. Note that the only two things that can be changed are the location and 
-        the phrase. Also here, we request for authentication of the user that wants to perform
+        the content. Note that the only one thing that can be changed is the the phrase. 
+        Also here, we request for authentication of the user that wants to perform
         this action. 
         
         RETURN:
@@ -384,18 +384,11 @@ paths:
         provided by the authentication, should be the unique user identifier of the username 
         given in input.
       
-      parameters:
-        - name: newLocation
-          in: query
-          required: false
-          description: New Photo's Location. 
-          schema: {$ref: "#/components/schemas/location"}
-        
-        - name: newPhrase
-          in: query
-          required: false
-          description: New Photo's Phrase. 
-          schema: {$ref: "#/components/schemas/phrase"}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/phrase"}
+        required: true
         
       responses:
         "200": 
@@ -564,12 +557,11 @@ paths:
         change of comment can be done by ONLY if the user that is changing the comment
         is the actual ORIGINAL COMMENTER. Otherwise, it cannot.
         
-      parameters:
-      - name: modifiedPhrase
-        in: query
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/phrase"}
         required: true
-        description: Modified Comment's Phrase. 
-        schema: {$ref: '#/components/schemas/phrase'}
         
       responses:
         "200": 
@@ -668,13 +660,13 @@ paths:
   
   
   
-  /users/{fixedUsername}/photos/{photoid}/likes/{usernameliker}:
+  /users/{fixedUsername}/photos/{photoid}/likes/{fixedUsernameLiker}:
     summary: Photo's Particular Like.
     parameters: 
       #I need to provide for a Photo's owner username, a Liker's uuid and a photo's photoid.
       - $ref : "#/components/parameters/fixedUsername"
       - $ref : "#/components/parameters/photoid"
-      - $ref : "#/components/parameters/usernameliker"
+      - $ref : "#/components/parameters/fixedUsernameLiker"
 
     #Adding a new Like.
     put:
@@ -714,7 +706,7 @@ paths:
           description: Created! Photo's Like Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/fixedUsername'}
+              schema: { $ref: '#/components/schemas/like'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -748,7 +740,7 @@ paths:
           description: OK! Photo's Like deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/like" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -843,7 +835,7 @@ paths:
           description: Created! User Ban Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/username' }
+              schema: { $ref: '#/components/schemas/ban' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -875,7 +867,7 @@ paths:
           description: OK! User Ban deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/username" }
+              schema: { $ref: "#/components/schemas/ban" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1018,7 +1010,7 @@ paths:
           description: Created! User Started to Follow Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/username' }
+              schema: { $ref: '#/components/schemas/follow' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1050,7 +1042,7 @@ paths:
           description: OK! User Follow deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/username" }
+              schema: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1168,6 +1160,16 @@ components:
       pattern: ^.*$
       example: Maria
     
+    
+    photoProfile:
+      title: photoProfile
+      type: string
+      description: |-
+        Actual User's Photo Profile. 
+      format: binary
+      example: "0001111001111111100000000000111111111110"
+      
+    
     name:
       title: name
       type: string
@@ -1220,7 +1222,7 @@ components:
       - male
       - female 
       - do not specify
-      default: do not specify
+      default: "do not specify"
       pattern: ^.*$
       example: male
 
@@ -1296,10 +1298,9 @@ components:
       description: Array of Photos(Posts).
       minItems: 0
       maxItems: 100000
-      default: []
 
     
-    #User Profile Including (uuid, username, (name, surname, personalInfo), 
+    #User Profile Including (uuid, fixedUsernameusername, (name, surname, personalInfo), 
     #                        dateOfCreation, numberPhotos, totNumberLikes,      
     #                        totNumberComments, numberFollowers, numberFollowing,
     #                        arrayPhotos).
@@ -1317,8 +1318,12 @@ components:
       properties: 
         uuid: 
           $ref: "#/components/schemas/uuid"
+        fixedUsername:
+          $ref: "#/components/schemas/fixedUsername"
         username: 
           $ref: "#/components/schemas/username"
+        photoProfile:
+          $ref: "#/components/schemas/photoProfile"
         personalInfo:
           $ref: "#/components/schemas/personalInfo"
         dateOfCreation:
@@ -1352,7 +1357,7 @@ components:
       description: |-
         Actual Photo to be uploaded. 
       format: binary
-      example: photoWASA.png
+      example: "0001111001111111100000000000111111111110"
     
     uploadDate:
       title: uploadDate
@@ -1397,7 +1402,6 @@ components:
       description: Phrase that will be used for descripting/commenting the photo.
       minLength: 5
       maxLength: 1000
-      default: ""
       pattern: ^.*$
       example: Hello Guys! I am here at University to do WASA Lecture!
 
@@ -1468,7 +1472,6 @@ components:
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
 
-      example: (1, Alessio_01, 'John, I will come to the WASA Lecture tomorrow. See you!', 2022-11-03T11:12:28Z)
     
     ### SCHEMAS FOR ../LIKES #
     like:
@@ -1485,7 +1488,6 @@ components:
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
 
-      example: (Alessio_01, 2022-11-03T04:12:28Z)
     
     ### SCHEMAS FOR ../BANS #    
     motivation:
@@ -1516,8 +1518,7 @@ components:
           $ref: "#/components/schemas/uploadDate"
         motivation:
           $ref: "#/components/schemas/motivation"
-      example: (Marco_23, 2022-11-03T08:07:28Z, Spam)
-    
+
 
     ### SCHEMAS FOR ../FOLLOW #
     follow:
@@ -1534,8 +1535,6 @@ components:
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
 
-      example: (Giorgio_01, 2022-11-03T11:12:28Z)
-
 
 
   ##### PARAMETERS ##
@@ -1545,12 +1544,20 @@ components:
       name: username
       in: path
       required: true
-      description: Action requested by the following Username.
+      description: Action requested on the following Username.
       schema:
         $ref: "#/components/schemas/username"
     
     fixedUsername:
       name: fixedUsername
+      in: path
+      required: true
+      description: Action requested on the following fixedUsername.
+      schema:
+        $ref: "#/components/schemas/fixedUsername"
+    
+    fixedUsernameLiker:
+      name: fixedUsernameLiker
       in: path
       required: true
       description: Action requested by the following fixedUsername.
