@@ -136,7 +136,7 @@ paths:
                 maxItems: 1000000
                 description: Array of Usernames of the WASAPhoto's Users.
                 items: 
-                  $ref: "#/components/schemas/username"
+                  $ref: "#/components/schemas/fixedUsername"
 
         '204': {$ref : '#/components/responses/NoContent'}
         
@@ -181,7 +181,7 @@ paths:
           description: OK! Username Updated Successfully!.
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/username" }
+              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -300,7 +300,7 @@ paths:
           description: Created! Photo Posted Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/photoid' }
+              schema: { $ref: '#/components/schemas/photo' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -388,7 +388,7 @@ paths:
            description: An existing Photo has been substituted.
            content:
             application/json:
-              schema: { $ref: "#/components/schemas/photoid" }
+              schema: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -420,7 +420,7 @@ paths:
           description: OK! Photo deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/photoid" }
+              schema: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -471,7 +471,7 @@ paths:
           description: Created! Photo's Comment Posted Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/commentid' }
+              schema: { $ref: '#/components/schemas/comment' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -562,7 +562,7 @@ paths:
            description: OK! An existing Photo's Comment has been modified.
            content:
             application/json:
-              schema: { $ref: '#/components/schemas/commentid' }
+              schema: { $ref: '#/components/schemas/comment' }
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -594,7 +594,7 @@ paths:
           description: OK! Photo's Comment deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/commentid" }
+              schema: { $ref: "#/components/schemas/comment" }
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -702,7 +702,7 @@ paths:
           description: Created! Photo's Like Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/fixedUsername'}
+              schema: { $ref: '#/components/schemas/like'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -736,7 +736,7 @@ paths:
           description: OK! Photo's Like deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/like" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -833,7 +833,7 @@ paths:
           description: Created! User Ban Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/fixedUsername' }
+              schema: { $ref: '#/components/schemas/ban' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -865,7 +865,7 @@ paths:
           description: OK! User Ban deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/ban" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1011,7 +1011,7 @@ paths:
           description: Created! User Started to Follow Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/fixedUsername' }
+              schema: { $ref: '#/components/schemas/follow' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1043,7 +1043,7 @@ paths:
           description: OK! User Follow deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
+              schema: { $ref: "#/components/schemas/follow" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 

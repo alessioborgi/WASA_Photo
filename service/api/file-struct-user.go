@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/binary"
 	"fmt"
 	"strconv"
 	"strings"
@@ -14,6 +15,7 @@ import (
 // Declaration of Customized type used after for checking their validity.(User)
 type Uuid string
 type Username string
+type FixedUsername string
 
 // Declaration of Customized type used after for checking validity (User Profile Personal Info).
 type Name string
@@ -26,7 +28,9 @@ type Nationality string
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
 	Uuid            Uuid         `json:"uuid"`
+	FixedUsername   fixedUsername`json:"fixedUsername"`
 	Username        Username     `json:"username"`
+	PhotoProfile	byte		 `json:"photoProfile"`
 	PersonalInfo    PersonalInfo `json:"personalInfo"`
 	DateOfCreation  string       `json:"dateOfCreation"`
 	NumberOfPhotos  int          `json:"numberOfPhotos"`
@@ -34,7 +38,6 @@ type User struct {
 	NumberComments  int          `json:"numberComments"`
 	NumberFollowers int          `json:"numberFollowers"`
 	NumberFollowing int          `json:"numberFollowing"`
-	ArrayPhotos     []Photo      `json:"arrayPhotos"`
 }
 
 // Ceation of a sub-Structure that handles the Personal Information of the User.

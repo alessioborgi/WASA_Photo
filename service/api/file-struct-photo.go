@@ -7,7 +7,7 @@ import (
 type Phrase string
 type Photo struct {
 	Photoid        int      `json:"photoid"`
-	Filename       string   `json:"filename"` //Note here it will be in bynary.
+	Filename       byte     `json:"filename"` //Note here it will be in bynary.
 	UploadDate     string   `json:"uploadDate"`
 	Location       Location `json:"location"`
 	Phrase         Phrase   `json:"phrase"`
