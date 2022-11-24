@@ -11,7 +11,7 @@ info:
     name: WASAPhoto APIs 
     url: https://github.com/alessioborgi/WASA_Project
     email: borgi.1952442@studenti.uniroma1.it
-  version: "1.0.3"
+  version: "1.0.4"
 
 servers:
  - url: http://localhost:3000
@@ -64,16 +64,16 @@ paths:
         registration to the WASAPhoto Platform of the given Username. There can be 
         distinguished two cases though:
         - If the user does not exist, it will be created, and a "unique" user
-          identifier is returned (uuid). 
-        - If the user exists, the "unique" user identifier is returned (uuid).
+          identifier is returned (fixedUsername). 
+        - If the user exists, the fixedUsername is returned.
         
         RETURN:
-        It will then return back in both the two cases above mentioned, the uuid 
+        It will then return back in both the two cases above mentioned, the fixedUsername 
         generated iff successful (it can be concepted as a sort of secret id).
         
         RESTRICTIONS:
         Note that this action is allowed ALWAYS, without any restriction and any need
-        to pass for uuid parameter, since it is the place where it is actually created
+        to pass for fixedUsername parameter, since it is the place where it is actually created
         a new username(profile) or logged-in a present username. 
       requestBody:
         content:
@@ -86,13 +86,13 @@ paths:
           description: Ok! User LogIn Successful!
           content:
             application/json:
-              schema: {$ref : "#/components/schemas/uuid"}
+              schema: {$ref : "#/components/schemas/fixedUsername"}
 
         '201':
           description: Created! New User Created Successfully!
           content:
             application/json:
-              schema: {$ref : "#/components/schemas/uuid"}
+              schema: {$ref : "#/components/schemas/fixedUsername"}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
           
@@ -126,7 +126,7 @@ paths:
         requesting this list).
 
       responses:
-        "200":
+        '200':
           description: Ok! List of registered Users Returned Successfully!.
           content:
             application/json:
@@ -138,7 +138,7 @@ paths:
                 items: 
                   $ref: "#/components/schemas/username"
 
-        "204": {$ref : '#/components/responses/NoContent'}
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -175,8 +175,6 @@ paths:
         content:
           application/json:
             schema: {$ref: "#/components/schemas/username"}
-        required: true
-      
 
       responses:
         "200":
@@ -207,15 +205,13 @@ paths:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the user(account) can be done by ONLY if the user that is deleting the
         account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
-        This means that the uuid that is given by the Bearer Authentication requested, should 
-        be the uuid of the username that is given necessarily, in order to perform the action.
         
       responses:
         "200": 
           description: OK! Username deleted successfully! 
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/username" }
+              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -239,16 +235,13 @@ paths:
         Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user
         profile iif this has not banned you.
       responses:
-        "200":
+        '200':
           description: Ok! User Profile Returned Successfully!.
           content:
             application/json:
-              schema:
-                description: Set of User Profile Components.
-                items: 
-                  $ref: "#/components/schemas/userProfile"
+              schema: {$ref: "#/components/schemas/userProfile"}
 
-        "204": {$ref : '#/components/responses/NoContent'}
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -335,7 +328,7 @@ paths:
         its photos and on other photos), except for the case where the user that wants 
         to revise photos, has been banned by the owner of the photo.
       responses:
-        "200":
+        '200':
           description: List of Photos Returned.
           content:
             application/json:
@@ -345,6 +338,8 @@ paths:
                 maxItems: 100000
                 description: Array of Photo Returned.
                 items: { $ref: "#/components/schemas/photo" }
+        
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -380,9 +375,7 @@ paths:
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of photo can be done by ONLY if the user that is changing the photo is the 
-        actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. This means that, the uuid 
-        provided by the authentication, should be the unique user identifier of the username 
-        given in input.
+        actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
       
       requestBody:
         content:
@@ -411,8 +404,7 @@ paths:
       summary: Remove your (existing) photo.
       description: |
         HOW IT WORKS:
-        Remove a photo from the account given the username of the photo owner, the uuid of 
-        the person who is trying to remove the photo and the photoID, i.e. the photo id. 
+        Remove a photo from the account given the username of the photo owner, and the photoID, i.e. the photo id. 
         Note that the removal of an image will also remove likes and comments related to it.
         
         RETURN:
@@ -507,7 +499,7 @@ paths:
         wants to retrieve the photo's comments has been banned by the owner of the photo.
         (Indeed, in this case, it should not be able to neither see its profile!)
       responses:
-        "200":
+        '200':
           description: Ok! List of Photos' Comments Returned.
           content:
             application/json:
@@ -517,6 +509,8 @@ paths:
                 maxItems: 100000
                 description: Array of Photo's Comment.
                 items: { $ref: "#/components/schemas/comment" }
+        
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -641,7 +635,7 @@ paths:
         wants to retrieve the photo's likes has been banned by the owner of the photo.
         (Indeed, in this case, it shoudl not be able to neither see its profile!)
       responses:
-        "200":
+        '200':
           description: Ok! List of Photos' Likes Returned.
           content:
             application/json:
@@ -651,6 +645,8 @@ paths:
                 maxItems: 100000
                 description: Array of Photo's Like.
                 items: { $ref: "#/components/schemas/like" }
+        
+        '204': {$ref : '#/components/responses/NoContent'}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -663,7 +659,7 @@ paths:
   /users/{fixedUsername}/photos/{photoid}/likes/{fixedUsernameLiker}:
     summary: Photo's Particular Like.
     parameters: 
-      #I need to provide for a Photo's owner username, a Liker's uuid and a photo's photoid.
+      #I need to provide for a Photo's owner username, a Liker's fixedUsername and a photo's photoid.
       - $ref : "#/components/parameters/fixedUsername"
       - $ref : "#/components/parameters/photoid"
       - $ref : "#/components/parameters/fixedUsernameLiker"
@@ -687,7 +683,7 @@ paths:
         
         RETURN:
         It will then return back in output the usernameliker iff successful (i.e. the  
-        username of the uuid that has added the like to the photo).
+        fixedUsername that has added the like to the photo).
         
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES and 
@@ -706,7 +702,7 @@ paths:
           description: Created! Photo's Like Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/like'}
+              schema: { $ref: '#/components/schemas/fixedUsername'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -740,7 +736,7 @@ paths:
           description: OK! Photo's Like deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/like" }
+              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -755,7 +751,7 @@ paths:
   /users/{fixedUsername}/bans:
     summary: Username's Banned Users Collection.
     parameters: 
-      #I need to provide for a uuid.
+      #I need to provide for a fixedUsername.
       - $ref : "#/components/parameters/fixedUsername"
 
     #Getting the set of Banned Users.
@@ -779,7 +775,7 @@ paths:
         means that the revision of banned users, can be done by only the owner of the 
         profile.
       responses:
-        "200":
+        '200':
           description: List of Banned Users.
           content:
             application/json:
@@ -789,6 +785,8 @@ paths:
                 maxItems: 100000
                 description: Array of User's Bans.
                 items: { $ref: "#/components/schemas/ban" }
+        
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -835,7 +833,7 @@ paths:
           description: Created! User Ban Added Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ban' }
+              schema: { $ref: '#/components/schemas/fixedUsername' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -867,7 +865,7 @@ paths:
           description: OK! User Ban deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/ban" }
+              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -894,7 +892,7 @@ paths:
       summary: Get the Followers.
       description: |
         HOW IT WORKS:
-        Return the list of the Followers of a given fixedUsername, given also the uuid of the 
+        Return the list of the Followers of a given fixedUsername, given also the fixedUsername of the 
         person that is requesting the action. The list should be sorted w.r.t. the reverse
         chronological order.  
         
@@ -905,7 +903,7 @@ paths:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
         followers of anyone, provided that we are not banned by them.
       responses:
-        "200":
+        '200':
           description: List of Followers Object.
           content:
             application/json:
@@ -916,6 +914,8 @@ paths:
                 description: Array of Followers.
                 items: { $ref: "#/components/schemas/follow" }
         
+        '204': {$ref : '#/components/responses/NoContent'}
+        
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
         '404': {$ref : '#/components/responses/NotFound'}
@@ -923,11 +923,10 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  /users/{fixedUsername}/following:
-    summary: Username's Following Collection (people I am following).
+  /users/{fixedUsername}/followings:
+    summary: Username's Followings Collection (people I am following).
     parameters: 
-      #I need to provide for a username of the account owner, a uuid of the person for which I
-      #want to add followers.
+      #I need to provide for a fixedUsername of the account owner.
       - $ref : "#/components/parameters/fixedUsername"
 
     #Getting the set of Followed People.
@@ -951,7 +950,7 @@ paths:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
         following Users of anyone, provided that we are not banned by them.
       responses:
-        "200":
+        '200':
           description: List of Following Object.
           content:
             application/json:
@@ -962,6 +961,8 @@ paths:
                 description: Array of Followers.
                 items: { $ref: "#/components/schemas/follow" }
         
+        '204': {$ref : '#/components/responses/NoContent'}
+        
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
         '404': {$ref : '#/components/responses/NotFound'}
@@ -970,12 +971,12 @@ paths:
     
 
     
-  /users/{fixedUsername}/followers/{followerid}:
+  /users/{fixedUsername}/followings/{followingid}:
     summary: Specific User's Ban.
     #I need to provide for the fixedUsername, and followID(username).
     parameters:
     - $ref: "#/components/parameters/fixedUsername"
-    - $ref: "#/components/parameters/followerid"
+    - $ref: "#/components/parameters/followingid"
     
     #Adding a new Follow.
     put:
@@ -996,7 +997,7 @@ paths:
         
         RESTRICTIONS:
         Note that this action is allowed to ONLY users that are of course authenticated, meaning 
-        that the actual uuid must be the uuid of the username passed in input. Moreover, in the 
+        that the actual fixedUsername must be the fixedUsername of the username passed in input. Moreover, in the 
         Request Body, obviously, we cannot pass a username that is equal to the username in the 
         path, since I cannot follow my own profile (or better, it does not make any sense).
       
@@ -1010,7 +1011,7 @@ paths:
           description: Created! User Started to Follow Successfully!
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/follow' }
+              schema: { $ref: '#/components/schemas/fixedUsername' }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1042,7 +1043,7 @@ paths:
           description: OK! User Follow deleted successfully!
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/follow" }
+              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1076,11 +1077,10 @@ paths:
         
         RESTRICTIONS:
         Note that this action is allowed NOT to EVERY USER. Indeed, this is only allowed to
-        the owner of the profile, meaning that, only if username and the username of the uuid
-        that is requesting this action coincide.
+        the owner of the profile, meaning that, only if fixedUsername and the fixedUsername of the person who is requesting this action coincide.
       responses:
-        "200":
-          description: List of Photo Objectof people I am following.
+        '200':
+          description: List of Photo Object of people I am following.
           content:
             application/json:
               schema:
@@ -1089,6 +1089,8 @@ paths:
                 maxItems: 100000
                 description: Array of Stream Photos.
                 items: { $ref: "#/components/schemas/photo" }
+        
+        '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
@@ -1117,36 +1119,21 @@ components:
   schemas:
 
     ### SCHEMAS FOR /USER #
-    uuid:
-      title: uuid
-      type: string
-      description:  |-
-        The uuid is the unique identifier that every user will have. It will be STATIC
-        and NOT-PUBLICLY-VISIBLE, used only as sort of token during bearer authenticaiton,
-        thus passed always in header when it is a parameter.
-        Here I will make use of an Universally Unique Identifier (UUID), i.e. a large 
-        number that is almost guaranteed to be unique, probabilistically speaking. 
-        It is rendered using a well-known Regex, a string of hexadecimal characters 
-        separated by hyphens, in the format 8-4-4-4-12. (Also adopted bu the Google's uuid).
-      pattern: '^[0-9a-fA-F\-]{36}'
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 25f9f605-7cbb-4f02-9569-1d120e0580f7
-      
     fixedUsername:
       title: fixedUsername
       type: string
       description:  |-
         The fixedUsername is a STATIC and PUBLICLY-AVAILABLE username, that will however 
         remain constants during the whole course of the user creation. It CANNOT BE CHANGED
-        (as the uuid) and I use it since it helps me to change the username of the user 
+        and I use it since it helps me to change the username of the user 
         (username) still pointing to this particular user.
-        I use as pattern a Regex of simply 10 letters (both capital and not).
-      pattern: '^[a-zA-Z]{10}$'
-      minLength: 10
-      maxLength: 10
-      example: abBHhjsHGF
+        I use as pattern a Regex of simply any alpha-numeric (both capital and not).
+        
+        ^[a-zA-Z0-9]*
+      pattern: '^[a-zA-Z]$'
+      minLength: 3
+      maxLength: 31
+      example: ale01
       
       
     username: 
@@ -1160,16 +1147,16 @@ components:
       pattern: ^.*$
       example: Maria
     
-    
     photoProfile:
       title: photoProfile
       type: string
+      minLength: 0
+      maxLength: 1000000
       description: |-
         Actual User's Photo Profile. 
       format: binary
       example: "0001111001111111100000000000111111111110"
       
-    
     name:
       title: name
       type: string
@@ -1203,6 +1190,8 @@ components:
       type: string
       description:  It is the User Email.
       format: email
+      minLength: 3
+      maxLength: 100
       default: "nome.matriculation@studenti.uniroma1.it"
       example: borgi.1952442@studenti.uniroma1.it
     
@@ -1210,6 +1199,8 @@ components:
       title: nationality
       type: string
       description:  It is the User Nationality.
+      minLength: 3
+      maxLength: 100
       default: "Not Inserted"
       pattern: ^.*$
       example: Italian
@@ -1289,21 +1280,8 @@ components:
       description: Current number of Following.
       default: 0
       example: 210
-    
-    arrayPhotos:
-      title: arrayPhotos
-      type: array
-      items: 
-        $ref: "#/components/schemas/photo" 
-      description: Array of Photos(Posts).
-      minItems: 0
-      maxItems: 100000
 
-    
-    #User Profile Including (uuid, fixedUsernameusername, (name, surname, personalInfo), 
-    #                        dateOfCreation, numberPhotos, totNumberLikes,      
-    #                        totNumberComments, numberFollowers, numberFollowing,
-    #                        arrayPhotos).
+    #User Profile 
     userProfile:
       title: user
       type: object
@@ -1312,12 +1290,9 @@ components:
         have also the possibility to have also more username per person (e.g. as 
         Instagram). It is therefore allowed that one person have more than one username
         and therefore more profiles. It would only need to re-insert all the personalInfo
-        (if he/she wants), (i.e. uuid, username, personalInfo, dateOfCreation, numberPhotos,
-        totNumberLikes, totNumberComments, numberFollowers, numberFollowing, arrayPhotos). 
+        (if he/she wants). 
         Thus, I treat every username as a new profile, indistinctly to whom belongs to.  
       properties: 
-        uuid: 
-          $ref: "#/components/schemas/uuid"
         fixedUsername:
           $ref: "#/components/schemas/fixedUsername"
         username: 
@@ -1338,8 +1313,6 @@ components:
           $ref: "#/components/schemas/numberFollowers"
         numberFollowing:
           $ref: "#/components/schemas/numberFollowing"  
-        arrayPhotos:
-          $ref: "#/components/schemas/arrayPhotos" 
 
 
     ### SCHEMAS FOR ../PHOTO #
@@ -1394,8 +1367,7 @@ components:
       properties:
         latitude: {$ref: "#/components/schemas/latitude"}
         longitude: {$ref: "#/components/schemas/longitude"}
-      example: (12.34, 56.78)
-    
+
     phrase:
       title: phrase
       type: string
@@ -1443,8 +1415,6 @@ components:
           $ref: "#/components/schemas/numberLikes"
         numberComments:
           $ref: "#/components/schemas/numberComments"
-      example: (1, photoWASA.png, 2022-11-03T09:12:28Z, (12.34, 56.78), 
-                Hello Guys! I am here at University to do WASA Lecture!, 180, 7)
     
     ### SCHEMAS FOR ../COMMENTS #
     commentid:
@@ -1479,12 +1449,12 @@ components:
       type: object
       description: |
         This is the entire Like object. It will have the likeid, i.e. the 
-        ID of the like that coincides with the username of the liker, i.e. the user that
-        is currently liking the photo, and the date and time of when the like has
+        ID of the like that coincides with the fixedUsername of the liker, i.e. the user
+        that is currently liking the photo, and the date and time of when the like has
         been delivered.  
       properties: 
         likeID: 
-          $ref: "#/components/schemas/username"
+          $ref: "#/components/schemas/fixedUsername"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
 
@@ -1508,12 +1478,12 @@ components:
       type: object
       description: |
         This is the entire Ban object. It will have the banID, i.e. the 
-        ID of the ban that coincides with the Username of the Banned Person (since we can 
-        ban each person once only), the date and time of when the ban has been delivered, 
-        and the motivation of the Ban.  
+        ID of the ban that coincides with the fixedUsername of the Banned Person (since we
+        can ban each person once only), the date and time of when the ban has been
+        delivered, and the motivation of the Ban.  
       properties: 
         banid: 
-          $ref: "#/components/schemas/username"
+          $ref: "#/components/schemas/fixedUsername"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
         motivation:
@@ -1526,12 +1496,12 @@ components:
       type: object
       description: |
         This is the entire Follow object. It will have the followid, i.e. the 
-        ID of the follow, that coincides with the username of the person I want to follow.
-        Moreover, I want to imdicate the date and time of when the follow action has
-        been delivered.  
+        ID of the follow, that coincides with the fixedUsername of the person I want to
+        follow. Moreover, I want to imdicate the date and time of when the follow action
+        has been delivered.  
       properties: 
         followID: 
-          $ref: "#/components/schemas/username"
+          $ref: "#/components/schemas/fixedUsername"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
 
@@ -1540,64 +1510,37 @@ components:
   ##### PARAMETERS ##
   parameters:
     ### USER PARAMETERS#
-    username:
-      name: username
-      in: path
-      required: true
-      description: Action requested on the following Username.
-      schema:
-        $ref: "#/components/schemas/username"
-    
     fixedUsername:
       name: fixedUsername
       in: path
       required: true
-      description: Action requested on the following fixedUsername.
-      schema:
-        $ref: "#/components/schemas/fixedUsername"
+      description: |
+        (Immutable Username)Action requested on the following fixedUsername.
+      schema: {$ref: "#/components/schemas/fixedUsername"}
     
-    fixedUsernameLiker:
-      name: fixedUsernameLiker
-      in: path
-      required: true
-      description: Action requested by the following fixedUsername.
-      schema:
-        $ref: "#/components/schemas/fixedUsername"
-      
-    uuid:
-      name: uuid
-      in: header
-      required: true
-      description: Action requested by the following Username (uuid).
-      schema:
-        $ref: '#/components/schemas/uuid'
-
     ### PHOTO PARAMETERS #
     photoid:
       name: photoid
       in: path
       required: true
       description: ID of the Photo to be/that is posted.
-      schema:
-        $ref: '#/components/schemas/photoid'
+      schema: {$ref: '#/components/schemas/photoid'}
         
     ### LIKE PARAMETERS #
-    usernameliker:
-      name: usernameliker
-      in: path
-      required: true
-      description: ID of the Liker that is going to put like to the post.
-      schema:
-        $ref: '#/components/schemas/username'
-    
+    fixedUsernameLiker:
+          name: fixedUsernameLiker
+          in: path
+          required: true
+          description: Like Action requested by the following fixedUsername.
+          schema: {$ref: "#/components/schemas/fixedUsername"}
+      
     ### BAN PARAMETERS #
     banid:
       name: banid
       in: path
       required: true
-      description: BanID coinciding with the banned Username.
-      schema:
-        $ref: '#/components/schemas/username'
+      description: BanID coinciding with the banned fixedUsername.
+      schema: {$ref: '#/components/schemas/fixedUsername'}
       
 
     ### PHOTO-FEAUTURES PARAMETERS #
@@ -1606,20 +1549,19 @@ components:
       in: path
       required: true
       description: ID of the Photo's Comment to be/that is posted.
-      schema:
-        $ref: '#/components/schemas/commentid'
+      schema: {$ref: '#/components/schemas/commentid'}
         
     ### FOLLOWER-RELATED PARAMETERS #
-    followerid:
-      name: followerid
+    followingid:
+      name: followingid
       in: path
       required: true
-      description: FollowerID coinciding with the follower Username.
-      schema:
-        $ref: '#/components/schemas/username'
+      description: Followingid coinciding with the following Username.
+      schema: {$ref: '#/components/schemas/fixedUsername'}
     
 
   ##### SECURITY SCHEMES ##
+  #Regex for the uuid: '^[0-9a-fA-F\-]{36}'
   securitySchemes:
     bearerAuthentication: 
       type: http
@@ -1629,13 +1571,17 @@ components:
   ##### RESPONSES ##
   responses:
     UnAuthorized:
-      description: Forbidden! You do not have the necessary permissions!
+      description: |
+        403(Forbidden!) You do not have the necessary permissions!
     InternalServerError:
-      description: The server encountered an Internal Error. Further info in server logs!
+      description: |
+        500(The server encountered an Internal Error. Further info in server logs!)
     NotFound:
-      description: Not Found! No object requested has been Found!
+      description: | 
+        404(Not Found!) No object requested has been Found!
     NoContent:
-      description: No content! No requested object is present on WASAPhoto.
+      description: |
+        No content! No requested object is present on WASAPhoto.
 
 
       
