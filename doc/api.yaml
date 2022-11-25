@@ -1149,8 +1149,6 @@ components:
     photoProfile:
       title: photoProfile
       type: string
-      minLength: 0
-      maxLength: 1000000
       description: |-
         Actual User's Photo Profile. 
       format: binary
@@ -1181,6 +1179,8 @@ components:
       type: string
       description: Actual Date when the user was born.
       format: date
+      minLength: 10
+      maxLength: 10
       default: "0000-01-01"
       example: "2001-04-17"
 
@@ -1244,6 +1244,8 @@ components:
       type: string
       description: Actual Date Profile Creation.
       format: date
+      minLength: 10
+      maxLength: 10
       default: "0000-01-01"
       example: "2021-04-17"
     
@@ -1338,6 +1340,8 @@ components:
       type: string
       description: |-
         Actual Date and Time of the moment when the photo is uploaded/commented/liked.
+      minLength: 20
+      maxLength: 20
       format: date-time
       default: "0000-01-01T00:00:00Z"
       example: "2022-11-03T08:30:00Z"
