@@ -156,7 +156,7 @@ paths:
     put:
       security:
         - bearerAuthentication: []
-      operationId: setMyUsername
+      operationId: setMyUserName
       tags: ["User-Handling"]
       summary: Change your Username.
       description: |
@@ -1129,8 +1129,7 @@ components:
         (username) still pointing to this particular user.
         I use as pattern a Regex of simply any alpha-numeric (both capital and not).
         
-        ^[a-zA-Z0-9]*
-      pattern: '^[a-zA-Z]$'
+      pattern: '[a-zA-Z0-9]+$'
       minLength: 3
       maxLength: 31
       example: ale01
@@ -1209,6 +1208,8 @@ components:
       title: gender
       type: string
       description: User Gender.
+      minLength: 4
+      maxLength: 14
       enum:
       - male
       - female 
@@ -1464,6 +1465,8 @@ components:
       title: motivation
       type: string
       description: Ban Motivation.
+      minLength: 4
+      maxLength: 13
       enum:
       - Spam
       - Bad Behaviour
