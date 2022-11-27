@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 /*
@@ -24,11 +25,18 @@ type Date string
 type Email string
 type Nationality string
 
+// Variables Declaration.
+var regex_fixed_username string = "[a-zA-Z0-9]+$"
+var regex_uuid string = "^[0-9a-fA-F-]{36}"		//123e4567-e89b-12d3-a456-426614174000
+var regex_date = "^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$"	//Without February Check.
+
+
+
 // Create a User structure.
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
 	Uuid            Uuid         `json:"uuid"`
-	FixedUsername   fixedUsername`json:"fixedUsername"`
+	FixedUsername   FixedUsername`json:"fixedUsername"`
 	Username        Username     `json:"username"`
 	PhotoProfile	byte		 `json:"photoProfile"`
 	PersonalInfo    PersonalInfo `json:"personalInfo"`
@@ -50,26 +58,54 @@ type PersonalInfo struct {
 	Gender      string  `json:"gender"`
 }
 
-// Declaring a Method for checking the uuid validty w.r.t. its length.
-func (u Uuid) ValidUuid() bool {
-	uuid := strings.SplitAfter(u, "-")
-	return len(u) == 36 && len(uuid[0]) == 8 && len(uuid[1]) == 4 &&
-		len(uuid[2]) == 4 && len(uuid[3]) == 4 && len(uuid[0]) == 12
+// Declaring a Method for checking the uuid validty w.r.t. its Regex.
+func (u Uuid) ValidUuid(regex string) bool {
+	match, err := regexp.MatchString(regex, string(u))
+	if err == nil {
+		correct_spaces := string(u[8]) == "-" && string(u[13]) == "-" && string(u[18]) == "-" && string(u[23]) == "-"
+		if match == true && correct_spaces == true{
+			fmt.Println("Uuid Regex Matched")
+			return true
+		} else {
+			fmt.Println("Uuid Regex UnMatched!")
+			return false
+		}
+	} else {
+		fmt.Println("Error:", err)
+		return false
+	}
+}
+
+// Declaring a Method for checking the fixedUsername validty w.r.t. its Regex.
+func (fu FixedUsername) ValidFixedUsername(regex string) bool {
+	match, err := regexp.MatchString(regex, string(fu))
+	if err == nil {
+		if err == true && len(string(fu)) >= 3 && len(string(fu)) <= 31{
+			fmt.Println("Fixed Username Regex Matched")
+			return true
+		} else {
+			fmt.Println("Fixed Username Regex UnMatched!")
+			return false
+		}
+	} else {
+		fmt.Println("Error:", err)
+		return false
+	}
 }
 
 // Declaring a Method for checking the Username validity w.r.t. its length.
 func (u Username) ValidUsername() bool {
-	return 1 <= len(u) && len(u) <= 31
+	return len(string(u)) >= 3 && len(string(u)) <= 31
 }
 
 // Declaring a Method for checking the Name validity w.r.t. its length.
-func (u Name) ValidName() bool {
-	return 1 <= len(u)
+func (n Name) ValidName() bool {
+	return len(string(n)) >= 2 && len(string(n)) <= 31
 }
 
 // Declaring a Method for checking the Surname validity w.r.t. its length.
 func (s Surname) ValidSurname() bool {
-	return 1 <= len(s)
+	return len(string(s)) >= 2 && len(string(s)) <= 31
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
@@ -95,6 +131,34 @@ func (d Date) ValidDateofBirth() bool {
 		fmt.Println("Error on more part of the Date Inserted!")
 		return
 	}
+
+// ----- FINAL FUNCTION -----
+
+//Function Method used to check for the User Validity.
+func ValidUser(user User, regex string) bool {
+	return user.Uuid.ValidUuid(regex_uuid) && 
+	user.FixedUsername.ValidFixedUsername(regex_fixed_username) &&
+	user.Username.ValidUsername() &&
+	user.PersonalInfo.Name.ValidName() &&
+	user.PersonalInfo.Surname.ValidSurname()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Declaring a Method for checking the Email validity w.r.t. its length.
 func (e Email) ValidEmail() bool {
@@ -127,10 +191,3 @@ func (f User) ValidGender() bool {
 	return g_lower == "male" || g_lower == "female" || g_lower == "do not specify"
 }
 
-// Function Method used to check for the User Validity.
-func (f User) ValidUser() bool {
-	return f.Uuid.ValidUuid() && f.Username.ValidUsername() && f.PersonalInfo.Name.ValidName() &&
-		f.PersonalInfo.Surname.ValidSurname() && f.PersonalInfo.DateOfBirth.ValidDateofBirth() &&
-		f.PersonalInfo.email.ValidEmail() && f.PersonalInfo.Nationality.ValidNationality() &&
-		f.PersonalInfo.Gender.ValidGender()
-}
