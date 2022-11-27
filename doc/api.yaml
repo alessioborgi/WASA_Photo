@@ -1141,7 +1141,7 @@ components:
       description: |-
         The Username is the DYNAMIC and PUBLICLY-AVAILABLE username, that can be reset by the 
         user.
-      minLength: 1
+      minLength: 3
       maxLength: 31
       pattern: ^.*$
       example: Maria
@@ -1158,7 +1158,7 @@ components:
       title: name
       type: string
       description: It is the User actual name.
-      minLength: 1
+      minLength: 2
       maxLength: 31
       default: "Not Inserted"
       pattern: ^.*$
@@ -1168,7 +1168,7 @@ components:
       title: surname
       type: string
       description: It is the User actual surname.
-      minLength: 1
+      minLength: 2
       maxLength: 31
       default: "Not Inserted"
       pattern: ^.*$
