@@ -37,8 +37,8 @@ var current_month = int(c_month)
 // Create a User structure.
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
-	Uuid              Uuid          `json:"uuid"`
 	FixedUsername     FixedUsername `json:"fixedUsername"`
+	Uuid              Uuid          `json:"uuid"`
 	Username          Username      `json:"username"`
 	PhotoProfile      byte          `json:"photoProfile"`
 	Biography         Phrase        `json:"biography"`

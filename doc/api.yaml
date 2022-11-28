@@ -1163,6 +1163,7 @@ components:
       minLength: 0
       maxLength: 1000
       pattern: ^.*$
+      default: " "
       example: Hello! I am Alessio Borgi, a third-year ACSAI Student...
       
     name:
@@ -1171,7 +1172,6 @@ components:
       description: It is the User actual name.
       minLength: 2
       maxLength: 31
-      default: "Not Inserted"
       pattern: ^.*$
       example: Alessio
     
@@ -1181,7 +1181,6 @@ components:
       description: It is the User actual surname.
       minLength: 2
       maxLength: 31
-      default: "Not Inserted"
       pattern: ^.*$
       example: Borgi
     
@@ -1202,7 +1201,7 @@ components:
       format: email
       minLength: 3
       maxLength: 100
-      default: "nome.matriculation@studenti.uniroma1.it"
+      default: "Not Inserted"
       example: borgi.1952442@studenti.uniroma1.it
     
     nationality:
