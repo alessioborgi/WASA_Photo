@@ -1441,7 +1441,7 @@ components:
         commentid: 
           $ref: "#/components/schemas/commentid"
         commenterUsername: 
-          $ref: "#/components/schemas/username"
+          $ref: "#/components/schemas/fixedUsername"
         phrase:
           $ref: "#/components/schemas/phrase"
         uploadDate:
@@ -1458,7 +1458,7 @@ components:
         that is currently liking the photo, and the date and time of when the like has
         been delivered.  
       properties: 
-        likeID: 
+        likeid: 
           $ref: "#/components/schemas/fixedUsername"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
