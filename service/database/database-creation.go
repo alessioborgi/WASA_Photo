@@ -32,9 +32,9 @@ var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
 var ban_table = `CREATE TABLE IF NOT EXIST Ban (
 	banner TEXT NOT NULL, 
 	banned TEXT NOT NULL,
-	PRIMARY KEY (banner, banned),
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	Motivation TEXT NOT NULL DEFAULT "Spam",
+	PRIMARY KEY (banner, banned),
 	FOREIGN KEY (banner) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
 	FOREIGN KEY (banned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
