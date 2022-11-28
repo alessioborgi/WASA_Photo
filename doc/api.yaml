@@ -1163,7 +1163,6 @@ components:
       minLength: 0
       maxLength: 1000
       pattern: ^.*$
-      default: " "
       example: Hello! I am Alessio Borgi, a third-year ACSAI Student...
       
     name:

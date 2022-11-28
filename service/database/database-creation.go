@@ -6,10 +6,10 @@ package database
 // UNIQUE is used for saying that the value must be unique among all rows.
 var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
 	fixedUsername TEXT NOT NULL PRIMARY KEY, 
-	username TEXT NOT NULL,
-	uuid TEXT NOT NULL,
+	username TEXT NOT NULL UNIQUE,
+	uuid TEXT NOT NULL UNIQUE,
 	photoProfile BLOB NOT NULL,
-	biography TEXT NOT NULL DEFAULT " ",
+	biography TEXT NOT NULL,
 	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
 	totNumberLikes INTEGER NOT NULL DEFAULT 0,
@@ -22,4 +22,37 @@ var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
 	email TEXT NOT NULL DEFAULT "NOT INSERTED",
 	nationality TEXT NOT NULL DEFAULT "NOT INSERTED",
 	gender TEXT NOT NULL DEFAULT "DO NOT SPECIFY"
+	);`
+
+// FOREIGN KEY (attribute_table) REFERENCES external_table (external_attribute) ON DELETE CASCADE
+// ON DELETE CASCADE used for removing the ban if the users are removed.
+var ban_table = `CREATE TABLE IF NOT EXIST Ban (
+	banner TEXT NOT NULL UNIQUE, 
+	banned TEXT NOT NULL UNIQUE,
+	PRIMARY KEY (banner, banned),
+	uploadDate TEXT NOT NULL DEFAULT "0000-01-01",
+	Motivation BLOB NOT NULL DEFAULT "Spam",
+	FOREIGN KEY (banner) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (banned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	);`
+
+var follow_table = `CREATE TABLE IF NOT EXIST Follow (
+	follower TEXT NOT NULL UNIQUE, 
+	followed TEXT NOT NULL UNIQUE,
+	uploadDate TEXT NOT NULL DEFAULT "0000-01-01",
+	PRIMARY KEY (follower, followed),
+	FOREIGN KEY (follower) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (followed) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	);`
+
+// Notice that here I declared only (commentid,photoid) as PK because adding also Commenter fixedUsername has not sense.
+var comment_table = `CREATE TABLE IF NOT EXIST Comment (
+	commentid INTEGER AUTOINCREMENT, 
+	photoid INTEGER NOT NULL,
+	phrase TEXT NOT NULL,
+	commenter TEXT NOT NULL,
+	uploadDate TEXT NOT NULL DEFAULT "0000-01-01",
+	PRIMARY KEY (commentid, photoid),
+	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
+	FOREIGN KEY (commenter) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
 	);`
