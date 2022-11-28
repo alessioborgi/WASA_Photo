@@ -1152,6 +1152,8 @@ components:
       description: |-
         Actual User's Photo Profile. 
       format: binary
+      minLength: 73 
+      maxLength: 2147483647
       example: "0001111001111111100000000000111111111110"
       
     name:
@@ -1333,6 +1335,8 @@ components:
       description: |-
         Actual Photo to be uploaded. 
       format: binary
+      minLength: 73 
+      maxLength: 2147483647
       example: "0001111001111111100000000000111111111110"
     
     uploadDate:
