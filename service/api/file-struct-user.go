@@ -41,6 +41,7 @@ type User struct {
 	FixedUsername     FixedUsername `json:"fixedUsername"`
 	Username          Username      `json:"username"`
 	PhotoProfile      byte          `json:"photoProfile"`
+	Biography         Phrase        `json:"biography"`
 	PersonalInfo      PersonalInfo  `json:"personalInfo"`
 	DateOfCreation    Date          `json:"dateOfCreation"`
 	NumberOfPhotos    int           `json:"numberOfPhotos"`
@@ -98,6 +99,11 @@ func (fu FixedUsername) ValidFixedUsername(regex string) bool {
 // Declaring a Method for checking the Username validity w.r.t. its length.
 func (u Username) ValidUsername() bool {
 	return len(string(u)) >= 3 && len(string(u)) <= 31
+}
+
+// Declaring a Method for checking the Biography validity w.r.t. its length.
+func (p Phrase) ValidBiography() bool {
+	return len(p) >= 0 && len(p) <= 1000
 }
 
 // Declaring a Method for checking the Name validity w.r.t. its length.
@@ -207,6 +213,7 @@ func ValidUser(user User, regex string) bool {
 	return user.Uuid.ValidUuid(regex_uuid) &&
 		user.FixedUsername.ValidFixedUsername(regex_fixed_username) &&
 		user.Username.ValidUsername() &&
+		user.Biography.ValidBiography() &&
 		user.PersonalInfo.Name.ValidName() &&
 		user.PersonalInfo.Surname.ValidSurname() &&
 		user.PersonalInfo.DateOfBirth.ValidDateofBirth() &&

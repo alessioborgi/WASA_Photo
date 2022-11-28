@@ -1155,6 +1155,15 @@ components:
       minLength: 73 
       maxLength: 2147483647
       example: "0001111001111111100000000000111111111110"
+    
+    biography:
+      title: biography
+      type: string
+      description: Phrase that the User should use to describe itself (only if he/she wants).
+      minLength: 0
+      maxLength: 1000
+      pattern: ^.*$
+      example: Hello! I am Alessio Borgi, a third-year ACSAI Student...
       
     name:
       title: name
@@ -1304,6 +1313,8 @@ components:
           $ref: "#/components/schemas/username"
         photoProfile:
           $ref: "#/components/schemas/photoProfile"
+        biography:
+          $ref: "#/components/schemas/biography"
         personalInfo:
           $ref: "#/components/schemas/personalInfo"
         dateOfCreation:
