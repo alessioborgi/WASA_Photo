@@ -13,7 +13,7 @@ var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
 	uuid TEXT NOT NULL UNIQUE,
 	photoProfile BLOB,
 	biography TEXT,
-	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01",									
+	dateOfCreation TEXT NOT NULL "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
 	totNumberLikes INTEGER NOT NULL DEFAULT 0,
 	totNumberComments INTEGER NOT NULL DEFAULT 0,
