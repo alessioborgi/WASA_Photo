@@ -89,3 +89,5 @@ var like_table = `CREATE TABLE IF NOT EXIST Like (
 	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
 	FOREIGN KEY (user) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
 	);`
+
+var database = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}

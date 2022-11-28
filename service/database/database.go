@@ -52,17 +52,21 @@ type appdbimpl struct {
 // `db` is required - an error will be returned if `db` is `nil`.
 func New(db *sql.DB) (AppDatabase, error) {
 	if db == nil {
-		return nil, errors.New("database is required when building a AppDatabase")
+		return nil, errors.New("Database is required when building a AppDatabase")
 	}
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
-	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
+	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='UserProfile';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
-		_, err = db.Exec(sqlStmt)
-		if err != nil {
-			return nil, fmt.Errorf("error creating database structure: %w", err)
+		for i := 0; i < len(database); i++ {
+			sqlStmt := database[i]
+			_, err = db.Exec(sqlStmt)
+			if err != nil {
+				return nil, fmt.Errorf("Error in Creating the Database Structure of the table: ", i, "Error: %w", err)
+			} else {
+				fmt.Println("Creation of the table number: ", i, "succeeded!")
+			}
 		}
 	}
 
