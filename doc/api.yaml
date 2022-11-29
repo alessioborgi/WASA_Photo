@@ -1154,7 +1154,7 @@ components:
       format: binary
       minLength: 73 
       maxLength: 2147483647
-      example: "0001111001111111100000000000111111111110"
+      example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
     
     biography:
       title: biography
@@ -1190,8 +1190,8 @@ components:
       format: date
       minLength: 10
       maxLength: 10
-      default: "0000-01-01"
-      example: "2001-04-17"
+      default: 0000-01-01
+      example: 2001-04-17
 
     email:
       title: email
@@ -1200,7 +1200,7 @@ components:
       format: email
       minLength: 3
       maxLength: 100
-      default: "Not Inserted"
+      default: "surname.matriculationNumber@studenti.uniroma1.it"
       example: borgi.1952442@studenti.uniroma1.it
     
     nationality:
@@ -1253,10 +1253,10 @@ components:
       type: string
       description: Actual Date Profile Creation.
       format: date-time
-      minLength: 10
-      maxLength: 10
-      default: "0000-01-01T00:00:00Z"
-      example: "2022-11-03T08:30:00Z"
+      minLength: 20
+      maxLength: 20
+      default: 0000-01-01T00:00:00Z
+      example: 2022-11-03T08:30:00Z
           
     numberPhotos:
       title: numberPhotos
@@ -1346,7 +1346,7 @@ components:
       format: binary
       minLength: 73 
       maxLength: 2147483647
-      example: "0001111001111111100000000000111111111110"
+      example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
     
     uploadDate:
       title: uploadDate
@@ -1356,8 +1356,8 @@ components:
       minLength: 20
       maxLength: 20
       format: date-time
-      default: "0000-01-01T00:00:00Z"
-      example: "2022-11-03T08:30:00Z"
+      default: 0000-01-01T00:00:00Z
+      example: 2022-11-03T08:30:00Z
 
     latitude:
       title: latitude
