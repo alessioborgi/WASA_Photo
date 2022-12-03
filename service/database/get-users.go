@@ -10,14 +10,14 @@ func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 	rows, err := db.c.Query(`WITH Req_User (fixedUsername) AS ( 
 		SELECT fixedUsername 
 		FROM Users
-		WHERE uuid == '123')
+		WHERE uuid == '?')
 	SELECT fixedUsername FROM Users
 	EXCEPT
 	SELECT * FROM Req_User 
 	EXCEPT
 	SELECT fixedUsernameBanner
 	FROM Bans
-	WHERE fixedUsernameBanned == (SELECT * FROM Req_User)`)
+	WHERE fixedUsernameBanned == (SELECT * FROM Req_User)`, uuid)
 	if err != nil {
 		return nil, err
 	}

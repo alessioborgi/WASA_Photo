@@ -69,7 +69,7 @@ type AppDatabase interface {
 
 	//(Security Required: Needs Uuid of the action requester).
 	// GetUserProfile() returns the User Profile requested given in input the fixedUsername.
-	//GetUserProfile(fixedUsername string, uuid string) (User, error)
+	GetUserProfile(fixedUsername string, uuid string) (User, error)
 
 	// USER's PHOTO COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
