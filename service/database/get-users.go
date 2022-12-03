@@ -2,7 +2,7 @@ package database
 
 func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 	// Variable for returning the slice of fixedUsernames.
-	var ret []string
+	var fixedUsernameList []string
 
 	// Selection of the fixedUsernames available in WASAPhoto.
 	//Check that the fixedUsername list should not include the fixedUsername of the person which is asking this action.
@@ -23,19 +23,19 @@ func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 	}
 	defer func() { _ = rows.Close() }()
 
-	// Here we read the resultset and we build the list to be returned
+	// Here we read the resultset and we build the list of fixedUsername to be returned
 	for rows.Next() {
-		var f Fountain
-		err = rows.Scan(&f.ID, &f.Latitude, &f.Longitude, &f.Status)
+		var f_username string
+		err = rows.Scan(&f_username)
 		if err != nil {
 			return nil, err
 		}
 
-		ret = append(ret, f)
+		fixedUsernameList = append(fixedUsernameList, f_username)
 	}
 	if rows.Err() != nil {
 		return nil, err
 	}
 
-	return ret, nil
+	return fixedUsernameList, nil
 }
