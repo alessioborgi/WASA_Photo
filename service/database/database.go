@@ -55,8 +55,8 @@ type AppDatabase interface {
 
 	// USERS COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
-	// GetUsers() returns the list of users.
-	//GetUsers(uuid string) ([]User, error)
+	// GetUsers() returns the list of fixedUsername.
+	GetUsers(uuid string) ([]string, error)
 
 	// PARTICULAR USER:
 	//(Security Required: Needs Uuid of the action requester).

@@ -134,7 +134,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 1000000
-                description: Array of Usernames of the WASAPhoto's Users.
+                description: Array of fixedUsernames of the WASAPhoto's Users.
                 items: 
                   $ref: "#/components/schemas/fixedUsername"
 

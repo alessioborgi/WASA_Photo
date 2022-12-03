@@ -7,14 +7,13 @@ package database
 // DEFAULT is used for checking the fixing the default values.
 // UNIQUE is used for saying that the value must be unique among all rows.
 // Note that photoProfile and Biography coul also be NULL.
-var user_table = `CREATE TABLE IF NOT EXIST User (
+var user_table = `CREATE TABLE IF NOT EXISTS Users (
 	fixedUsername TEXT NOT NULL PRIMARY KEY, 
 	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
-	uuid TEXT NOT NULL UNIQUE,
 	photoProfile BLOB,
 	biography TEXT,
-	dateOfCreation TEXT NOT NULL "0000-01-01T00:00:00Z",									
+	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
 	totNumberLikes INTEGER NOT NULL DEFAULT 0,
 	totNumberComments INTEGER NOT NULL DEFAULT 0,
@@ -30,7 +29,7 @@ var user_table = `CREATE TABLE IF NOT EXIST User (
 
 // FOREIGN KEY (attribute_table) REFERENCES external_table (external_attribute) ON DELETE CASCADE
 // ON DELETE CASCADE used for removing the ban if the users are removed.
-var ban_table = `CREATE TABLE IF NOT EXIST Ban (
+var ban_table = `CREATE TABLE IF NOT EXISTS Bans (
 	fixedUsernameBanner TEXT NOT NULL, 
 	fixedUsernameBanned TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
@@ -40,7 +39,7 @@ var ban_table = `CREATE TABLE IF NOT EXIST Ban (
 	FOREIGN KEY (fixedUsernameBanned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
-var follow_table = `CREATE TABLE IF NOT EXIST Follow (
+var follow_table = `CREATE TABLE IF NOT EXISTS Follows (
 	fixedUsername TEXT NOT NULL, 
 	fixedUsernameFollowing TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
@@ -51,7 +50,7 @@ var follow_table = `CREATE TABLE IF NOT EXIST Follow (
 
 // ----- PHOTO-RELATED: -----
 // Note here that phrase, latitude, longitude could also be NULL.
-var photo_table = `CREATE TABLE IF NOT EXIST Photo (
+var photo_table = `CREATE TABLE IF NOT EXISTS Photos (
 	photoid INTEGER NOT NULL, 
 	fixedUsername TEXT NOT NULL,
 	filename BLOB NOT NULL,
@@ -66,7 +65,7 @@ var photo_table = `CREATE TABLE IF NOT EXIST Photo (
 	);`
 
 // Notice that here I declared (commentid,photoid, fixedUsername) as PK. Commenter is not needed since it can make more than one comment.
-var comment_table = `CREATE TABLE IF NOT EXIST Comment (
+var comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	commentid INTEGER NOT NULL, 
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL, 
@@ -80,7 +79,7 @@ var comment_table = `CREATE TABLE IF NOT EXIST Comment (
 	);`
 
 // Here the key (likeid, photoid, fixedUsername), menas that likeid(fixedUsername) has put alike on the photoid photo of the user(fixedUsername).
-var like_table = `CREATE TABLE IF NOT EXIST Like (
+var like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL,
@@ -88,15 +87,15 @@ var like_table = `CREATE TABLE IF NOT EXIST Like (
 	PRIMARY KEY (likeid, photoid, fixedUsername),
 	FOREIGN KEY (likeid) REFERENCES UserProfile (fixedUsername) ON DELETE CASCADE,
 	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
-var query_presence_user = `SELECT name FROM sqlite_master WHERE type='table' AND name='User';`
-var query_presence_ban = `SELECT name FROM sqlite_master WHERE type='table' AND name='Ban';`
-var query_presence_follow = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follow';`
-var query_presence_photo = `SELECT name FROM sqlite_master WHERE type='table' AND name='Photo';`
-var query_presence_comment = `SELECT name FROM sqlite_master WHERE type='table' AND name='Comment';`
-var query_presence_like = `SELECT name FROM sqlite_master WHERE type='table' AND name='Like';`
+var query_presence_user = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
+var query_presence_ban = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
+var query_presence_follow = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follows';`
+var query_presence_photo = `SELECT name FROM sqlite_master WHERE type='table' AND name='Photos';`
+var query_presence_comment = `SELECT name FROM sqlite_master WHERE type='table' AND name='Comments';`
+var query_presence_like = `SELECT name FROM sqlite_master WHERE type='table' AND name='Likes';`
 
 var database = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
 var query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
