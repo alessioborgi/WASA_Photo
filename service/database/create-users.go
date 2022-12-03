@@ -1,17 +1,17 @@
 package database
 
-func (db *appdbimpl) CreateFountain(u User) (User, error) {
+func (db *appdbimpl) CreateFountain(f Fountain) (Fountain, error) {
 	res, err := db.c.Exec(`INSERT INTO fountains (id, latitude, longitude, status) VALUES (?, ?, ?, ?)`,
-		u.ID, u.Latitude, u.Longitude, u.Status)
+		f.ID, f.Latitude, f.Longitude, f.Status)
 	if err != nil {
-		return u, err
+		return f, err
 	}
 
 	lastInsertID, err := res.LastInsertId()
 	if err != nil {
-		return u, err
+		return f, err
 	}
 
-	u.ID = uint64(lastInsertID)
-	return u, nil
+	f.ID = uint64(lastInsertID)
+	return f, nil
 }

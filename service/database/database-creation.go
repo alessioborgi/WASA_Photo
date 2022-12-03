@@ -91,5 +91,12 @@ var like_table = `CREATE TABLE IF NOT EXIST Like (
 	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
 	);`
 
+var query_presence_user = `SELECT name FROM sqlite_master WHERE type='table' AND name='User';`
+var query_presence_ban = `SELECT name FROM sqlite_master WHERE type='table' AND name='Ban';`
+var query_presence_follow = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follow';`
+var query_presence_photo = `SELECT name FROM sqlite_master WHERE type='table' AND name='Photo';`
+var query_presence_comment = `SELECT name FROM sqlite_master WHERE type='table' AND name='Comment';`
+var query_presence_like = `SELECT name FROM sqlite_master WHERE type='table' AND name='Like';`
+
 var database = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
-var database_names = []string{"User", "Ban", "Follow", "Photo", "Comment", "Like"}
+var query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
