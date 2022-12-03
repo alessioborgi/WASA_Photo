@@ -7,8 +7,9 @@ package database
 // DEFAULT is used for checking the fixing the default values.
 // UNIQUE is used for saying that the value must be unique among all rows.
 // Note that photoProfile and Biography coul also be NULL.
-var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
+var user_table = `CREATE TABLE IF NOT EXIST User (
 	fixedUsername TEXT NOT NULL PRIMARY KEY, 
+	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
 	uuid TEXT NOT NULL UNIQUE,
 	photoProfile BLOB,
@@ -30,28 +31,28 @@ var user_table = `CREATE TABLE IF NOT EXIST UserProfile (
 // FOREIGN KEY (attribute_table) REFERENCES external_table (external_attribute) ON DELETE CASCADE
 // ON DELETE CASCADE used for removing the ban if the users are removed.
 var ban_table = `CREATE TABLE IF NOT EXIST Ban (
-	banner TEXT NOT NULL, 
-	banned TEXT NOT NULL,
+	fixedUsernameBanner TEXT NOT NULL, 
+	fixedUsernameBanned TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	Motivation TEXT NOT NULL DEFAULT "Spam",
-	PRIMARY KEY (banner, banned),
-	FOREIGN KEY (banner) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (banned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	PRIMARY KEY (fixedUsernameBanner, fixedUsernameBanned),
+	FOREIGN KEY (fixedUsernameBanner) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsernameBanned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
 var follow_table = `CREATE TABLE IF NOT EXIST Follow (
-	follower TEXT NOT NULL, 
-	followed TEXT NOT NULL,
+	fixedUsername TEXT NOT NULL, 
+	fixedUsernameFollowing TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (follower, followed),
-	FOREIGN KEY (follower) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (followed) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	PRIMARY KEY (fixedUsername, fixedUsernameFollowing),
+	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsernameFollowing) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
 // ----- PHOTO-RELATED: -----
 // Note here that phrase, latitude, longitude could also be NULL.
 var photo_table = `CREATE TABLE IF NOT EXIST Photo (
-	photoid TEXT NOT NULL, 
+	photoid INTEGER NOT NULL, 
 	fixedUsername TEXT NOT NULL,
 	filename BLOB NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
@@ -64,30 +65,31 @@ var photo_table = `CREATE TABLE IF NOT EXIST Photo (
 	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE 
 	);`
 
-// Notice that here I declared (commentid,photoid, user) as PK. Commenter is not needed since it can make more than one comment.
+// Notice that here I declared (commentid,photoid, fixedUsername) as PK. Commenter is not needed since it can make more than one comment.
 var comment_table = `CREATE TABLE IF NOT EXIST Comment (
-	commentid INTEGER AUTOINCREMENT, 
+	commentid INTEGER NOT NULL, 
 	photoid INTEGER NOT NULL,
-	user TEXT NOT NULL, 
+	fixedUsername TEXT NOT NULL, 
 	phrase TEXT NOT NULL,
-	commenter TEXT NOT NULL,
+	commenterFixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (commentid, photoid, user),
+	PRIMARY KEY (commentid, photoid, fixedUsername),
 	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (user) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (commenter) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (commenterFixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
-// Here the key (likeid, photoid, user), menas that likeid(fixedUsername) has put alike on the photoid photo of the user(fixedUsername).
+// Here the key (likeid, photoid, fixedUsername), menas that likeid(fixedUsername) has put alike on the photoid photo of the user(fixedUsername).
 var like_table = `CREATE TABLE IF NOT EXIST Like (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
-	user TEXT NOT NULL,
+	fixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (likeid, photoid, user),
+	PRIMARY KEY (likeid, photoid, fixedUsername),
 	FOREIGN KEY (likeid) REFERENCES UserProfile (fixedUsername) ON DELETE CASCADE,
 	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (user) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
 	);`
 
 var database = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
+var database_names = []string{"User", "Ban", "Follow", "Photo", "Comment", "Like"}

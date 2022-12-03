@@ -100,7 +100,7 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
   
-  ### USER LOGIN PART: #
+  ### PARTICULAR USER: #
   /users:
     summary: Users Collection
 
@@ -209,9 +209,6 @@ paths:
       responses:
         "200": 
           description: OK! Username deleted successfully! 
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -259,7 +256,7 @@ paths:
   
   #However, I have decided to go for the more straightforward way. 
 
-  ### PHOTO PUBLICATION #
+  ### USER's PHOTO COLLECTION #
   /users/{fixedUsername}/photos:
     summary: User's Photos Collection.
     parameters: 
@@ -354,7 +351,7 @@ paths:
     - $ref: "#/components/parameters/fixedUsername"
     - $ref: "#/components/parameters/photoid"
 
-    #To Modify the Photo's Location or the Photo's Phrase.
+    #To Modify the Photo's Phrase.
     put:
       security:
         - bearerAuthentication: []
@@ -418,9 +415,6 @@ paths:
       responses:
         "200": 
           description: OK! Photo deleted successfully!
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -430,7 +424,7 @@ paths:
 
 
 
-  ### PHOTO COMMENTS #
+  ### USER's PHOTO COMMENTS COLLECTION #
 
   #Comments Set.
   /users/{fixedUsername}/photos/{photoid}/comments:
@@ -519,7 +513,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   
-  #Particular Comment.
+  #PARTICULAR COMMENT:
   /users/{fixedUsername}/photos/{photoid}/comments/{commentid}:
     summary: Specific Photo's Comment.
     parameters:
@@ -592,9 +586,6 @@ paths:
       responses:
         "200": 
           description: OK! Photo's Comment deleted successfully!
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/comment" }
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -655,7 +646,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   
-  
+  #PARTICULAR LIKE:
   /users/{fixedUsername}/photos/{photoid}/likes/{fixedUsernameLiker}:
     summary: Photo's Particular Like.
     parameters: 
@@ -734,10 +725,7 @@ paths:
       responses:
         "200": 
           description: OK! Photo's Like deleted successfully!
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/like" }
-        
+
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '404': {$ref : '#/components/responses/NotFound'}
@@ -745,7 +733,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
   
-  ### BANS PUBLICATION #
+  ### USER's BANS COLLECTION: #
 
   #Bans Set:
   /users/{fixedUsername}/bans:
@@ -794,7 +782,7 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
     
-  #Particular Ban
+  #PARTICULAR BAN: 
   /users/{fixedUsername}/bans/{banid}:
     summary: Specific User's Ban.
     parameters:
@@ -863,9 +851,6 @@ paths:
       responses:
         "200": 
           description: OK! User Ban deleted successfully!
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/ban" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -874,7 +859,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  ### FOLLOWERS PUBLICATION #
+  ### USER's FOLLOWERS COLLECTION #
 
   #Followers set: (Set of people that are following this account)
   /users/{fixedUsername}/followers:
@@ -958,7 +943,7 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 100000
-                description: Array of Followers.
+                description: Array of Followings.
                 items: { $ref: "#/components/schemas/follow" }
         
         '204': {$ref : '#/components/responses/NoContent'}
@@ -1041,10 +1026,7 @@ paths:
       responses:
         "200": 
           description: OK! User Follow deleted successfully!
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/follow" }
-        
+          
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '404': {$ref : '#/components/responses/NotFound'}
