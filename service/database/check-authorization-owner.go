@@ -1,6 +1,6 @@
 package database
 
-func (db *appdbimpl) CheckAuthorization(fixedUsername string, uuid string) (string, error) {
+func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) (string, error) {
 
 	//Check whether the uuid that is requesting the action is the owner of the profile.
 	var auth bool
