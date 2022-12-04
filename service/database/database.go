@@ -110,7 +110,7 @@ type AppDatabase interface {
 	// USER's PHOTO LIKES:
 	//(Security Required: Needs Uuid of the action requester).
 	// GetPhotoLikes() returns the list of Photos's Likes of a given User Photo, given in input a fixedUsername, and the photoId.
-	//GetPhotoLikes(fixedUsername string, photoId int, uuid string) ([]Like, error)
+	GetPhotoLikes(fixedUsername string, photoId int, uuid string) ([]Like, error)
 
 	// PARTICULAR LIKE:
 	//(Security Required: Needs Uuid of the action requester).

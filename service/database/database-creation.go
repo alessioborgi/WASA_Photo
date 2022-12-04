@@ -78,7 +78,7 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	FOREIGN KEY (commenterFixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
 
-// Here the key (likeid, photoid, fixedUsername), menas that likeid(fixedUsername) has put alike on the photoid photo of the user(fixedUsername).
+// Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
 const like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
