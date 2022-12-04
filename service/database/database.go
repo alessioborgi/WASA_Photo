@@ -78,7 +78,7 @@ type AppDatabase interface {
 
 	//(Security Required: Needs Uuid of the action requester).
 	// GetPhotos() returns the list of Photos of a given user, given in input a fixedUsername.
-	//GetPhotos(fixedUsername string, uuid string) ([]Photo, error)
+	GetPhotos(fixedUsername string, uuid string) ([]Photo, error)
 
 	// PARTICULAR PHOTO:
 	//(Security Required: Needs Uuid of the action requester).
