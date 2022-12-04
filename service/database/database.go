@@ -138,12 +138,12 @@ type AppDatabase interface {
 	// USER's FOLLOWERS COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
 	// GetFollowers() returns the list of User's Followers(Follow Objects), given in input a fixedUsername.
-	//GetFollowers(fixedUsername string, uuid string) ([]Follow, error)
+	GetFollowers(fixedUsername string, uuid string) ([]Follow, error)
 
 	// USER's FOLLOWINGS COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
 	// GetFollowing() returns the list of User's Followings(Follow Objects), given in input a fixedUsername.
-	//GetFollowing(fixedUsername string, uuid string) ([]Follow, error)
+	GetFollowing(fixedUsername string, uuid string) ([]Follow, error)
 
 	// PARTICULAR FOLLOW:
 	//(Security Required: Needs Uuid of the action requester).
