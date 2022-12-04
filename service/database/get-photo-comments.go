@@ -23,7 +23,7 @@ func (db *appdbimpl) GetPhotoComments(fixedUsername string, photoId int, uuid st
 			//If you are the Owner of the Profile, select all the photo's comments.
 			comments, err := db.c.Query(`SELECT * 
 			FROM Comments 
-			WHERE fixedUsername == '?' AND photoId == '?'
+			WHERE fixedUsername == '?' AND photoid == '?'
 			ORDER BY uploadDate DESC`, fixedUsername, photoId)
 
 			//Check for the error during the Query.
