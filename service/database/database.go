@@ -156,7 +156,7 @@ type AppDatabase interface {
 
 	//(Security Required: Needs Uuid of the action requester).
 	// GetMyStream() returns a list of Photos pertaining to the User's following list. We provide in input a fixedUsername.
-	//GetMyStream(fixedUsername string, uuid string) ([]Photo, error)
+	GetMyStream(fixedUsername string, uuid string) ([]Photo, error)
 
 	// Ping checks whether the database is available or not (in that case, an error will be returned).
 	Ping() error
