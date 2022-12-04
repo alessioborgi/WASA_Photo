@@ -124,7 +124,7 @@ type AppDatabase interface {
 	// USER's BANS COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
 	// GetBannedUsers() returns the list of User's Bans, given in input a fixedUsername.
-	//GetBannedUsers(fixedUsername string, uuid string) ([]Ban, error)
+	GetBannedUsers(fixedUsername string, uuid string) ([]Ban, error)
 
 	// PARTICULAR BAN:
 	//(Security Required: Needs Uuid of the action requester).
