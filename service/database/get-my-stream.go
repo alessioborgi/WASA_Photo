@@ -56,7 +56,7 @@ func (db *appdbimpl) GetMyStream(fixedUsername string, uuid string) ([]Photo, er
 		} else {
 			//In the case you are not the profile owner, i.e. you result as "unauthorized", you must not see any other's Streams.
 			fmt.Println("You cannot have the PhotoList you are requiring!")
-			return nil, nil
+			return nil, ErrUserNotAuthorized
 		}
 	}
 }

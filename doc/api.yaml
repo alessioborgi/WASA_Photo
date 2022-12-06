@@ -179,10 +179,7 @@ paths:
       responses:
         "200":
           description: OK! Username Updated Successfully!.
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/fixedUsername" }
-        
+          
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}

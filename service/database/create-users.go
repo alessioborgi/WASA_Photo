@@ -2,23 +2,50 @@ package database
 
 //DOUBT: What does lastInserId does and what from line 13 happens?
 
-func (db *appdbimpl) DoLogin(u User) (User, error) {
-	// res, err := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-	_, err := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		u.FixedUsername, u.Uuid, u.Username, u.PhotoProfile, u.Biography, u.DateOfCreation, u.NumberOfPhotos, u.TotNumberLikes, u.TotNumberComments, u.NumberFollowers, u.NumberFollowing, u.Name, u.Surname, u.DateOfBirth, u.Email, u.Nationality, u.Gender)
+func (db *appdbimpl) DoLogin(u User) (string, error) {
+
+	//First check whether there exists a User with the inserted Username.
+	var exists bool
+	err := db.c.QueryRow(`SELECT true
+	FROM Users
+	WHERE fixedUsername == '?'`, u.FixedUsername).Scan(&exists)
+
+	//Check for the error during the Query.
 	if err != nil {
-		return u, err
+		return "", err
+	} else {
+		//If no error during the Query occurs, checking whether we already have the user registered, thus going for the Login, or whether we have to do the User Registration.
+		if exists == true {
+			// The User already Exists. LOGIN Part.
+			var uuid string
+			errLogin := db.c.QueryRow(`SELECT uuid
+			FROM Users
+			WHERE fixedUsername == '?'`, u.FixedUsername).Scan(&uuid)
+			if errLogin != nil {
+				return "", errLogin
+			} else {
+				return uuid, nil
+			}
+		} else {
+			// The User deos not Exists. User CREATION Part.
+			// res, err := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			_, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				u.FixedUsername, u.Uuid, u.Username, u.PhotoProfile, u.Biography, u.DateOfCreation, u.NumberOfPhotos, u.TotNumberLikes, u.TotNumberComments, u.NumberFollowers, u.NumberFollowing, u.Name, u.Surname, u.DateOfBirth, u.Email, u.Nationality, u.Gender)
+			if errCretion != nil {
+				return u.Uuid, errCretion
+			}
+			//I added this line. Remove if below is necessary.
+			return u.Uuid, errCretion
+
+			// lastInsertID, err := res.LastInsertId()
+			// if err != nil {
+			// 	return u, err
+			// }
+
+			// f.ID = uint64(lastInsertID)
+			// return f, nil
+		}
 	}
-	//I added this line. Remove if below is necessary.
-	return u, err
-
-	// lastInsertID, err := res.LastInsertId()
-	// if err != nil {
-	// 	return u, err
-	// }
-
-	// f.ID = uint64(lastInsertID)
-	// return f, nil
 }
 
 // ------------------------------------------------------------------------------------

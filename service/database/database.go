@@ -38,6 +38,7 @@ import (
 
 // Error Function.
 var ErrUserDoesNotExist = errors.New("User does not Exists!")
+var ErrUserNotAuthorized = errors.New("User not Authorized!")
 
 // User Struct has been declared in the "db-struct-user.go" file.
 
@@ -61,7 +62,7 @@ type AppDatabase interface {
 	// PARTICULAR USER:
 	//(Security Required: Needs Uuid of the action requester).
 	// SetMyUsername(), given the fixedUsername in input together with a newUsername, updates the User's Username.
-	//SetMyUsername(fixedUsername string, newUsername string, uuid string) (string, error)
+	SetMyUsername(fixedUsername string, newUsername string, uuid string) error
 
 	//(Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.

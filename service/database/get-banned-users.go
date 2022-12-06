@@ -53,8 +53,7 @@ func (db *appdbimpl) GetBannedUsers(fixedUsername string, uuid string) ([]Ban, e
 		} else {
 			//In the case you are not the profile owner, i.e. you result as "unauthorized", you must receive any BanList information.
 			fmt.Println("You cannot have the Ban List you are requiring!")
-			return nil, nil
-
+			return nil, ErrUserDoesNotExist
 		}
 	}
 }

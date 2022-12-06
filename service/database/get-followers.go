@@ -96,7 +96,7 @@ func (db *appdbimpl) GetFollowers(fixedUsername string, uuid string) ([]Follow, 
 				} else {
 					//If the User was Banned instead, returns nothing.
 					fmt.Println("You cannot have the Followers List you are requiring!")
-					return nil, nil
+					return nil, ErrUserDoesNotExist
 				}
 			}
 		}
