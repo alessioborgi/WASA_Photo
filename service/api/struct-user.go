@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/alessioborgi/WASA_Photo/service/database"
 )
 
 /*
@@ -38,7 +40,6 @@ var current_month = int(c_month)
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
 	FixedUsername     FixedUsername `json:"fixedUsername"`
-	Uuid              Uuid          `json:"uuid"`
 	Username          Username      `json:"username"`
 	PhotoProfile      byte          `json:"photoProfile"`
 	Biography         Phrase        `json:"biography"`
@@ -231,3 +232,49 @@ func ValidUser(user User, regex string) bool {
 }
 
 // -----                -----
+
+// Function for handling the population of the struct with data from the DB.
+func (u *User) FromDatabase(user database.User) {
+	u.FixedUsername = FixedUsername(user.FixedUsername)
+	u.Username = Username(user.Username)
+	u.PhotoProfile = byte(user.PhotoProfile)
+	u.Biography = Phrase(user.Biography)
+	u.DateOfCreation = Date(user.DateOfCreation)
+	u.NumberOfPhotos = int(user.NumberOfPhotos) //Maybe int(...)?
+	u.TotNumberLikes = int(user.TotNumberLikes)
+	u.TotNumberComments = int(user.TotNumberComments)
+	u.NumberFollowers = int(user.NumberFollowers)
+	u.NumberFollowing = int(user.NumberFollowing)
+
+	//Also personalInfo Struct
+	u.PersonalInfo.Name = Name(user.Name)
+	u.PersonalInfo.Surname = Surname(user.Surname)
+	u.PersonalInfo.DateOfBirth = Date(user.DateOfBirth)
+	u.PersonalInfo.Email = Email(user.Email)
+	u.PersonalInfo.Nationality = Nationality(user.Nationality)
+	u.PersonalInfo.Gender = Gender(user.Gender)
+}
+
+// ToDatabase returns the User in a Database-Compatible Representation.
+
+// DOUBT: What to do with the UUID?
+func (u *User) ToDatabase() database.User {
+	return database.User{
+		FixedUsername:     string(u.FixedUsername),
+		Username:          string(u.Username),
+		PhotoProfile:      byte(u.PhotoProfile), //Maybe without byte()?
+		Biography:         string(u.Biography),
+		DateOfCreation:    string(u.DateOfCreation),
+		NumberOfPhotos:    int64(u.NumberOfPhotos),
+		TotNumberLikes:    int64(u.TotNumberLikes),
+		TotNumberComments: int64(u.TotNumberComments),
+		NumberFollowers:   int64(u.NumberFollowers),
+		NumberFollowing:   int64(u.NumberFollowing),
+		Name:              string(u.PersonalInfo.Name),
+		Surname:           string(u.PersonalInfo.Surname),
+		DateOfBirth:       string(u.PersonalInfo.DateOfBirth),
+		Email:             string(u.PersonalInfo.Email),
+		Nationality:       string(u.PersonalInfo.Nationality),
+		Gender:            string(u.PersonalInfo.Gender),
+	}
+}
