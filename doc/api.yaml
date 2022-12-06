@@ -177,7 +177,7 @@ paths:
             schema: {$ref: "#/components/schemas/username"}
 
       responses:
-        "200":
+        "204":
           description: OK! Username Updated Successfully!.
           
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -204,8 +204,8 @@ paths:
         account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
         
       responses:
-        "200": 
-          description: OK! Username deleted successfully! 
+        "204": 
+          description: OK! User Profile deleted successfully! 
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -378,8 +378,8 @@ paths:
         required: true
         
       responses:
-        "200": 
-           description: An existing Photo has been substituted.
+        "204": 
+           description: An existing Photo's Phrase has been substituted!.
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -407,7 +407,7 @@ paths:
         is the actual ORIGINAL PHOTO ADDER. Otherwise, it cannot. Thus, only the user that
         has actually posted the photo can delete it. 
       responses:
-        "200": 
+        "204": 
           description: OK! Photo deleted successfully!
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -546,12 +546,9 @@ paths:
         required: true
         
       responses:
-        "200": 
+        "204": 
            description: OK! An existing Photo's Comment has been modified.
-           content:
-            application/json:
-              schema: { $ref: '#/components/schemas/comment' }
-
+           
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
@@ -578,7 +575,7 @@ paths:
         deletion of the comment can be done ONLY if the user that is deleting the comment
         is the actual ORIGINAL COMMENTER. Otherwise, it cannot.
       responses:
-        "200": 
+        "204": 
           description: OK! Photo's Comment deleted successfully!
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -717,7 +714,7 @@ paths:
         deletion of the like can be done by ONLY if the user that is deleting the like
         is the actual original liker. Otherwise, it cannot.
       responses:
-        "200": 
+        "204": 
           description: OK! Photo's Like deleted successfully!
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -843,7 +840,7 @@ paths:
         is the actual ORIGINAL BAN ADDER. Otherwise, it cannot. Thus, only the user that
         has actually banned a user, can also delete the ban, whenever it wants. 
       responses:
-        "200": 
+        "204": 
           description: OK! User Ban deleted successfully!
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -1018,7 +1015,7 @@ paths:
         has actually followed a user, can also delete it, whenever it wants. This means that 
         the user that performs this action should be on its own profile.
       responses:
-        "200": 
+        "204": 
           description: OK! User Follow deleted successfully!
           
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -1105,7 +1102,7 @@ components:
         (username) still pointing to this particular user.
         I use as pattern a Regex of simply any alpha-numeric (both capital and not).
         
-      pattern: '[a-zA-Z0-9]+$'
+      pattern: ^(?=[a-zA-Z0-9._]{3,31}$)(?!.*[_.]{2})[^_.].*[^_.]$
       minLength: 3
       maxLength: 31
       example: ale01
@@ -1119,7 +1116,7 @@ components:
         user.
       minLength: 3
       maxLength: 31
-      pattern: ^.*$
+      pattern: ^(?=[a-zA-Z0-9._]{3,31}$)(?!.*[_.]{2})[^_.].*[^_.]$
       example: Maria
     
     photoProfile:

@@ -38,6 +38,8 @@ import (
 
 // Error Function.
 var ErrUserDoesNotExist = errors.New("User does not Exists!")
+var ErrPhotoDoesNotExist = errors.New("Photo does not Exists!")
+var ErrCommentDoesNotExist = errors.New("Comment does not Exists!")
 var ErrUserNotAuthorized = errors.New("User not Authorized!")
 
 // User Struct has been declared in the "db-struct-user.go" file.
@@ -101,8 +103,8 @@ type AppDatabase interface {
 
 	// PARTICULAR COMMENT:
 	//(Security Required: Needs Uuid of the action requester).
-	// SetComment(), given the fixedUsername in input together with a photoId, a commentId and a newComment(Phrase), updates the User's Username, returning then the updated Comment Object.
-	//SetComment(fixedUsername string, photoId int, commentId int, newComment string, uuid string) (Comment, error)
+	// SetComment(), given the fixedUsername in input together with a photoId, a commentId and a newComment(Phrase), updates the User's Username.
+	SetComment(fixedUsername string, photoId int, commentId int, newComment string, uuid string) error
 
 	//(Security Required: Needs Uuid of the action requester).
 	// UncommentPhoto() removes a User's Photo Comment given the fixedUsername, the photoId and the commentId in input.

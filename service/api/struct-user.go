@@ -27,9 +27,9 @@ type Nationality string
 type Gender string
 
 // Variables Declaration.
-var regex_fixed_username string = "[a-zA-Z0-9]+$"
-var regex_uuid string = "^[0-9a-fA-F-]{36}"         //123e4567-e89b-12d3-a456-426614174000
-var regex_date = "^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$" //Without February Check.
+var regex_username string = "^(?=[a-zA-Z0-9._]{3,31}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+var regex_uuid string = "^[0-9a-fA-F-]{36}"                //123e4567-e89b-12d3-a456-426614174000
+var regex_date string = "^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$" //Without February Check.
 
 var current_year, c_month, current_day = time.Now().Date()
 var current_month = int(c_month)
@@ -81,24 +81,26 @@ func (u Uuid) ValidUuid(regex string) bool {
 
 // Declaring a Method for checking the fixedUsername validty w.r.t. its Regex.
 func (fu FixedUsername) ValidFixedUsername(regex string) bool {
-	match, err := regexp.MatchString(regex, string(fu))
+	_, err := regexp.MatchString(regex, string(fu))
 	if err == nil {
-		if match == true && len(string(fu)) >= 3 && len(string(fu)) <= 31 {
-			fmt.Println("Fixed Username Regex Matched")
-			return true
-		} else {
-			fmt.Println("Fixed Username Regex UnMatched!")
-			return false
-		}
+		fmt.Println("Fixed Username Regex Matched")
+		return true
 	} else {
-		fmt.Println("Error:", err)
+		fmt.Println("Fixed Username Regex UnMatched!")
 		return false
 	}
 }
 
 // Declaring a Method for checking the Username validity w.r.t. its length.
-func (u Username) ValidUsername() bool {
-	return len(string(u)) >= 3 && len(string(u)) <= 31
+func (u Username) ValidUsername(regex string) bool {
+	_, err := regexp.MatchString(regex, string(u))
+	if err == nil {
+		fmt.Println("Dynamic Username Regex Matched")
+		return true
+	} else {
+		fmt.Println("Dynamic Username Regex UnMatched!")
+		return false
+	}
 }
 
 // Declaring a Method for checking the Biography validity w.r.t. its length.
@@ -211,8 +213,8 @@ func (d Date) ValidDateofCreation() bool { //yyyy/mm/dd
 // Function Method used to check for the User Validity.
 func ValidUser(user User, regex string) bool {
 	return user.Uuid.ValidUuid(regex_uuid) &&
-		user.FixedUsername.ValidFixedUsername(regex_fixed_username) &&
-		user.Username.ValidUsername() &&
+		user.FixedUsername.ValidFixedUsername(regex_username) &&
+		user.Username.ValidUsername(regex_username) &&
 		user.Biography.ValidBiography() &&
 		user.PersonalInfo.Name.ValidName() &&
 		user.PersonalInfo.Surname.ValidSurname() &&
