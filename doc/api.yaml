@@ -380,9 +380,6 @@ paths:
       responses:
         "200": 
            description: An existing Photo has been substituted.
-           content:
-            application/json:
-              schema: { $ref: "#/components/schemas/photo" }
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 

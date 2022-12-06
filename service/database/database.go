@@ -83,8 +83,8 @@ type AppDatabase interface {
 
 	// PARTICULAR PHOTO:
 	//(Security Required: Needs Uuid of the action requester).
-	// SetPhoto() updates a User's Photo, replacing it with the new value of the Phrase in the argument, in addition to a fixedUsername of the User and the PhotoId. It returns then the Photo Object.
-	//SetPhoto(fixedUsername string, photoId int, newPhrase string, uuid string) (Photo, error)
+	// SetPhoto() updates a User's Photo, replacing it with the new value of the Phrase in the argument, in addition to a fixedUsername of the User and the PhotoId.
+	SetPhoto(fixedUsername string, photoId int, newPhrase string, uuid string) error
 
 	//(Security Required: Needs Uuid of the action requester).
 	// DeletePhoto() removes a User's Photo given the fixedUsername and the photoId in input.
