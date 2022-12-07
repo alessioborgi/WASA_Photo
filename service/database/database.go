@@ -68,7 +68,7 @@ type AppDatabase interface {
 
 	//(Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
-	//DeleteUsername(fixedUsername string, uuid string) error
+	DeleteUsername(fixedUsername string, uuid string) error
 
 	//(Security Required: Needs Uuid of the action requester).
 	// GetUserProfile() returns the User Profile requested given in input the fixedUsername.
