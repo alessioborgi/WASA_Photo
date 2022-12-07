@@ -2,7 +2,7 @@ package database
 
 func (db *appdbimpl) CheckBan(fixedUsername string, uuid string) (string, error) {
 
-	//Check whether the uuid that is requesting the action is the owner of the profile.
+	//Check whether the uuid that is requesting the action has been banned by the fixedUsername.
 	var ban bool
 	err := db.c.QueryRow(`SELECT fixedUsernameBanned == (SELECT fixedUsername FROM Users WHERE uuid == '?')
 	FROM Bans
