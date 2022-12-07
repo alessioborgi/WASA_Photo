@@ -27,7 +27,7 @@ func (db *appdbimpl) FollowUser(follow Follow, uuid string) (Follow, error) {
 				//If no error occurs, checking whether the user was banned by the fixedUsername.
 				if ban == "Not Banned" {
 					//If Not Banned, you can add the follow object without any problem.
-					_, err := db.c.Exec(`INSERT INTO Follows (fixedUsername, fixedUsernameFollowing, uploadDate) VALUES (?, ?, ?, ?)`,
+					_, err := db.c.Exec(`INSERT INTO Follows (fixedUsername, fixedUsernameFollowing, uploadDate) VALUES (?, ?, ?)`,
 						follow.FixedUsername, follow.FixedUsernameFollowing, follow.UploadDate)
 					if err != nil {
 						return follow, err
