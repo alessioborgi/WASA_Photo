@@ -88,7 +88,7 @@ type AppDatabase interface {
 	// PARTICULAR BAN:
 	//(Security Required: Needs Uuid of the action requester).
 	// BanUser() creates a new User's Ban in the database, given in input the Ban Object. It returns a Ban Object.
-	//BanUser(ban Ban, uuid string) (Ban, error)
+	BanUser(ban Ban, uuid string) (Ban, error)
 
 	//(Security Required: Needs Uuid of the action requester).
 	// UnbanUser() removes a User's Ban given the fixedUsername, and the BanId(i.e., the fixedUsername of the Banned Person).
