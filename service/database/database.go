@@ -79,7 +79,7 @@ type AppDatabase interface {
 	// PARTICULAR FOLLOW:
 	//(Security Required: Needs Uuid of the action requester).
 	// FollowUser() creates a new User's Follow in the database, given in input the Follow Object. It returns a Follow Object.
-	// FollowUser(follow Follow, uuid string) (Follow, error)
+	FollowUser(follow Follow, uuid string) (Follow, error)
 
 	//(Security Required: Needs Uuid of the action requester).
 	// UnfollowUser() removes a User's Follow given the fixedUsername, and the FollowindId(i.e., the fixedUsername of the Person that the fixedUsername wants to delete from the following list).
