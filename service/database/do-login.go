@@ -2,64 +2,70 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/gofrs/uuid"
 )
 
-//DOUBT: What does lastInserId does and what from line 13 happens?
+// DOUBT: What does lastInserId does and what from line 13 happens?
 
 func (db *appdbimpl) DoLogin(username string) (string, error) {
 
-	//First check whether there exists a User with the inserted Username.
+	// First check whether there exists a User with the inserted Username.
 	var exists = 0
-	// fmt.Println("SELECT 1 FROM Users WHERE username == '?'", username)
-	// fmt.Println(exists)
-	err := db.c.QueryRow(`SELECT 1 FROM Users WHERE username == '?'`, username).Scan(&exists)
-	// fmt.Println(exists)
-	// fmt.Println(err)
-	//Check for the error during the Query.
+	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
+
+	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
-		fmt.Println("Unexpected Error!")
+		log.Fatalf("Unexpected Error!")
 		return "", err
 	} else if exists == 1 {
-		//If no strange error during the Query occurs, and exists = 1, we already have the user registered.
+		// If no strange error during the Query occurs, and exists = 1, we already have the user registered.
 		// The User already Exists. LOGIN Part.
-		fmt.Println("The User already esists!")
-		var uuid string
-		errLogin := db.c.QueryRow(`SELECT uuid
-		FROM Users
-		WHERE username == '?'`, username).Scan(&uuid)
-		fmt.Println(exists)
-		if errLogin != nil {
-			return "", errLogin
+		log.Println("The User already esists!")
+		var saved_uuid string
+		err := db.c.QueryRow(`SELECT uuid FROM Users WHERE username == ?`, username).Scan(&saved_uuid)
+		if err != nil {
+			log.Fatalf("Failed to Retrieve UUID")
+			return "", err
 		} else {
-			return uuid, nil
+			log.Println("Uuid Retrieval Succeeded!")
+			return saved_uuid, nil
 		}
+
 	} else {
 		// The User deos not Exists. User CREATION Part.
-		fmt.Println("The User does not esists!")
+		log.Println("The User does not exists!")
 		var uuid = uuid.Must(uuid.NewV4())
 		if err != nil && err != sql.ErrNoRows {
-			log.Fatalf("failed to generate UUID: %v", err)
+			log.Fatalf("Failed to generate UUID: %v", err)
 		} else {
-			log.Printf("generated Version 4 UUID %v", uuid)
+			log.Println("Generated UUID", uuid)
 		}
+
+		// Add the snapshot time of when it is added automatically with like "time.now".
 		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", "2022-01-01", 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 		if errCretion != nil {
-			fmt.Println("Error Insert")
+			log.Fatalf("Error During Creation")
 			return "Error", errCretion
 		} else {
-			fmt.Println("Good Insert")
+			log.Println("User Creation Succeeded!")
 			lastInsertID, err := res.LastInsertId()
 			if err != nil {
+				log.Fatalf("User fixedUsername retrieval Error")
 				return "", err
 			} else {
+				log.Println("User fixedUsername retrieval Succedeed.")
 				var a = lastInsertID
-
-				return string(rune(a)), nil
+				_, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername="?" WHERE username = '?'`, string(rune(a)), username)
+				if errUpdate != nil {
+					log.Fatalf("Error During Updatating")
+					return "", errUpdate
+				} else {
+					log.Println("fixedUsername Update succeeded")
+					return uuid.String(), nil
+				}
 			}
 		}
 	}
