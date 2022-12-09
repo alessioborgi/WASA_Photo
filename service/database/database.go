@@ -62,8 +62,8 @@ type AppDatabase interface {
 
 	// SESSION:
 	//DoLogin() creates a new Username given in input a Username. If does not already exists and returns a uuid, or,  if it already exists, simply returns a uuid.
-	//DoLogin(username string) (string, error)
-	DoLogin(user User) (string, error) //Maybe in this way?
+	DoLogin(username string) (string, error)
+	// DoLogin(user User) (string, error) //Maybe in this way?
 
 	// PARTICULAR USER:
 	//(Security Required: Needs Uuid of the action requester).
@@ -133,6 +133,7 @@ type AppDatabase interface {
 	//(Security Required: Needs Uuid of the action requester).
 	// GetUsers() returns the list of fixedUsername.
 	// GetUsers(uuid string) ([]string, error)
+	GetUsers() ([]string, error)
 
 	// PARTICULAR USER:
 	//(Security Required: Needs Uuid of the action requester).

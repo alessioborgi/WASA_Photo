@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/gofrs/uuid"
@@ -8,45 +10,56 @@ import (
 
 //DOUBT: What does lastInserId does and what from line 13 happens?
 
-func (db *appdbimpl) DoLogin(u User) (string, error) {
+func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 	//First check whether there exists a User with the inserted Username.
-	var exists bool
-	err := db.c.QueryRow(`SELECT true
-	FROM Users
-	WHERE username == '?'`, u.Username).Scan(&exists)
-
+	var exists = 0
+	// fmt.Println("SELECT 1 FROM Users WHERE username == '?'", username)
+	// fmt.Println(exists)
+	err := db.c.QueryRow(`SELECT 1 FROM Users WHERE username == '?'`, username).Scan(&exists)
+	// fmt.Println(exists)
+	// fmt.Println(err)
 	//Check for the error during the Query.
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Unexpected Error!")
 		return "", err
-	} else {
-		//If no error during the Query occurs, checking whether we already have the user registered, thus going for the Login, or whether we have to do the User Registration.
-		if exists == true {
-			// The User already Exists. LOGIN Part.
-			var uuid string
-			errLogin := db.c.QueryRow(`SELECT uuid
-			FROM Users
-			WHERE fixedUsername == '?'`, u.FixedUsername).Scan(&uuid)
-			if errLogin != nil {
-				return "", errLogin
-			} else {
-				return uuid, nil
-			}
+	} else if exists == 1 {
+		//If no strange error during the Query occurs, and exists = 1, we already have the user registered.
+		// The User already Exists. LOGIN Part.
+		fmt.Println("The User already esists!")
+		var uuid string
+		errLogin := db.c.QueryRow(`SELECT uuid
+		FROM Users
+		WHERE username == '?'`, username).Scan(&uuid)
+		fmt.Println(exists)
+		if errLogin != nil {
+			return "", errLogin
 		} else {
-			// The User deos not Exists. User CREATION Part.
-			var uuid = uuid.Must(uuid.NewV4())
+			return uuid, nil
+		}
+	} else {
+		// The User deos not Exists. User CREATION Part.
+		fmt.Println("The User does not esists!")
+		var uuid = uuid.Must(uuid.NewV4())
+		if err != nil && err != sql.ErrNoRows {
+			log.Fatalf("failed to generate UUID: %v", err)
+		} else {
+			log.Printf("generated Version 4 UUID %v", uuid)
+		}
+		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", "2022-01-01", 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
+		if errCretion != nil {
+			fmt.Println("Error Insert")
+			return "Error", errCretion
+		} else {
+			fmt.Println("Good Insert")
+			lastInsertID, err := res.LastInsertId()
 			if err != nil {
-				log.Fatalf("failed to generate UUID: %v", err)
+				return "", err
 			} else {
-				log.Printf("generated Version 4 UUID %v", uuid)
-			}
-			// res, err := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			_, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-				u.FixedUsername, uuid.String(), u.Username, u.PhotoProfile, u.Biography, u.DateOfCreation, u.NumberOfPhotos, u.TotNumberLikes, u.TotNumberComments, u.NumberFollowers, u.NumberFollowing, u.Name, u.Surname, u.DateOfBirth, u.Email, u.Nationality, u.Gender)
-			if errCretion != nil {
-				return "Error", errCretion
-			} else {
-				return uuid.String(), nil
+				var a = lastInsertID
+
+				return string(rune(a)), nil
 			}
 		}
 	}

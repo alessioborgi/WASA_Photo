@@ -20,7 +20,7 @@ import (
 // type Uuid string
 
 // Declaration of Customized type used after for checking validity (User Profile Personal Info).
-type Username string
+// type Username string
 type Date string
 type Email string
 type Gender string
@@ -51,6 +51,10 @@ type User struct {
 	NumberFollowing   int64        `json:"numberFollowing"`
 }
 
+type Username struct {
+	Name string `json:"username"`
+}
+
 // Ceation of a sub-Structure that handles the Personal Information of the User.
 type PersonalInfo struct {
 	Name        string `json:"name"`
@@ -63,7 +67,7 @@ type PersonalInfo struct {
 
 // Declaring a Method for checking the Username validity w.r.t. its regex.
 func (username Username) ValidUsername(regex regexp.Regexp) bool {
-	return regex.MatchString(string(username))
+	return regex.MatchString(string(username.Name))
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
@@ -176,8 +180,8 @@ func (user *User) ValidUser() bool {
 
 // Function for handling the population of the struct with data from the DB.
 func (u *User) FromDatabase(user database.User) {
-	u.FixedUsername = Username(user.FixedUsername)
-	u.Username = Username(user.Username)
+	u.FixedUsername = u.FixedUsername
+	u.Username = u.Username
 	u.PhotoProfile = user.PhotoProfile
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
@@ -201,8 +205,8 @@ func (u *User) FromDatabase(user database.User) {
 // DOUBT: What to do with the UUID?
 func (u *User) ToDatabase() database.User {
 	return database.User{
-		FixedUsername:     string(u.FixedUsername),
-		Username:          string(u.Username),
+		FixedUsername:     string(u.FixedUsername.Name),
+		Username:          string(u.Username.Name),
 		PhotoProfile:      u.PhotoProfile, //Maybe without byte()?
 		Biography:         u.Biography,
 		DateOfCreation:    string(u.DateOfCreation),
