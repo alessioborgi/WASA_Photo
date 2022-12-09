@@ -1,5 +1,11 @@
 package database
 
+import (
+	"log"
+
+	"github.com/gofrs/uuid"
+)
+
 //DOUBT: What does lastInserId does and what from line 13 happens?
 
 func (db *appdbimpl) DoLogin(u User) (string, error) {
@@ -8,7 +14,7 @@ func (db *appdbimpl) DoLogin(u User) (string, error) {
 	var exists bool
 	err := db.c.QueryRow(`SELECT true
 	FROM Users
-	WHERE fixedUsername == '?'`, u.FixedUsername).Scan(&exists)
+	WHERE username == '?'`, u.Username).Scan(&exists)
 
 	//Check for the error during the Query.
 	if err != nil {
@@ -28,22 +34,20 @@ func (db *appdbimpl) DoLogin(u User) (string, error) {
 			}
 		} else {
 			// The User deos not Exists. User CREATION Part.
+			var uuid = uuid.Must(uuid.NewV4())
+			if err != nil {
+				log.Fatalf("failed to generate UUID: %v", err)
+			} else {
+				log.Printf("generated Version 4 UUID %v", uuid)
+			}
 			// res, err := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			_, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-				u.FixedUsername, u.Uuid, u.Username, u.PhotoProfile, u.Biography, u.DateOfCreation, u.NumberOfPhotos, u.TotNumberLikes, u.TotNumberComments, u.NumberFollowers, u.NumberFollowing, u.Name, u.Surname, u.DateOfBirth, u.Email, u.Nationality, u.Gender)
+				u.FixedUsername, uuid.String(), u.Username, u.PhotoProfile, u.Biography, u.DateOfCreation, u.NumberOfPhotos, u.TotNumberLikes, u.TotNumberComments, u.NumberFollowers, u.NumberFollowing, u.Name, u.Surname, u.DateOfBirth, u.Email, u.Nationality, u.Gender)
 			if errCretion != nil {
-				return u.Uuid, errCretion
+				return "Error", errCretion
+			} else {
+				return uuid.String(), nil
 			}
-			//I added this line. Remove if below is necessary.
-			return u.Uuid, errCretion
-
-			// lastInsertID, err := res.LastInsertId()
-			// if err != nil {
-			// 	return u, err
-			// }
-
-			// f.ID = uint64(lastInsertID)
-			// return f, nil
 		}
 	}
 }

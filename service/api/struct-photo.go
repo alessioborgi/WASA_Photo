@@ -89,10 +89,10 @@ func ValidPhoto(photo Photo) bool {
 // -----                -----
 
 type Comment struct {
-	Commentid         int           `json:"commentid"`
-	CommenterUsername FixedUsername `json:"commenterUsername"`
-	Phrase            Phrase        `json:"phrase"`
-	UploadDate        DateTime      `json:"uploadDate"`
+	Commentid         int      `json:"commentid"`
+	CommenterUsername Username `json:"commenterUsername"`
+	Phrase            Phrase   `json:"phrase"`
+	UploadDate        DateTime `json:"uploadDate"`
 }
 
 // ----- FINAL PHOTO FUNCTION -----
@@ -100,7 +100,7 @@ type Comment struct {
 // Function Method used to check for the User Validity.
 func ValidComment(comment Comment) bool {
 	return comment.Commentid >= 0 &&
-		comment.CommenterUsername.ValidFixedUsername(regex_fixed_username) &&
+		comment.CommenterUsername.ValidUsername(*regex_username) &&
 		comment.Phrase.ValidPhrase() &&
 		comment.UploadDate.ValidUploadDate()
 }
@@ -108,24 +108,24 @@ func ValidComment(comment Comment) bool {
 // -----                -----
 
 type Like struct {
-	Likeid     FixedUsername `json:"likeid"` //This corresponds to the Username of the Liker.
-	UploadDate DateTime      `json:"uploadDate"`
+	Likeid     Username `json:"likeid"` //This corresponds to the Username of the Liker.
+	UploadDate DateTime `json:"uploadDate"`
 }
 
 // ----- FINAL LIKE FUNCTION -----
 
 // Function Method used to check for the User Validity.
 func ValidLike(like Like) bool {
-	return like.Likeid.ValidFixedUsername(regex_fixed_username) &&
+	return like.Likeid.ValidUsername(*regex_username) &&
 		like.UploadDate.ValidUploadDate()
 }
 
 // -----                -----
 
 type Ban struct {
-	Banid      FixedUsername `json:"banid"` //This corresponds to the Username of the User Banned.
-	UploadDate DateTime      `json:"uploadDate"`
-	Motivation Motivation    `json:"motivation"`
+	Banid      Username   `json:"banid"` //This corresponds to the Username of the User Banned.
+	UploadDate DateTime   `json:"uploadDate"`
+	Motivation Motivation `json:"motivation"`
 }
 
 func (m Motivation) ValidMotivation() bool {
@@ -137,7 +137,7 @@ func (m Motivation) ValidMotivation() bool {
 
 // Function Method used to check for the User Validity.
 func ValidBan(ban Ban) bool {
-	return ban.Banid.ValidFixedUsername(regex_fixed_username) &&
+	return ban.Banid.ValidUsername(*regex_username) &&
 		ban.UploadDate.ValidUploadDate() &&
 		ban.Motivation.ValidMotivation()
 }
@@ -145,15 +145,15 @@ func ValidBan(ban Ban) bool {
 // -----                -----
 
 type Follow struct {
-	Followid   FixedUsername `json:"followid"` //This corresponds to the Username of the Follower.
-	UploadDate DateTime      `json:"uploadDate"`
+	Followid   Username `json:"followid"` //This corresponds to the Username of the Follower.
+	UploadDate DateTime `json:"uploadDate"`
 }
 
 // ----- FINAL FOLLOW FUNCTION -----
 
 // Function Method used to check for the User Validity.
 func ValidFollow(follow Follow) bool {
-	return follow.Followid.ValidFixedUsername(regex_fixed_username) &&
+	return follow.Followid.ValidUsername(*regex_username) &&
 		follow.UploadDate.ValidUploadDate()
 }
 

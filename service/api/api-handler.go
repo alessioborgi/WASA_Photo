@@ -58,34 +58,34 @@ func (rt *_router) Handler() http.Handler {
 	// -----
 
 	//Register the getUsers API.
-	rt.router.GET("/users/", rt.wrap(rt.getUsers))
+	// rt.router.GET("/users/", rt.wrap(rt.getUsers))
 
 	//Register the deleteUsername API.
-	rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))
+	// rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))
 
 	//Register the getPhotos API.
-	rt.router.GET("/users/:fixedUsername/photos/", rt.wrap(rt.getPhotos))
+	// rt.router.GET("/users/:fixedUsername/photos/", rt.wrap(rt.getPhotos))
 
 	//Register the setPhoto API.
-	rt.router.PUT("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.setPhoto))
+	// rt.router.PUT("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.setPhoto))
 
 	//Register the getPhotoComments API.
-	rt.router.GET("/users/:fixedUsername/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
+	// rt.router.GET("/users/:fixedUsername/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
 
 	//Register the setComment API.
-	rt.router.PUT("/users/:fixedUsername/photos/:photoid/comments/:commentid", rt.wrap(rt.setComment))
+	// rt.router.PUT("/users/:fixedUsername/photos/:photoid/comments/:commentid", rt.wrap(rt.setComment))
 
 	//Register the getPhotoLikes API.
-	rt.router.GET("/users/:fixedUsername/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
+	// rt.router.GET("/users/:fixedUsername/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
 
 	//Register the getBannedUsers API.
-	rt.router.GET("/users/:fixedUsername/bans/", rt.wrap(rt.getBannedUsers))
+	// rt.router.GET("/users/:fixedUsername/bans/", rt.wrap(rt.getBannedUsers))
 
 	//Register the getFollowers API.
-	rt.router.GET("/users/:fixedUsername/followers/", rt.wrap(rt.getFollowers))
+	// rt.router.GET("/users/:fixedUsername/followers/", rt.wrap(rt.getFollowers))
 
 	//Register the getFollowings API.
-	rt.router.GET("/users/:fixedUsername/followings/", rt.wrap(rt.getFollowings))
+	// rt.router.GET("/users/:fixedUsername/followings/", rt.wrap(rt.getFollowings))
 
 	// -----
 	//SPECIAL ROUTES

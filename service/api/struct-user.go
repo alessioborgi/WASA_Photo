@@ -16,107 +16,54 @@ import (
 */
 
 // Declaration of Customized type used after for checking their validity.(User)
-type Uuid string
-type Username string
-type FixedUsername string
+
+// type Uuid string
 
 // Declaration of Customized type used after for checking validity (User Profile Personal Info).
-type Name string
-type Surname string
+type Username string
 type Date string
 type Email string
-type Nationality string
 type Gender string
 
 // Variables Declaration.
-var regex_username string = "^(?=[a-zA-Z0-9._]{3,31}$)(?!.*[_.]{2})[^_.].*[^_.]$"
-var regex_uuid string = "^[0-9a-fA-F-]{36}"                //123e4567-e89b-12d3-a456-426614174000
-var regex_date string = "^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$" //Without February Check.
+var (
+	regex_username = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
+	// regex_uuid     = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)                //123e4567-e89b-12d3-a456-426614174000
+	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) //Without February Check.
 
-var current_year, c_month, current_day = time.Now().Date()
-var current_month = int(c_month)
+	current_year, c_month, current_day = time.Now().Date()
+	current_month                      = int(c_month)
+)
 
 // Create a User structure.
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
-	FixedUsername     FixedUsername `json:"fixedUsername"`
-	Username          Username      `json:"username"`
-	PhotoProfile      byte          `json:"photoProfile"`
-	Biography         Phrase        `json:"biography"`
-	PersonalInfo      PersonalInfo  `json:"personalInfo"`
-	DateOfCreation    Date          `json:"dateOfCreation"`
-	NumberOfPhotos    int           `json:"numberOfPhotos"`
-	TotNumberLikes    int           `json:"totNumberLikes"`
-	TotNumberComments int           `json:"totNumberComments"`
-	NumberFollowers   int           `json:"numberFollowers"`
-	NumberFollowing   int           `json:"numberFollowing"`
+	FixedUsername     Username     `json:"fixedUsername"`
+	Username          Username     `json:"username"`
+	PhotoProfile      byte         `json:"photoProfile"`
+	Biography         string       `json:"biography"`
+	PersonalInfo      PersonalInfo `json:"personalInfo"`
+	DateOfCreation    Date         `json:"dateOfCreation"`
+	NumberOfPhotos    int64        `json:"numberOfPhotos"`
+	TotNumberLikes    int64        `json:"totNumberLikes"`
+	TotNumberComments int64        `json:"totNumberComments"`
+	NumberFollowers   int64        `json:"numberFollowers"`
+	NumberFollowing   int64        `json:"numberFollowing"`
 }
 
 // Ceation of a sub-Structure that handles the Personal Information of the User.
 type PersonalInfo struct {
-	Name        Name        `json:"name"`
-	Surname     Surname     `json:"surname"`
-	DateOfBirth Date        `json:"dateOfBirth"`
-	Email       Email       `json:"email"`
-	Nationality Nationality `json:"nationality"`
-	Gender      Gender      `json:"gender"`
+	Name        string `json:"name"`
+	Surname     string `json:"surname"`
+	DateOfBirth Date   `json:"dateOfBirth"`
+	Email       Email  `json:"email"`
+	Nationality string `json:"nationality"`
+	Gender      Gender `json:"gender"`
 }
 
-// Declaring a Method for checking the uuid validty w.r.t. its Regex.
-func (u Uuid) ValidUuid(regex string) bool {
-	match, err := regexp.MatchString(regex, string(u))
-	if err == nil {
-		correct_spaces := string(u[8]) == "-" && string(u[13]) == "-" && string(u[18]) == "-" && string(u[23]) == "-"
-		if match == true && correct_spaces == true {
-			fmt.Println("Uuid Regex Matched")
-			return true
-		} else {
-			fmt.Println("Uuid Regex UnMatched!")
-			return false
-		}
-	} else {
-		fmt.Println("Error:", err)
-		return false
-	}
-}
-
-// Declaring a Method for checking the fixedUsername validty w.r.t. its Regex.
-func (fu FixedUsername) ValidFixedUsername(regex string) bool {
-	_, err := regexp.MatchString(regex, string(fu))
-	if err == nil {
-		fmt.Println("Fixed Username Regex Matched")
-		return true
-	} else {
-		fmt.Println("Fixed Username Regex UnMatched!")
-		return false
-	}
-}
-
-// Declaring a Method for checking the Username validity w.r.t. its length.
-func (u Username) ValidUsername(regex string) bool {
-	_, err := regexp.MatchString(regex, string(u))
-	if err == nil {
-		fmt.Println("Dynamic Username Regex Matched")
-		return true
-	} else {
-		fmt.Println("Dynamic Username Regex UnMatched!")
-		return false
-	}
-}
-
-// Declaring a Method for checking the Biography validity w.r.t. its length.
-func (p Phrase) ValidBiography() bool {
-	return len(p) >= 0 && len(p) <= 1000
-}
-
-// Declaring a Method for checking the Name validity w.r.t. its length.
-func (n Name) ValidName() bool {
-	return len(string(n)) >= 2 && len(string(n)) <= 31
-}
-
-// Declaring a Method for checking the Surname validity w.r.t. its length.
-func (s Surname) ValidSurname() bool {
-	return len(string(s)) >= 2 && len(string(s)) <= 31
+// Declaring a Method for checking the Username validity w.r.t. its regex.
+func (username Username) ValidUsername(regex regexp.Regexp) bool {
+	return regex.MatchString(string(username))
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
@@ -165,11 +112,6 @@ func (e Email) ValidEmail() bool {
 	}
 }
 
-// Declaring a Method for checking the Nationality validity w.r.t. its length.
-func (n Nationality) ValidNationality() bool {
-	return len(n) >= 3 && len(n) <= 100
-}
-
 // Declaring a Method for checking the Gender validity w.r.t. it belongs to an "enum" of values.
 func (g Gender) ValidGender() bool {
 	g_lower := strings.ToLower(string(g))
@@ -212,16 +154,15 @@ func (d Date) ValidDateofCreation() bool { //yyyy/mm/dd
 // ----- FINAL FUNCTION -----
 
 // Function Method used to check for the User Validity.
-func ValidUser(user User, regex string) bool {
-	return user.Uuid.ValidUuid(regex_uuid) &&
-		user.FixedUsername.ValidFixedUsername(regex_username) &&
-		user.Username.ValidUsername(regex_username) &&
-		user.Biography.ValidBiography() &&
-		user.PersonalInfo.Name.ValidName() &&
-		user.PersonalInfo.Surname.ValidSurname() &&
+func (user *User) ValidUser() bool {
+	return user.FixedUsername.ValidUsername(*regex_username) && //Checking for the FixedUsername Regex.
+		user.Username.ValidUsername(*regex_username) && //Checking for the Username Regex.
+		len(user.Biography) >= 0 && len(user.Biography) <= 1000 && //Checking for the Biography.
+		len(user.PersonalInfo.Name) >= 2 && len(user.PersonalInfo.Name) <= 31 && //Checking for the Name.
+		len(user.PersonalInfo.Surname) >= 2 && len(user.PersonalInfo.Surname) <= 31 && //Checking for the Surname.
 		user.PersonalInfo.DateOfBirth.ValidDateofBirth() &&
 		user.PersonalInfo.Email.ValidEmail() &&
-		user.PersonalInfo.Nationality.ValidNationality() &&
+		len(user.PersonalInfo.Nationality) >= 3 && len(user.PersonalInfo.Nationality) <= 100 &&
 		user.PersonalInfo.Gender.ValidGender() &&
 		user.DateOfCreation.ValidDateofCreation() &&
 		user.NumberOfPhotos >= 0 &&
@@ -235,23 +176,23 @@ func ValidUser(user User, regex string) bool {
 
 // Function for handling the population of the struct with data from the DB.
 func (u *User) FromDatabase(user database.User) {
-	u.FixedUsername = FixedUsername(user.FixedUsername)
+	u.FixedUsername = Username(user.FixedUsername)
 	u.Username = Username(user.Username)
-	u.PhotoProfile = byte(user.PhotoProfile)
-	u.Biography = Phrase(user.Biography)
+	u.PhotoProfile = user.PhotoProfile
+	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
-	u.NumberOfPhotos = int(user.NumberOfPhotos) //Maybe int(...)?
-	u.TotNumberLikes = int(user.TotNumberLikes)
-	u.TotNumberComments = int(user.TotNumberComments)
-	u.NumberFollowers = int(user.NumberFollowers)
-	u.NumberFollowing = int(user.NumberFollowing)
+	u.NumberOfPhotos = user.NumberOfPhotos
+	u.TotNumberLikes = user.TotNumberLikes
+	u.TotNumberComments = user.TotNumberComments
+	u.NumberFollowers = user.NumberFollowers
+	u.NumberFollowing = user.NumberFollowing
 
 	//Also personalInfo Struct
-	u.PersonalInfo.Name = Name(user.Name)
-	u.PersonalInfo.Surname = Surname(user.Surname)
+	u.PersonalInfo.Name = user.Name
+	u.PersonalInfo.Surname = user.Surname
 	u.PersonalInfo.DateOfBirth = Date(user.DateOfBirth)
 	u.PersonalInfo.Email = Email(user.Email)
-	u.PersonalInfo.Nationality = Nationality(user.Nationality)
+	u.PersonalInfo.Nationality = user.Nationality
 	u.PersonalInfo.Gender = Gender(user.Gender)
 }
 
@@ -262,19 +203,19 @@ func (u *User) ToDatabase() database.User {
 	return database.User{
 		FixedUsername:     string(u.FixedUsername),
 		Username:          string(u.Username),
-		PhotoProfile:      byte(u.PhotoProfile), //Maybe without byte()?
-		Biography:         string(u.Biography),
+		PhotoProfile:      u.PhotoProfile, //Maybe without byte()?
+		Biography:         u.Biography,
 		DateOfCreation:    string(u.DateOfCreation),
-		NumberOfPhotos:    int64(u.NumberOfPhotos),
-		TotNumberLikes:    int64(u.TotNumberLikes),
-		TotNumberComments: int64(u.TotNumberComments),
-		NumberFollowers:   int64(u.NumberFollowers),
-		NumberFollowing:   int64(u.NumberFollowing),
-		Name:              string(u.PersonalInfo.Name),
-		Surname:           string(u.PersonalInfo.Surname),
+		NumberOfPhotos:    u.NumberOfPhotos,
+		TotNumberLikes:    u.TotNumberLikes,
+		TotNumberComments: u.TotNumberComments,
+		NumberFollowers:   u.NumberFollowers,
+		NumberFollowing:   u.NumberFollowing,
+		Name:              u.PersonalInfo.Name,
+		Surname:           u.PersonalInfo.Surname,
 		DateOfBirth:       string(u.PersonalInfo.DateOfBirth),
 		Email:             string(u.PersonalInfo.Email),
-		Nationality:       string(u.PersonalInfo.Nationality),
+		Nationality:       u.PersonalInfo.Nationality,
 		Gender:            string(u.PersonalInfo.Gender),
 	}
 }

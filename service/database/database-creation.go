@@ -79,6 +79,8 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	);`
 
 // Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
+// LikeId = fixedUsername of the Liker
+// fixedUsername = fixedusername of the person being liked.
 const like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
