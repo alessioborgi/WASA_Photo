@@ -3,11 +3,12 @@ package database
 import (
 	"database/sql"
 	"log"
+	"time"
 
 	"github.com/gofrs/uuid"
 )
 
-// DOUBT: What does lastInserId does and what from line 13 happens?
+var now = time.Now()
 
 func (db *appdbimpl) DoLogin(username string) (string, error) {
 
@@ -45,7 +46,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Add the snapshot time of when it is added automatically with like "time.now".
 		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", "2022-01-01", 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
+			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", now, 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 		if errCretion != nil {
 			log.Fatalf("Error During Creation")
 			return "Error", errCretion

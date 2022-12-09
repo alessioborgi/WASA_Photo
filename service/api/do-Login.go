@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
@@ -20,6 +21,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	} else if !username.ValidUsername(*regex_username) {
+		log.Fatalf("The Username inserted is not Valid!")
 		// Here we validated the fountain structure content (e.g., location coordinates in correct range, etc.), and we
 		// discovered that the fountain data are not valid.
 		// Note: the IsValid() function skips the ID check (see below).
