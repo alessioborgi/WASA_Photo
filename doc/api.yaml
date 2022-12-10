@@ -416,6 +416,38 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
+    get:
+      security:
+        - bearerAuthentication: []
+      operationId: getPhoto
+      tags: ["Photo-Uploading"]
+      summary: Return the User Photo Object.
+      description: |
+        HOW IT WORKS:
+        Return the current User Photo Object given in input the Username and the photo id. Also here, we request for 
+        authentication of the user that wants to perform this action. 
+        
+        RETURN:
+        The returned value is the requested User's Photo object. 
+        
+        RESTRICTIONS:
+        Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user's photo
+        iif this has not banned you.
+      responses:
+        '200':
+          description: Ok! User's Photo Returned Successfully!.
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/photo"}
+
+        '204': {$ref : '#/components/responses/NoContent'}
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+        
+        '404': {$ref : '#/components/responses/NotFound'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+
 
 
   ### USER's PHOTO COMMENTS COLLECTION #

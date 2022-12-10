@@ -18,7 +18,8 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.PUT("/users/:fixedUsername", rt.wrap(rt.setMyUsername))
 
 	//Register the uploadPhoto API.
-	rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
+	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
+	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
 	//Register the followUser API.
 	// rt.router.PUT("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.followUser))

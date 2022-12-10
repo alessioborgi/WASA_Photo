@@ -75,7 +75,7 @@ type AppDatabase interface {
 	//(Security Required: Needs Uuid of the action requester).
 	// UploadPhoto() creates a new User's Photo(Post) in the database, given in input the Photo Object. It returns an Photo Object.
 	// UploadPhoto(photo Photo, uuid string) (Photo, error)
-	UploadPhoto(photo Photo) (Photo, error)
+	UploadPhoto(username string, photo Photo) (Photo, error)
 
 	//(Security Required: Needs Uuid of the action requester).
 	// DeletePhoto() removes a User's Photo given the fixedUsername and the photoId in input.

@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/alessioborgi/WASA_Photo/service/database"
 )
 
 type (
@@ -84,3 +86,27 @@ func ValidPhoto(photo Photo) bool {
 }
 
 // -----                -----
+
+func (p *Photo) FromDatabase(photo database.Photo) {
+	p.Photoid = int(photo.Photoid)
+	p.Filename = photo.Filename
+	p.UploadDate = DateTime(photo.UploadDate)
+	p.Location.latitude = photo.Latitude
+	p.Location.longitude = photo.Longitude
+	p.Phrase = photo.Phrase
+	p.NumberLikes = int(photo.NumberLikes)
+	p.NumberComments = int(photo.NumberComments)
+}
+
+func (p *Photo) ToDatabase() database.Photo {
+	return database.Photo{
+		Photoid:        int64(p.Photoid),
+		Filename:       p.Filename,
+		UploadDate:     string(p.UploadDate),
+		Latitude:       p.Location.latitude,
+		Longitude:      p.Location.longitude,
+		Phrase:         p.Phrase,
+		NumberLikes:    int64(p.NumberLikes),
+		NumberComments: int64(p.NumberComments),
+	}
+}

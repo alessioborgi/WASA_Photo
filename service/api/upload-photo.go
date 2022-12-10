@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 
@@ -11,39 +12,43 @@ import (
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// 1 - get userid from path
-	mediaID := ps.ByName("media")
-	mediaID = strings.TrimPrefix(mediaID, ":mediaid=")
-	if mediaID == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// 1 - get username from path
+	username := ps.ByName("username")
+	username = strings.TrimPrefix(username, ":username=")
 
-	// 2 - get media from RB
-	var media structs.Media
-	err := json.NewDecoder(r.Body).Decode(&media)
+	// 2- get the photo object from the request body.
+	var photo Photo
+
+	// Getting the Username from the JSON.
+	err := json.NewDecoder(r.Body).Decode(&photo)
+
 	if err != nil {
-		// The body was not a parseable JSON, reject it
+		// The body was not a parseable JSON, reject it.
 		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("The Body was not a Parseable JSON!")
 		return
-	} else if !media.IsValid() {
-		// Here we validated the fountain structure content (e.g., location coordinates in correct range, etc.), and we
-		// discovered that the fountain data are not valid.
-		// Note: the IsValid() function skips the ID check (see below).
+	} else if !ValidPhoto(photo) {
+		// If no error occurs, check whether the Username is a Valid User using the regex.
+		// In this case it is not. Thus reject it.
 		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("The Photo Pbject inserted is not Valid (Does not respect its Regex)!")
 		return
-	}
+	} else {
+		// Here the Regex is Validated, and threfore we can proceed to give back User or create it.
+		newPhotoId, err := rt.db.UploadPhoto(username, photo.ToDatabase())
 
-	// 3 - chiamare metodo DB
-	newMediaID, err := rt.db.UploadPhoto(mediaID, media.ToDatabase())
-	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't log you in")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+		// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
 
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(newMediaID)
+		if err != nil {
+			// We have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
+			return
+		} else {
+			// It is all fine. We can send back the uuid to the User.
+			w.Header().Set("Content-Type", "application/json")
+			log.Println("The User Uuid is returned to the WebSite...")
+			_ = json.NewEncoder(w).Encode(newPhotoId)
+		}
+	}
 }
