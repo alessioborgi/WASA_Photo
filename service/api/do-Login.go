@@ -10,44 +10,38 @@ import (
 )
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	// Read the new content for the fountain from the request body.
 
-	//Step 1: Verify that is a Valid User.
 	var username Username
 
+	// Getting the Username from the JSON.
 	err := json.NewDecoder(r.Body).Decode(&username)
 	if err != nil {
-		// The body was not a parseable JSON, reject it
+		// The body was not a parseable JSON, reject it.
 		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("The Body was not a Parseable JSON!")
 		return
 	} else if !username.ValidUsername(*regex_username) {
-		log.Fatalf("The Username inserted is not Valid!")
-		// Here we validated the fountain structure content (e.g., location coordinates in correct range, etc.), and we
-		// discovered that the fountain data are not valid.
-		// Note: the IsValid() function skips the ID check (see below).
+		// If no error occurs, check whether the Username is a Valid User using the regex.
+		// In this case it is not. Thus reject it.
 		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	//Step 2: If it is valid and it does exists, Login. Return Uuid.
-
-	//Step 3: If it is valid and does not exists. Create it. Return Uuid.
-
-	//Step 4: If it is not valid, return Error.
-
-	// Create the fountain in the database. Note that this function will return a new instance of the fountain with the
-	// same information, plus the ID.
-	newUid, err := rt.db.DoLogin(string(username.Name))
-	// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
-	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("can't log you in")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Fatalf("The Username inserted is not Valid (Does not respect its Regex)!")
 		return
 	} else {
-		// Send the output to the user.
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(newUid)
+		// Here the Regex is Validated, and threfore we can proceed to give back User or create it.
+		newUid, err := rt.db.DoLogin(string(username.Name))
+
+		// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
+
+		if err != nil {
+			// We have an error on our side. Log the error (so we can be notified) and send a 500 to the user
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
+			return
+		} else {
+			// It is all fine. We can send back the uuid to the User.
+			w.Header().Set("Content-Type", "application/json")
+			log.Println("The User Uuid is returned...")
+			_ = json.NewEncoder(w).Encode(newUid)
+		}
 	}
 }

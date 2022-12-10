@@ -39,8 +39,8 @@ var (
 // Create a User structure.
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
-	FixedUsername     Username     `json:"fixedUsername"`
-	Username          Username     `json:"username"`
+	FixedUsername     string       `json:"fixedUsername"`
+	Username          string       `json:"username"`
 	PhotoProfile      byte         `json:"photoProfile"`
 	Biography         string       `json:"biography"`
 	PersonalInfo      PersonalInfo `json:"personalInfo"`
@@ -166,8 +166,8 @@ func (d Date) ValidDateofCreation() bool { //yyyy/mm/dd
 
 // Function Method used to check for the User Validity.
 func (user *User) ValidUser() bool {
-	return user.FixedUsername.ValidUsername(*regex_username) && //Checking for the FixedUsername Regex.
-		user.Username.ValidUsername(*regex_username) && //Checking for the Username Regex.
+	return regex_username.MatchString(user.FixedUsername) && //Checking for the FixedUsername Regex.
+		regex_username.MatchString(user.Username) && //Checking for the Username Regex.
 		len(user.Biography) >= 0 && len(user.Biography) <= 1000 && //Checking for the Biography.
 		len(user.PersonalInfo.Name) >= 2 && len(user.PersonalInfo.Name) <= 31 && //Checking for the Name.
 		len(user.PersonalInfo.Surname) >= 2 && len(user.PersonalInfo.Surname) <= 31 && //Checking for the Surname.
@@ -187,8 +187,8 @@ func (user *User) ValidUser() bool {
 
 // Function for handling the population of the struct with data from the DB.
 func (u *User) FromDatabase(user database.User) {
-	u.FixedUsername = Username(u.FixedUsername)
-	u.Username = Username(u.Username)
+	u.FixedUsername = u.FixedUsername
+	u.Username = u.Username
 	u.PhotoProfile = user.PhotoProfile
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
@@ -212,8 +212,8 @@ func (u *User) FromDatabase(user database.User) {
 // DOUBT: What to do with the UUID?
 func (u *User) ToDatabase() database.User {
 	return database.User{
-		FixedUsername:     string(u.FixedUsername.Name),
-		Username:          string(u.Username.Name),
+		FixedUsername:     u.FixedUsername,
+		Username:          u.Username,
 		PhotoProfile:      u.PhotoProfile, //Maybe without byte()?
 		Biography:         u.Biography,
 		DateOfCreation:    string(u.DateOfCreation),

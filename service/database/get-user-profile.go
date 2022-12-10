@@ -1,6 +1,11 @@
 package database
 
-func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) {
+import (
+	"database/sql"
+	"log"
+)
+
+func (db *appdbimpl) GetUserProfile(username string) (User, error) {
 	// Variable for returning the UserProfile.
 	var user User
 
@@ -18,16 +23,34 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 	// 	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
 	// 	if authorization == "Authorized" {
 
-	//If you are the Owner of the Profile.
-	err := db.c.QueryRow(`SELECT * 
-			FROM Users
-			WHERE username == '?'`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.PhotoProfile, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
+	// First check whether the user you are searching is present.
+	var exists = 0
+	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
 
-	//Check for the error during the Query.
-	if err != nil {
+	// Check for the error during the Query.
+	if err != nil && err != sql.ErrNoRows {
+		log.Fatalf("Unexpected Error during the Query!")
 		return User{}, err
+	} else if exists == 1 {
+		// If the User Exists.
+		log.Println("The User Exists WASAPhoto Platform!")
+		// If you are the Owner of the Profile.
+		err := db.c.QueryRow(`SELECT *
+				FROM Users
+				WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.PhotoProfile, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
+
+		// Check for the error during the Query.
+		if err != nil {
+			log.Fatalf("Unexpected Error! During the Query Retrieval")
+			return User{}, err
+		} else {
+			log.Println("User Profile retrieved correctly!")
+			return user, nil
+		}
 	} else {
-		return user, nil
+		// The User Does not exists.
+		log.Fatalf("ErrUserDoesNotExist")
+		return User{}, ErrUserDoesNotExist
 	}
 	// } else {
 	//In the case you are not the profile owner, i.e. you result as "unauthorized", you must have a restricted View of the User profile (i.e, it must not see the Personal Data).

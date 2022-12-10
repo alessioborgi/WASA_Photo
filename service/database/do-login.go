@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -18,19 +19,19 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
-		log.Fatalf("Unexpected Error!")
+		log.Fatalf("Unexpected Error during the Query of the DB!")
 		return "", err
 	} else if exists == 1 {
-		// If no strange error during the Query occurs, and exists = 1, we already have the user registered.
+		// If no strange error occurs during the Query, and exists = 1, we already have the user registered.
 		// The User already Exists. LOGIN Part.
-		log.Println("The User already esists!")
+		log.Println("The User already exists!")
 		var saved_uuid string
 		err := db.c.QueryRow(`SELECT uuid FROM Users WHERE username == ?`, username).Scan(&saved_uuid)
 		if err != nil {
-			log.Fatalf("Failed to Retrieve UUID")
+			log.Fatalf("Failed to Retrieve UUID from the DB")
 			return "", err
 		} else {
-			log.Println("Uuid Retrieval Succeeded!")
+			log.Println("Uuid Retrieval Succeeded from the DB!")
 			return saved_uuid, nil
 		}
 
@@ -44,14 +45,27 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 			log.Println("Generated UUID", uuid)
 		}
 
-		// Add the snapshot time of when it is added automatically with like "time.now".
+		// Actual User insertion in the DB. Insertion of the actual uuid, username and (after), update the fixedUsername.
+		// The rest of the User is completely Standard, in such a way to have that teh user is not obliged to add nothing else.
+
+		var max_id string
+		err := db.c.QueryRow(`SELECT MAX(fixedUsername) FROM Users`).Scan(&max_id)
+		if err != nil {
+			return "", err
+		} else {
+			fmt.Println("The last id is: ", max_id)
+		}
 		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", now, 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 		if errCretion != nil {
 			log.Fatalf("Error During Creation")
 			return "Error", errCretion
 		} else {
+
+			// User Created Successfully.
 			log.Println("User Creation Succeeded!")
+
+			// User's fixedUsername Update.
 			lastInsertID, err := res.LastInsertId()
 			if err != nil {
 				log.Fatalf("User fixedUsername retrieval Error")
@@ -59,43 +73,15 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 			} else {
 				log.Println("User fixedUsername retrieval Succedeed.")
 				var a = lastInsertID
-				_, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername="?" WHERE username = '?'`, string(rune(a)), username)
+				_, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername=? WHERE username = ?`, string(rune(a)), username)
 				if errUpdate != nil {
 					log.Fatalf("Error During Updatating")
 					return "", errUpdate
 				} else {
-					log.Println("fixedUsername Update succeeded")
+					log.Println("fixedUsername Update Succeeded")
 					return uuid.String(), nil
 				}
 			}
 		}
 	}
 }
-
-// ------------------------------------------------------------------------------------
-// import (
-// 	"log"
-
-// 	"github.com/gofrs/uuid"
-// )
-
-// // Create a Version 4 UUID, panicking on error.
-// // Use this form to initialize package-level variables.
-// var u1 = uuid.Must(uuid.NewV4())
-
-// func main() {
-// 	// Create a Version 4 UUID.
-// 	u2, err := uuid.NewV4()
-// 	if err != nil {
-// 		log.Fatalf("failed to generate UUID: %v", err)
-// 	}
-// 	log.Printf("generated Version 4 UUID %v", u2)
-
-// 	// Parse a UUID from a string.
-// 	s := "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-// 	u3, err := uuid.FromString(s)
-// 	if err != nil {
-// 		log.Fatalf("failed to parse UUID %q: %v", s, err)
-// 	}
-// 	log.Printf("successfully parsed UUID %v", u3)
-// }
