@@ -1,6 +1,6 @@
 package database
 
-func (db *appdbimpl) UploadPhoto(photo Photo, uuid string) (Photo, error) {
+func (db *appdbimpl) UploadPhoto(photo Photo) (Photo, error) {
 
 	// Adding a User Photo. Here we can distinguish two cases:
 	//1) We have that the User can add the photo since the photo insertion action has been requested by the profile owner's coinciding with the action requester.

@@ -7,9 +7,10 @@ import (
 	"time"
 )
 
-type Phrase string
-type DateTime string
-type Motivation string
+type (
+	DateTime   string
+	Motivation string
+)
 
 var current_hour, current_minute, current_second = time.Now().Clock()
 
@@ -18,7 +19,7 @@ type Photo struct {
 	Filename       byte     `json:"filename"` //Note here it will be in bynary.
 	UploadDate     DateTime `json:"uploadDate"`
 	Location       Location `json:"location"`
-	Phrase         Phrase   `json:"phrase"`
+	Phrase         string   `json:"phrase"`
 	NumberLikes    int      `json:"numberLikes"`
 	NumberComments int      `json:"numberComments"`
 }
@@ -70,10 +71,6 @@ func (l Location) ValidLocation() bool {
 	return l.latitude <= 90 && l.latitude >= -90 && l.longitude <= 180 && l.longitude >= -180
 }
 
-func (p Phrase) ValidPhrase() bool {
-	return len(p) >= 5 && len(p) <= 1000
-}
-
 // ----- FINAL PHOTO FUNCTION -----
 
 // Function Method used to check for the User Validity.
@@ -81,85 +78,9 @@ func ValidPhoto(photo Photo) bool {
 	return photo.Photoid >= 0 &&
 		photo.UploadDate.ValidUploadDate() &&
 		photo.Location.ValidLocation() &&
-		photo.Phrase.ValidPhrase() &&
+		len(photo.Phrase) >= 5 && len(photo.Phrase) <= 1000 &&
 		photo.NumberLikes >= 0 &&
 		photo.NumberComments >= 0
 }
 
 // -----                -----
-
-type Comment struct {
-	Commentid         int      `json:"commentid"`
-	CommenterUsername Username `json:"commenterUsername"`
-	Phrase            Phrase   `json:"phrase"`
-	UploadDate        DateTime `json:"uploadDate"`
-}
-
-// ----- FINAL PHOTO FUNCTION -----
-
-// Function Method used to check for the User Validity.
-func ValidComment(comment Comment) bool {
-	return comment.Commentid >= 0 &&
-		comment.CommenterUsername.ValidUsername(*regex_username) &&
-		comment.Phrase.ValidPhrase() &&
-		comment.UploadDate.ValidUploadDate()
-}
-
-// -----                -----
-
-type Like struct {
-	Likeid     Username `json:"likeid"` //This corresponds to the Username of the Liker.
-	UploadDate DateTime `json:"uploadDate"`
-}
-
-// ----- FINAL LIKE FUNCTION -----
-
-// Function Method used to check for the User Validity.
-func ValidLike(like Like) bool {
-	return like.Likeid.ValidUsername(*regex_username) &&
-		like.UploadDate.ValidUploadDate()
-}
-
-// -----                -----
-
-type Ban struct {
-	Banid      Username   `json:"banid"` //This corresponds to the Username of the User Banned.
-	UploadDate DateTime   `json:"uploadDate"`
-	Motivation Motivation `json:"motivation"`
-}
-
-func (m Motivation) ValidMotivation() bool {
-	m_lower := strings.ToLower(string(m))
-	return m_lower == "spam" || m_lower == "bad behaviour" || m_lower == "threats"
-}
-
-// ----- FINAL BAN FUNCTION -----
-
-// Function Method used to check for the User Validity.
-func ValidBan(ban Ban) bool {
-	return ban.Banid.ValidUsername(*regex_username) &&
-		ban.UploadDate.ValidUploadDate() &&
-		ban.Motivation.ValidMotivation()
-}
-
-// -----                -----
-
-type Follow struct {
-	Followid   Username `json:"followid"` //This corresponds to the Username of the Follower.
-	UploadDate DateTime `json:"uploadDate"`
-}
-
-// ----- FINAL FOLLOW FUNCTION -----
-
-// Function Method used to check for the User Validity.
-func ValidFollow(follow Follow) bool {
-	return follow.Followid.ValidUsername(*regex_username) &&
-		follow.UploadDate.ValidUploadDate()
-}
-
-// -----                -----
-
-// Create a JSON Error Message Structure.
-type JSONErrorMsg struct {
-	Message string
-}
