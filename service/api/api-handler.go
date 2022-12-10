@@ -72,6 +72,9 @@ func (rt *_router) Handler() http.Handler {
 	//Register the setPhoto API.
 	// rt.router.PUT("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.setPhoto))
 
+	//Register the getPhoto API.
+	// rt.router.GET("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.getPhoto))
+
 	//Register the getPhotoComments API.
 	// rt.router.GET("/users/:fixedUsername/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
 

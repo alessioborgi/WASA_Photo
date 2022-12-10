@@ -153,6 +153,10 @@ type AppDatabase interface {
 	// SetPhoto() updates a User's Photo, replacing it with the new value of the Phrase in the argument, in addition to a fixedUsername of the User and the PhotoId.
 	// SetPhoto(fixedUsername string, photoId int, newPhrase string, uuid string) error
 
+	//(Security Required: Needs Uuid of the action requester).
+	// GetPhoto() return a User's Photo, given the fixedUsername and the photoid in input.
+	// GetPhoto(fixedUsername string, photoId int, uuid string) (Photo, error)
+
 	// USER's PHOTO COMMENTS COLLECTION:
 	//(Security Required: Needs Uuid of the action requester).
 	// GetPhotoComments() returns the list of Photos's Comments of a given User Photo, given in input a fixedUsername, and the photoId.
