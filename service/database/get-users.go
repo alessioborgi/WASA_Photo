@@ -9,7 +9,7 @@ func (db *appdbimpl) GetUsers() ([]string, error) {
 	//Check that the users that have banned the User that is requesting this action, must not be present in the list.
 	//Returns the list in Descending Order(i.e., New Users first).
 
-	users, err := db.c.Query(`SELECT username FROM Users`)
+	users, err := db.c.Query(`SELECT username FROM Users ORDER BY dateOfCreation DESC`)
 
 	// users, err := db.c.Query(`WITH Req_User (fixedUsername) AS (
 	// 	SELECT fixedUsername
@@ -26,7 +26,7 @@ func (db *appdbimpl) GetUsers() ([]string, error) {
 
 	// SELECT fixedUsername, dateOfCreation
 	// FROM Tuser AS t JOIN Users As u On t.name = u.fixedUsername
-	// ORDER By dateOfCreation`, uuid)
+	// ORDER BY dateOfCreation`, uuid)
 
 	if err != nil {
 		return nil, err

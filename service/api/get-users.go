@@ -16,8 +16,10 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	// the OpenAPI file).
 	// If one of latitude or longitude is not specified (or both), no filter will be applied.
 
-	var err error
-	var users []string
+	var (
+		err   error
+		users []string
+	)
 	users, err = rt.db.GetUsers()
 
 	if err != nil {

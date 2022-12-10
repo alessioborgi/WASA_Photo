@@ -24,11 +24,12 @@ import (
 type Date string
 type Email string
 type Gender string
+type Uuid string
 
 // Variables Declaration.
 var (
 	regex_username = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
-	// regex_uuid     = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)                //123e4567-e89b-12d3-a456-426614174000
+	regex_uuid     = regexp.MustCompile(`^[0-9a-fA-F-]{36}`) //123e4567-e89b-12d3-a456-426614174000
 	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) //Without February Check.
 
 	current_year, c_month, current_day = time.Now().Date()
@@ -68,6 +69,11 @@ type PersonalInfo struct {
 // Declaring a Method for checking the Username validity w.r.t. its regex.
 func (username Username) ValidUsername(regex regexp.Regexp) bool {
 	return regex.MatchString(string(username.Name))
+}
+
+// Declaring a Method for checking the uuid validity w.r.t. its regex.
+func (uuid Uuid) ValidUuid(regex regexp.Regexp) bool {
+	return regex.MatchString(string(uuid))
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
@@ -128,6 +134,7 @@ func (d Date) ValidDateofCreation() bool { //yyyy/mm/dd
 	year, erry := strconv.Atoi(date[0])
 	month, errm := strconv.Atoi(date[1])
 	day, errd := strconv.Atoi(date[2])
+	fmt.Println("The date is: ", year, month, day)
 
 	if erry != nil && errm != nil && errd != nil {
 		// Check whether the date is after the 2022-01-01 and before the current date (range included).
@@ -180,8 +187,8 @@ func (user *User) ValidUser() bool {
 
 // Function for handling the population of the struct with data from the DB.
 func (u *User) FromDatabase(user database.User) {
-	u.FixedUsername = u.FixedUsername
-	u.Username = u.Username
+	u.FixedUsername = Username(u.FixedUsername)
+	u.Username = Username(u.Username)
 	u.PhotoProfile = user.PhotoProfile
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
