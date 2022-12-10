@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -14,6 +13,7 @@ var now = time.Now()
 func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 	// First check whether there exists a User with the inserted Username.
+
 	var exists = 0
 	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
 
@@ -22,10 +22,13 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		log.Fatalf("Unexpected Error during the Query of the DB!")
 		return "", err
 	} else if exists == 1 {
+		// USER PROFILE LOGIN:
 		// If no strange error occurs during the Query, and exists = 1, we already have the user registered.
-		// The User already Exists. LOGIN Part.
+		// The User already Exists.
 		log.Println("The User already exists!")
 		var saved_uuid string
+
+		// Uuid Retrieval.
 		err := db.c.QueryRow(`SELECT uuid FROM Users WHERE username == ?`, username).Scan(&saved_uuid)
 		if err != nil {
 			log.Fatalf("Failed to Retrieve UUID from the DB")
@@ -36,8 +39,12 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		}
 
 	} else {
-		// The User deos not Exists. User CREATION Part.
+
+		// USER PROFILE CREATION:
+		// The User deos not Exists.
 		log.Println("The User does not exists!")
+
+		//Uuid Generation.
 		var uuid = uuid.Must(uuid.NewV4())
 		if err != nil && err != sql.ErrNoRows {
 			log.Fatalf("Failed to generate UUID: %v", err)
@@ -48,13 +55,14 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		// Actual User insertion in the DB. Insertion of the actual uuid, username and (after), update the fixedUsername.
 		// The rest of the User is completely Standard, in such a way to have that teh user is not obliged to add nothing else.
 
-		var max_id string
-		err := db.c.QueryRow(`SELECT MAX(fixedUsername) FROM Users`).Scan(&max_id)
-		if err != nil {
-			return "", err
-		} else {
-			fmt.Println("The last id is: ", max_id)
-		}
+		// //Getting the last id inserted.
+		// var max_id string
+		// err := db.c.QueryRow(`SELECT MIN(fixedUsername) FROM Users`).Scan(&max_id)
+		// if err != nil {
+		// 	return "", err
+		// } else {
+		// 	fmt.Println("The last id is: ", max_id)
+		// }
 		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			uuid.String(), uuid.String(), username, "0000000000000000000000000000000000000000000000000000000000000000000000", "", now, 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 		if errCretion != nil {

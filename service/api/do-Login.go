@@ -40,7 +40,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		} else {
 			// It is all fine. We can send back the uuid to the User.
 			w.Header().Set("Content-Type", "application/json")
-			log.Println("The User Uuid is returned...")
+			log.Println("The User Uuid is returned to the WebSite...")
 			_ = json.NewEncoder(w).Encode(newUid)
 		}
 	}

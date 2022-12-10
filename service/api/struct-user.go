@@ -187,8 +187,8 @@ func (user *User) ValidUser() bool {
 
 // Function for handling the population of the struct with data from the DB.
 func (u *User) FromDatabase(user database.User) {
-	u.FixedUsername = u.FixedUsername
-	u.Username = u.Username
+	u.FixedUsername = user.FixedUsername
+	u.Username = user.Username
 	u.PhotoProfile = user.PhotoProfile
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)

@@ -34,6 +34,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 )
 
 // Errors
@@ -140,6 +141,7 @@ type AppDatabase interface {
 	//(Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
 	// DeleteUsername(fixedUsername string, uuid string) error
+	DeleteUsername(username string) error
 
 	//(Security Required: Needs Uuid of the action requester).
 	// GetPhotos() returns the list of Photos of a given user, given in input a fixedUsername.
@@ -221,9 +223,45 @@ func New(db *sql.DB) (AppDatabase, error) {
 		}
 	}
 
-	return &appdbimpl{
-		c: db,
-	}, nil
+	// ADMIN USER PROFILE CREATION (myself): alessioborgi01
+
+	// First check whether there are any other users in the table.
+	var exists = 0
+	err := db.QueryRow(`SELECT COUNT(fixedUsername) FROM Users`).Scan(&exists)
+
+	// Check for the error during the Query.
+	if err != nil && err != sql.ErrNoRows {
+		log.Fatalf("Unexpected Error during the Query of the DB!")
+		return &appdbimpl{
+			c: db,
+		}, err
+	} else if exists == 0 {
+
+		// If no user is in the Users Table, go beyond and add the Admin User Profile.
+		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"/u0000", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "0000000000000000000000000000000000000000000000000000000000000000000000", "I am the WASAPhoto Owner", now, 0, 0, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
+
+		if errCretion != nil {
+			log.Fatalf("Error During Creation")
+			return &appdbimpl{
+				c: db,
+			}, errCretion
+		} else {
+
+			// If no error occurs, User Profile Creation.
+			log.Println("WASAPhoto's Owner Account Created: alessioborgi01")
+			return &appdbimpl{
+				c: db,
+			}, nil
+		}
+	} else {
+
+		// We arrive here if we have already the Admin User to be Present in the DB.
+		log.Println("User Admin already Created!")
+		return &appdbimpl{
+			c: db,
+		}, nil
+	}
 }
 
 func (db *appdbimpl) Ping() error {

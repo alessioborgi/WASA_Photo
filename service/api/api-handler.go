@@ -33,7 +33,8 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.DELETE("/users/:fixedUsername/bans/:banid", rt.wrap(rt.unbanUser))
 
 	//Register the getUserProfile API.
-	rt.router.GET("/users/:fixedUsername", rt.wrap(rt.getUserProfile))
+	// rt.router.GET("/users/:fixedUsername", rt.wrap(rt.getUserProfile))
+	rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
 
 	//Register the getMyStream API.
 	// rt.router.GET("/users/:fixedUsername/myStream/", rt.wrap(rt.getMyStream))
@@ -62,6 +63,7 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the deleteUsername API.
 	// rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))
+	rt.router.DELETE("/users/:username", rt.wrap(rt.deleteUsername))
 
 	//Register the getPhotos API.
 	// rt.router.GET("/users/:fixedUsername/photos/", rt.wrap(rt.getPhotos))
