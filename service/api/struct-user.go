@@ -41,7 +41,6 @@ var (
 type User struct {
 	FixedUsername     string       `json:"fixedUsername"`
 	Username          string       `json:"username"`
-	PhotoProfile      byte         `json:"photoProfile"`
 	Biography         string       `json:"biography"`
 	PersonalInfo      PersonalInfo `json:"personalInfo"`
 	DateOfCreation    Date         `json:"dateOfCreation"`
@@ -189,7 +188,6 @@ func (user *User) ValidUser() bool {
 func (u *User) FromDatabase(user database.User) {
 	u.FixedUsername = user.FixedUsername
 	u.Username = user.Username
-	u.PhotoProfile = user.PhotoProfile
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
 	u.NumberOfPhotos = user.NumberOfPhotos
@@ -214,7 +212,6 @@ func (u *User) ToDatabase() database.User {
 	return database.User{
 		FixedUsername:     u.FixedUsername,
 		Username:          u.Username,
-		PhotoProfile:      u.PhotoProfile, //Maybe without byte()?
 		Biography:         u.Biography,
 		DateOfCreation:    string(u.DateOfCreation),
 		NumberOfPhotos:    u.NumberOfPhotos,

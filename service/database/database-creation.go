@@ -11,7 +11,6 @@ const user_table = `CREATE TABLE IF NOT EXISTS Users (
 	fixedUsername TEXT NOT NULL PRIMARY KEY, 
 	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
-	photoProfile BLOB,
 	biography TEXT,
 	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
@@ -81,7 +80,8 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 // Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
 // LikeId = fixedUsername of the Liker
 // fixedUsername = fixedusername of the person being liked.
-const like_table = `CREATE TABLE IF NOT EXISTS Likes (
+const (
+	like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL,
@@ -91,13 +91,23 @@ const like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
 	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
 	);`
+	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
+	query_presence_ban     = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
+	query_presence_follow  = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follows';`
+	query_presence_photo   = `SELECT name FROM sqlite_master WHERE type='table' AND name='Photos';`
+	query_presence_comment = `SELECT name FROM sqlite_master WHERE type='table' AND name='Comments';`
+	query_presence_like    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Likes';`
 
-const query_presence_user = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
-const query_presence_ban = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
-const query_presence_follow = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follows';`
-const query_presence_photo = `SELECT name FROM sqlite_master WHERE type='table' AND name='Photos';`
-const query_presence_comment = `SELECT name FROM sqlite_master WHERE type='table' AND name='Comments';`
-const query_presence_like = `SELECT name FROM sqlite_master WHERE type='table' AND name='Likes';`
+	delete_users    = `DROP TABLE Users;`
+	delete_bans     = `DROP TABLE Bans;`
+	delete_follows  = `DROP TABLE Follows;`
+	delete_photos   = `DROP TABLE Photos;`
+	delete_comments = `DROP TABLE Comments;`
+	delete_likes    = `DROP TABLE Likes;`
+)
 
-var database = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
-var query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
+var (
+	database             = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
+	query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
+	delete_tables        = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+)

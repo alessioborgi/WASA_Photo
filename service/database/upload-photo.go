@@ -32,7 +32,7 @@ func (db *appdbimpl) UploadPhoto(username string, photo Photo) (Photo, error) {
 
 		// We can therefore proceed to Insert the photo.
 		res, err := db.c.Exec(`INSERT INTO Photos (photoid, fixedUsername, filename, uploadDate, phrase, numberLikes, numberComments, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			photo.Photoid, fixedUsername, photo.Filename, photo.UploadDate, photo.Phrase, photo.NumberLikes, photo.NumberComments, photo.Latitude, photo.Longitude)
+			photo.Photoid, fixedUsername, photo.Filename, now, photo.Phrase, 0, 0, photo.Latitude, photo.Longitude)
 		if err != nil {
 			return Photo{}, err
 		} else {

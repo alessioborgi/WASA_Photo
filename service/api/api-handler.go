@@ -15,7 +15,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session/", rt.wrap(rt.doLogin))
 
 	//Register the setMyUsername API.
-	// rt.router.PUT("/users/:fixedUsername", rt.wrap(rt.setMyUsername))
+	rt.router.PUT("/users/:username", rt.wrap(rt.setMyUsername))
 
 	//Register the uploadPhoto API.
 	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))

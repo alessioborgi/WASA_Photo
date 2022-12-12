@@ -134,16 +134,14 @@ paths:
                 type: array
                 minItems: 0
                 maxItems: 1000000
-                description: Array of fixedUsernames of the WASAPhoto's Users.
+                description: Array of Usernames of the WASAPhoto's Users.
                 items: 
-                  $ref: "#/components/schemas/fixedUsername"
+                  $ref: "#/components/schemas/username"
 
         '204': {$ref : '#/components/responses/NoContent'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
@@ -1151,16 +1149,6 @@ components:
       pattern: ^(?=[a-zA-Z0-9._]{3,31}$)(?!.*[_.]{2})[^_.].*[^_.]$
       example: Maria
     
-    photoProfile:
-      title: photoProfile
-      type: string
-      description: |-
-        Actual User's Photo Profile. 
-      format: binary
-      minLength: 73 
-      maxLength: 2147483647
-      example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
-    
     biography:
       title: biography
       type: string
@@ -1314,8 +1302,6 @@ components:
           $ref: "#/components/schemas/fixedUsername"
         username: 
           $ref: "#/components/schemas/username"
-        photoProfile:
-          $ref: "#/components/schemas/photoProfile"
         biography:
           $ref: "#/components/schemas/biography"
         personalInfo:

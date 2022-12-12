@@ -4,33 +4,38 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	var username Username
+	// 1 - get username from path
+	username := ps.ByName("username")
+	username = strings.TrimPrefix(username, ":username=")
+
+	// 2- get the photo object from the request body.
+	var photo Photo
 
 	// Getting the Username from the JSON.
-	err := json.NewDecoder(r.Body).Decode(&username)
-	log.Println("The Username that will be added is: ", username)
+	err := json.NewDecoder(r.Body).Decode(&photo)
 
 	if err != nil {
 		// The body was not a parseable JSON, reject it.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Body was not a Parseable JSON!")
 		return
-	} else if !username.ValidUsername(*regex_username) {
+	} else if !ValidPhoto(photo) {
 		// If no error occurs, check whether the Username is a Valid User using the regex.
 		// In this case it is not. Thus reject it.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("The Username inserted is not Valid (Does not respect its Regex)!")
+		log.Fatalf("The Photo Pbject inserted is not Valid (Does not respect its Regex)!")
 		return
 	} else {
 		// Here the Regex is Validated, and threfore we can proceed to give back User or create it.
-		newUid, err := rt.db.DoLogin(string(username.Name))
+		newPhotoId, err := rt.db.UploadPhoto(username, photo.ToDatabase())
 
 		// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
 
@@ -42,9 +47,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		} else {
 			// It is all fine. We can send back the uuid to the User.
 			w.Header().Set("Content-Type", "application/json")
-			log.Println("The User Uuid is returned to the WebSite")
-			log.Println("...")
-			_ = json.NewEncoder(w).Encode(newUid)
+			log.Println("The User Uuid is returned to the WebSite...")
+			_ = json.NewEncoder(w).Encode(newPhotoId)
 		}
 	}
 }
