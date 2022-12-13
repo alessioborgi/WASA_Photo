@@ -104,6 +104,7 @@ const (
 	delete_photos   = `DROP TABLE Photos;`
 	delete_comments = `DROP TABLE Comments;`
 	delete_likes    = `DROP TABLE Likes;`
+	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
 )
 
 var (

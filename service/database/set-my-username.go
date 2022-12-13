@@ -4,18 +4,20 @@ package database
 
 func (db *appdbimpl) SetMyUsername(username string, newUsername string) error {
 	// Selection of the User profile. Here we can distinguish two cases:
-	//1) We have that the User Username can be modified since the username that is requesting the action is the Profile Owner.
-	//2) We have that the User Username cannot be modified since the username that is requesting the action is NOT the Profile Owner.
-	//	 Here, you have also to check whether the User that is requesting the profile, has been Banned by the fixedUsername.
-	// authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
+	// 1) We have that the User Username can be modified since the username that is requesting the action is the Profile Owner.
+	// 2) We have that the User Username cannot be modified since the username that is requesting the action is NOT the Profile Owner.
 
-	//Check for the error during the Query.
+	// Here, you have also to check whether the User that is requesting the profile, has been Banned by the fixedUsername.
+	// authorization, errAuth := db.CheckAuthorizationOwner(username, uuid)
+
+	// Check for the error during the Query.
 	// if errAuth != nil {
-	// 	return errAuth
-	// } else {
-	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
-	// if authorization == "Authorized" {
 
+	// 	// Check whether we have received some errors during the Authentication.
+	// 	return errAuth
+	// } else if authorization == AUTHORIZED {
+
+	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
 	// First of all, I need to check whether I have the username I am requesting to change.
 	fixedUsername, errFixedUsername := db.CheckUserPresence(username)
 	if errFixedUsername != nil && errFixedUsername != ErrUserDoesNotExist {
@@ -43,9 +45,13 @@ func (db *appdbimpl) SetMyUsername(username string, newUsername string) error {
 		}
 		return nil
 	}
-	// 	} else {
-	// 		//If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
-	// 		return ErrUserNotAuthorized
-	// 	}
+	// } else if authorization == NOTAUTHORIZED {
+	// 	//If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+	// 	return ErrUserNotAuthorized
+	// } else {
+
+	// 	// Here we are in the case in which we have that the authorization = NOTVALID, i.e., we have that the requesting user
+	// 	// has inserted a Not-Valid Uuid
+	// 	return nil
 	// }
 }

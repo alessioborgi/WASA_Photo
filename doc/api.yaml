@@ -86,18 +86,16 @@ paths:
           description: Ok! User LogIn Successful!
           content:
             application/json:
-              schema: {$ref : "#/components/schemas/fixedUsername"}
+              schema: {$ref : "#/components/schemas/uuid"}
 
         '201':
           description: Created! New User Created Successfully!
           content:
             application/json:
-              schema: {$ref : "#/components/schemas/fixedUsername"}
+              schema: {$ref : "#/components/schemas/uuid"}
 
-        '403': {$ref : '#/components/responses/UnAuthorized'}
+        '400': {$ref : '#/components/responses/BadRequest'}
           
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   ### PARTICULAR USER: #
@@ -159,7 +157,7 @@ paths:
       summary: Change your Username.
       description: |
         HOW IT WORKS:
-        Change the (variable) Username with the new value passed in input (newUsername). 
+        Change the (variable) Username with the new value passed in input (newUsername, in the body). 
         Also here, we request for authentication of the user that wants to perform this action.
         
         RETURN:
@@ -1136,6 +1134,19 @@ components:
       minLength: 3
       maxLength: 31
       example: ale01
+
+    
+    uuid:
+      title: uuid
+      type: string
+      description:  |-
+        The uuid is a Unique user Identifier that will be passed as Token in the Bearer Authentication. 
+        It has 36 chars: 8 - 4 - 4 - 4 - 12
+        
+      pattern: ^[0-9a-fA-F-]{36}
+      minLength: 36
+      maxLength: 36
+      example: 00000000-0000-0000-0000-000000000000
       
       
     username: 
@@ -1593,6 +1604,9 @@ components:
     NoContent:
       description: |
         No content! No requested object is present on WASAPhoto.
+    BadRequest:
+      description: |
+       Bad Request! Not Valid action requested..
 
 
       

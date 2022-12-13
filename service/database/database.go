@@ -46,6 +46,10 @@ var (
 	ErrUserProfileOwner    = errors.New("The User is the Profile Owner!")
 	ErrInternalServerError = errors.New("Internal Server Error!")
 	ErrNoContent           = errors.New("There isn't any object you are searching for in the WASAPhoto Platform!")
+	ErrBadRequest          = errors.New("The action you requested cannot be parsed due to a Bad Request!")
+
+	Created = errors.New("Object Created Correctly.")
+	Ok      = errors.New("Object Returned Correctly.")
 )
 
 // User Struct has been declared in the "db-struct-user.go" file.
@@ -257,7 +261,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 		// If no user is in the Users Table, go beyond and add the Admin User Profile.
 		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"/u0000", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
+			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
 
 		if errCretion != nil {
 			log.Fatalf("Error During Alessio's Account Creation")

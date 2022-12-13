@@ -6,11 +6,13 @@ import (
 	"net/http"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
+	// Username variable declaration.
 	var username Username
 
 	// Getting the Username from the JSON.
@@ -18,28 +20,40 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	log.Println("The Username that will be added is: ", username)
 
 	if err != nil {
+
 		// The body was not a parseable JSON, reject it.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Body was not a Parseable JSON!")
 		return
 	} else if !username.ValidUsername(*regex_username) {
+
 		// If no error occurs, check whether the Username is a Valid User using the regex.
 		// In this case it is not. Thus reject it.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Username inserted is not Valid (Does not respect its Regex)!")
 		return
 	} else {
+
 		// Here the Regex is Validated, and threfore we can proceed to give back User or create it.
 		newUid, err := rt.db.DoLogin(string(username.Name))
 
 		// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
 
-		if err != nil {
+		if err != nil && err != database.Created && err != database.Ok {
 			// We have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 			w.WriteHeader(http.StatusInternalServerError)
 			ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
 			return
 		} else {
+
+			// Note that here I do a not-so-clean thing. I pass the "Created" and "Ok" as errors. I have done this only for not returning
+			// more variables. They only have to say to me whether the User was new or already present.
+			result := err
+			if result == database.Created {
+				w.WriteHeader(http.StatusCreated)
+			} else {
+				w.WriteHeader(http.StatusOK)
+			}
 			// It is all fine. We can send back the uuid to the User.
 			w.Header().Set("Content-Type", "application/json")
 			log.Println("The User Uuid is returned to the WebSite")

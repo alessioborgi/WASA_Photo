@@ -18,8 +18,10 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var user User
 
 	// Get the Username of the user I am searching for from the URL.
-	s := r.URL.String()
-	username_search := s[strings.LastIndex(s, "/")+1:]
+	// s := r.URL.String()
+
+	username_search := ps.ByName("username")
+	username_search = strings.TrimPrefix(username_search, ":username=")
 	log.Println("You are searching for the Username: ", username_search)
 	profile, err = rt.db.GetUserProfile(username_search)
 	if err != nil && err != database.ErrUserDoesNotExist {

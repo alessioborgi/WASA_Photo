@@ -32,13 +32,13 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 
 		// If the Authorization we have inserted is not the Bearer ones, stop.
 		log.Fatalf("The Authentication inserted is not the Bearer Authenticaton.")
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	} else if !regex_uuid.MatchString(authorization_token) {
 
 		// If the Authorization we have inserted does not respect its Regex, stop.
 		log.Fatalf("The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	} else {
 
@@ -65,6 +65,7 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 
 			// If we arrive here, it is all ok.
 			// We only need to send back the list to the user.
+			w.WriteHeader(http.StatusOK)
 			log.Println("We can correctly return the list of WASAPhoto's users.")
 			w.Header().Set("Content-Type", "application/json")
 			_ = json.NewEncoder(w).Encode(users)
