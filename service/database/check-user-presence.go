@@ -28,9 +28,10 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 
 			// If we arrive here we have that the username has been correclty retrieved. We can therefore return it.
 			log.Println("fixedUsername correctly from the Database.")
-			return fixedUsername, nil
+			return fixedUsername, Ok
 		}
 	} else {
+
 		// The User does not Exists.
 		return "Not Exists", ErrUserDoesNotExist
 	}

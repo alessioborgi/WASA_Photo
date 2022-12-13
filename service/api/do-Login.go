@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
@@ -20,7 +21,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	log.Println("The Username that will be added is: ", username)
 
 	// First check whether we have encountered some error in the Body Retrieval.
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Body was not a Parseable JSON!")
@@ -40,7 +41,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	newUid, err := rt.db.DoLogin(string(username.Name))
 
 	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
-	if err != nil && err != database.Created && err != database.Ok {
+	if !errors.Is(err, nil) && !errors.Is(err, database.Created) && !errors.Is(err, database.Ok) {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
 		return
