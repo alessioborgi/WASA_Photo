@@ -6,8 +6,6 @@ import (
 )
 
 func (db *appdbimpl) GetUserProfile(username string) (User, error) {
-	// Variable for returning the UserProfile.
-	var user User
 
 	// Selection of the User profile. Here we can distinguish two cases:
 	//1) We have that the User Profile must return sort of restricted data(i.e., without Personal Data if the User is requesting the action is not the owner.
@@ -18,10 +16,13 @@ func (db *appdbimpl) GetUserProfile(username string) (User, error) {
 
 	//Check for the error during the Query.
 	// if errAuth != nil {
-	// 	return User{}, errAuth
+	//  	return User{}, errAuth
 	// } else {
-	// 	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
-	// 	if authorization == "Authorized" {
+	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
+	// Variable for returning the UserProfile.
+	var user User
+
+	// if authorization == AUTHORIZED {
 
 	// First check whether the user you are searching is present.
 	var exists = 0
@@ -36,8 +37,8 @@ func (db *appdbimpl) GetUserProfile(username string) (User, error) {
 		log.Println("The User Exists WASAPhoto Platform!")
 		// If you are the Owner of the Profile.
 		err := db.c.QueryRow(`SELECT *
-				FROM Users
-				WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
+						FROM Users
+						WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
 
 		// Check for the error during the Query.
 		if err != nil {
@@ -52,6 +53,7 @@ func (db *appdbimpl) GetUserProfile(username string) (User, error) {
 		log.Fatalf("ErrUserDoesNotExist")
 		return User{}, ErrUserDoesNotExist
 	}
+	// }
 	// } else {
 	//In the case you are not the profile owner, i.e. you result as "unauthorized", you must have a restricted View of the User profile (i.e, it must not see the Personal Data).
 
@@ -68,9 +70,9 @@ func (db *appdbimpl) GetUserProfile(username string) (User, error) {
 	// if ban == "Not Banned" {
 	//If we are Not Banned, we proceed to return the User Data (restricted View).
 	//Notice that here, I could have also used a View instead of a query with all these selected columns. I have just opted for the worst choice, since it is very verbose.
-	// err := db.c.QueryRow(`SELECT fixedusername, username, photoprofile, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing
+	// err := db.c.QueryRow(`SELECT fixedusername, username, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing
 	// FROM Users
-	// WHERE username == '?'`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.PhotoProfile, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing)
+	// WHERE username == '?'`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing)
 
 	// //Check for the error during the Query.
 	// if err != nil {

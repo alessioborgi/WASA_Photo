@@ -235,13 +235,13 @@ func New(db *sql.DB) (AppDatabase, error) {
 			table_creation := database[i]
 			_, err = db.Exec(table_creation)
 			if err != nil {
-				fmt.Println("Error in Creating the Database Structure of the table: ", i)
+				log.Println("Error in Creating the Database Structure of the table: ", i)
 				return nil, fmt.Errorf("Error in Creating the Database Structure: %w", err)
 			} else {
 				fmt.Println("Creation of the table number: ", i, "succeeded!")
 			}
 		} else {
-			fmt.Println("The Table is already present!")
+			log.Println("The Table is already present!")
 		}
 	}
 

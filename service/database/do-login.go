@@ -36,7 +36,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 			return "", err
 		} else {
 			log.Println("Uuid Retrieval Succeeded from the DB!")
-			return saved_uuid, Created
+			return saved_uuid, Ok
 		}
 	} else {
 
@@ -80,7 +80,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 					return "", errUpdate
 				} else {
 					log.Println("fixedUsername Update Succeeded")
-					return uuid.String(), Ok
+					return uuid.String(), Created
 				}
 			}
 		}

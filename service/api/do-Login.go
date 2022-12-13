@@ -15,50 +15,49 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// Username variable declaration.
 	var username Username
 
-	// Getting the Username from the JSON.
+	// Getting the Username from the Body JSON.
 	err := json.NewDecoder(r.Body).Decode(&username)
 	log.Println("The Username that will be added is: ", username)
 
+	// First check whether we have encountered some error in the Body Retrieval.
 	if err != nil {
 
-		// The body was not a parseable JSON, reject it.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Body was not a Parseable JSON!")
 		return
-	} else if !username.ValidUsername(*regex_username) {
+	}
 
-		// If no error occurs, check whether the Username is a Valid User using the regex.
-		// In this case it is not. Thus reject it.
+	// We can then check whether the Username we are providing is currently a Valid Username respecting the Regex.
+	if !username.ValidUsername(*regex_username) {
+
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("The Username inserted is not Valid (Does not respect its Regex)!")
 		return
-	} else {
-
-		// Here the Regex is Validated, and threfore we can proceed to give back User or create it.
-		newUid, err := rt.db.DoLogin(string(username.Name))
-
-		// dbfountain, err := rt.db.CreateFountain(fountain.ToDatabase())
-
-		if err != nil && err != database.Created && err != database.Ok {
-			// We have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-			w.WriteHeader(http.StatusInternalServerError)
-			ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
-			return
-		} else {
-
-			// Note that here I do a not-so-clean thing. I pass the "Created" and "Ok" as errors. I have done this only for not returning
-			// more variables. They only have to say to me whether the User was new or already present.
-			result := err
-			if result == database.Created {
-				w.WriteHeader(http.StatusCreated)
-			} else {
-				w.WriteHeader(http.StatusOK)
-			}
-			// It is all fine. We can send back the uuid to the User.
-			w.Header().Set("Content-Type", "application/json")
-			log.Println("The User Uuid is returned to the WebSite")
-			log.Println("...")
-			_ = json.NewEncoder(w).Encode(newUid)
-		}
 	}
+
+	// If we arrive here, the Regex is Validated, and threfore we can proceed to give back User or create it.
+	// Note that here we only send the Username to the doLogin DB function, because I am going to create a standard User.
+	newUid, err := rt.db.DoLogin(string(username.Name))
+
+	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
+	if err != nil && err != database.Created && err != database.Ok {
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
+		return
+	}
+
+	// If I arrive here, either the User has been "Created" or it was already in the Db "Ok".
+	// Thus, set the header as "Created" or "OK" accordingly.
+	result := err
+	if result == database.Created {
+		w.WriteHeader(http.StatusCreated)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	// Here, we can finally send back the Uuid to the User, using the JSON.
+	w.Header().Set("Content-Type", "application/json")
+	log.Println("The User Uuid is returned to the WebSite")
+	log.Println("...")
+	_ = json.NewEncoder(w).Encode(newUid)
 }

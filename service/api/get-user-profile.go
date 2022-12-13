@@ -18,24 +18,29 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var user User
 
 	// Get the Username of the user I am searching for from the URL.
-	// s := r.URL.String()
-
 	username_search := ps.ByName("username")
 	username_search = strings.TrimPrefix(username_search, ":username=")
 	log.Println("You are searching for the Username: ", username_search)
+
+	// Getting the entire User Profile from the DB.
 	profile, err = rt.db.GetUserProfile(username_search)
+
 	if err != nil && err != database.ErrUserDoesNotExist {
+
 		// Error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		ctx.Logger.WithError(err).Error("Can't provide User profile!")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	} else if err == database.ErrUserDoesNotExist {
+
 		// User Does not Exists.
 		log.Fatalf("The User you are searching for does not Exists in WASAPhoto")
 	} else {
+
 		// The User Exists.
 		log.Println("Profile Retrieval Succedeed")
 		user.FromDatabase(profile)
+		w.WriteHeader(http.StatusOK)
 		// Send the user profile to the user
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(user)
