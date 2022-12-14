@@ -24,7 +24,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	if !errors.Is(err, nil) {
 
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("The Body was not a Parseable JSON!")
+		log.Println("Err: The Body was not a Parseable JSON!")
 		return
 	}
 
@@ -32,7 +32,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	if !username.ValidUsername(*regex_username) {
 
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("The Username inserted is not Valid (Does not respect its Regex)!")
+		log.Println("Err: The Username inserted is not Valid (Does not respect its Regex)!")
 		return
 	}
 

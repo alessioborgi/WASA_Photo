@@ -29,7 +29,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		if err != nil {
 
 			// Uuid failed to be retrieved from the DB.
-			log.Fatalf("Failed to Retrieve UUID from the DB")
+			log.Println("Err: Failed to Retrieve UUID from the DB")
 			return "", err
 		} else {
 
@@ -57,7 +57,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Check whether we have experienced an error from the User Insertion.
 		if errCretion != nil {
-			log.Fatalf("Error During Creation")
+			log.Println("Err: Error During Creation")
 			return "Error", errCretion
 		}
 
@@ -69,7 +69,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		//Check whether we have some error in the LastId retrieval.
 		if err != nil {
-			log.Fatalf("User fixedUsername retrieval Error")
+			log.Println("Err: User fixedUsername retrieval Error")
 			return "", err
 		}
 
@@ -85,7 +85,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Check whether we have some errors during the update in the DB.
 		if errUpdate != nil {
-			log.Fatalf("Error During Updatating")
+			log.Println("Err: Error During Updatating")
 			return "", errUpdate
 		}
 
@@ -96,6 +96,6 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 	// Fist, check whether there is an error strange, i.e., that is neither nil nor ErrUserDoesNotExists.
 	fmt.Println(errUserPresence)
-	log.Fatalf("Unexpected Error during the Query of the DB!")
+	log.Println("Err: Unexpected Error during the Query of the DB!")
 	return "", errUserPresence
 }
