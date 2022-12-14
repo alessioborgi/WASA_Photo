@@ -28,8 +28,9 @@ type Uuid string
 
 // Variables Declaration.
 var (
-	regex_username = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
-	regex_uuid     = regexp.MustCompile(`^[0-9a-fA-F-]{36}`) //123e4567-e89b-12d3-a456-426614174000
+	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
+	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
+	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`) //123e4567-e89b-12d3-a456-426614174000
 	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) //Without February Check.
 
 	current_year, c_month, current_day = time.Now().Date()
@@ -165,7 +166,7 @@ func (d Date) ValidDateofCreation() bool { //yyyy/mm/dd
 
 // Function Method used to check for the User Validity.
 func (user *User) ValidUser() bool {
-	return regex_username.MatchString(user.FixedUsername) && //Checking for the FixedUsername Regex.
+	return regex_fixedUsername.MatchString(user.FixedUsername) && //Checking for the FixedUsername Regex.
 		regex_username.MatchString(user.Username) && //Checking for the Username Regex.
 		len(user.Biography) >= 0 && len(user.Biography) <= 1000 && //Checking for the Biography.
 		len(user.PersonalInfo.Name) >= 2 && len(user.PersonalInfo.Name) <= 31 && //Checking for the Name.

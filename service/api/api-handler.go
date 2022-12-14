@@ -15,15 +15,15 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session/", rt.wrap(rt.doLogin))
 
 	//Register the getUserProfile API.
-	rt.router.GET("/users/", rt.wrap(rt.getUserProfile))
+	rt.router.GET("/users", rt.wrap(rt.getUserProfile))
 	// rt.router.GET("/users/", rt.wrap(rt.getUserProfile))
 
 	//Register the setMyUsername API.
-	rt.router.PUT("/users/:username", rt.wrap(rt.setMyUsername))
+	rt.router.PUT("/users/:fixedUsername", rt.wrap(rt.setMyUsername))
 
 	//Register the uploadPhoto API.
 	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
-	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
+	rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
 
 	//Register the followUser API.
 	// rt.router.PUT("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.followUser))

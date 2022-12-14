@@ -5,11 +5,11 @@ import (
 	"log"
 )
 
-func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
+func (db *appdbimpl) CheckFixedUserPresence(fixedUsername string) (string, error) {
 
-	// Check whether the uuid that is requesting the action is the owner of the profile.
+	// Check whether there exists a fixedUsername that is requesting the action is present..
 	var exists = 0
-	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
+	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE fixedUsername == ?`, fixedUsername).Scan(&exists)
 
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
@@ -19,8 +19,8 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 		// If no strange error during the Query occurs, and exists = 1, we already have the user registered.
 		// The User already Exists.
 
-		var fixedUsername string
-		errFixedUsername := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE username == ?`, username).Scan(&fixedUsername)
+		var username string
+		errFixedUsername := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername == ?`, fixedUsername).Scan(&username)
 		if errFixedUsername != nil {
 			log.Println("Err: Unexpected Error!")
 			return "", err
@@ -28,7 +28,7 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 
 			// If we arrive here we have that the username has been correclty retrieved. We can therefore return it.
 			log.Println("fixedUsername correctly from the Database.")
-			return fixedUsername, Ok
+			return username, Ok
 		}
 	} else {
 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
 	"github.com/alessioborgi/WASA_Photo/service/database"
@@ -21,13 +20,13 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 	// if authorization_type != "Bearer" {
 
 	// 	// If the Authorization we have inserted is not the Bearer ones, stop.
-	// 	log.Fatalf("The Authentication inserted is not the Bearer Authenticaton.")
+	// 	log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
 	// 	w.WriteHeader(http.StatusUnauthorized)
 	// 	return
 	// } else if !regex_uuid.MatchString(authorization_token) {
 
 	// 	// If the Authorization we have inserted does not respect its Regex, stop.
-	// 	log.Fatalf("The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
+	// 	log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 	// 	w.WriteHeader(http.StatusUnauthorized)
 	// 	return
 	// } else {
@@ -39,15 +38,21 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 	// 	// Secondly, we take from the path the username that is requested to be deleted.
 	// 	// Get the Username of the user I am searching for from the URL.
 
-	username := ps.ByName("username")
-	username = strings.TrimPrefix(username, ":username=")
-	log.Println("The Username that will be updated is: ", username)
+	var fixedUsername Username
+	fixedUsername.Name = ps.ByName("fixedUsername")
+	log.Println("The fixedUsername that will update its Username is: ", fixedUsername.Name)
 
-	if username == "" {
+	if fixedUsername.Name == "" {
 
-		// If the Username is empty, there is a bad request.
-		log.Fatalf("The Update has received an Empty username.")
+		// If the fixedUsername is empty, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Update cannot be done because it has received an Empty fixedUsername.")
+		return
+	} else if !regex_fixedUsername.MatchString(fixedUsername.Name) {
+
+		// If the fixedUsername does not respect its Regex, there is a bad request.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Update cannot be done because it has received a not valid fixedUsername.")
 		return
 	} else {
 
@@ -59,40 +64,42 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 
 		// Getting the Username from the JSON.
 		err := json.NewDecoder(r.Body).Decode(&newUsername)
-		log.Println("The Username that will be Updated is: ", newUsername)
+		log.Println("The Username will be Updated to: ", newUsername.Name)
 
 		if err != nil {
 
 			// The body was not a parseable JSON, reject it.
 			w.WriteHeader(http.StatusBadRequest)
-			log.Fatalf("The Body was not a Parseable JSON!")
+			log.Println("Err: The Body was not a Parseable JSON!")
 			return
+		}
 
-		} else if !newUsername.ValidUsername(*regex_username) {
+		// Check whether we have that the newUsername inserted respect its Regex.
+		if !newUsername.ValidUsername(*regex_username) {
 
 			// If no error occurs, check whether the Username is a Valid User using the regex.
 			// In this case it is not. Thus reject it.
 			w.WriteHeader(http.StatusBadRequest)
-			log.Fatalf("The newUsername received does not respect the Regex.")
+			log.Println("Err: The newUsername received does not respect the Regex.")
 			return
 		} else {
 
 			// If we arrive here, there is no error and the newUsername respects its regex.
 			// We can therefore proceed in the Username Update.
 			// Call the DB action and wait for its response.
-			err := rt.db.SetMyUsername(username, newUsername.Name)
+			err := rt.db.SetMyUsername(fixedUsername.Name, newUsername.Name)
 			if err == database.ErrUserDoesNotExist {
 
-				// In this case, we have that the Username that was requested to be deleted, is not in the WASAPhoto Platform.
+				// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
 				w.WriteHeader(http.StatusNotFound)
-				log.Fatalf("The Username that was requested to be deleted, is not a WASAPhoto User.")
+				log.Println("Err: The Username that was requested to be updated, is not a WASAPhoto User.")
 				return
 			} else if err != nil {
 				// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 				// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 				// the Username of the User that triggered the error.
-
-				ctx.Logger.WithError(err).WithField("Username", username).Error("User not present in WASAPhoto. Can't update the Username.")
+				w.WriteHeader(http.StatusInternalServerError)
+				ctx.Logger.WithError(err).WithField("fixedUsername", fixedUsername.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 				return
 			} else {
 
