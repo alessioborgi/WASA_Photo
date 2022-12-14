@@ -46,20 +46,23 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	// If we arrive here, we get a Valid Uuid (that we need to, however, check whether its in the DB and so on).
 
-	// Get the Username of the user I am searching for from the URL.
-	fixed_username_search := ps.ByName("username")
-	if !strings.HasPrefix(fixed_username_search, ":username=") {
+	// We can now get the Username(from query) of the user I am searching for from the URL.
+	// If I have no username parameter, I will have an error BadRequest.
+	if !r.URL.Query().Has("username") {
+
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Path parameter inserted (User to search) is not valid.")
+		log.Println("Err: The Username Parameter has not been inserted.")
 		return
 	}
 
-	// If we arrive here, we can get the fixedUsername.
-	fixed_username_search = strings.TrimPrefix(fixed_username_search, ":fixedUsername=")
-	log.Println("You are searching for profile retrieval of the fixedUsername: ", fixed_username_search)
+	// Since no error has been detected, we can get the Username.
+	username_search := r.URL.Query().Get("username")
+
+	// We arrive here, we can get the fixedUsername.
+	log.Println("You are searching for profile retrieval of the Username: ", username_search)
 
 	// Getting the entire User Profile from the DB.
-	profile, err = rt.db.GetUserProfile(fixed_username_search, authorization_token)
+	profile, err = rt.db.GetUserProfile(username_search, authorization_token)
 
 	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
 	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, database.ErrUserNotAuthorized) && !errors.Is(err, sql.ErrNoRows) && !errors.Is(err, database.ErrUserDoesNotExist) {
@@ -74,14 +77,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 		// If, instead, we have that the error is No Content, we return it, meaning that we haven't found any User with the fixedUsername passed in the platform.
 		w.WriteHeader(http.StatusNotFound)
-		log.Fatalf("We have no User with that fixedUsername in the Platform.")
+		log.Println("Err: We have no User with that fixedUsername in the Platform.")
 		return
 
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
 		// If we arrive here, the Uuid we have inserted, is not a Uuid present in the DB. Thus it is not Authorized.
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Fatalf("We have not the requester Uuid in the Platform.")
+		log.Println("Err: We have not the requester Uuid in the Platform.")
 		return
 	} else {
 

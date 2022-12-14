@@ -24,7 +24,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(username string, uuid string) (stri
 	if err != nil && err != sql.ErrNoRows {
 
 		// Unexpected Error encountered during the query retrieval.
-		log.Fatalf("Unexpected Error!")
+		log.Println("Err: Unexpected Error!")
 		return "", err
 	} else if exists == PRESENT {
 
@@ -60,7 +60,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(username string, uuid string) (stri
 	} else {
 
 		// Here we have that the Uuid inserted, is NOT one present in the DB.
-		log.Fatalf("Inserted Uuid is not one Present in the DB!")
+		log.Println("Err: Inserted Uuid is not one Present in the DB!")
 		return NOTVALID, nil
 	}
 }
@@ -73,7 +73,7 @@ func (db *appdbimpl) CheckAuthorizationPresence(uuid string) (string, error) {
 	if err != nil && err != sql.ErrNoRows {
 
 		// Unexpected Error encountered during the query retrieval.
-		log.Fatalf("Unexpected Error!")
+		log.Println("Err: Unexpected Error!")
 		return "", err
 	} else if exists == 1 {
 		return PRESENT, nil

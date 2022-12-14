@@ -14,6 +14,10 @@ func (rt *_router) Handler() http.Handler {
 	//Register the doLogin API.
 	rt.router.POST("/session/", rt.wrap(rt.doLogin))
 
+	//Register the getUserProfile API.
+	rt.router.GET("/users/", rt.wrap(rt.getUserProfile))
+	// rt.router.GET("/users/", rt.wrap(rt.getUserProfile))
+
 	//Register the setMyUsername API.
 	rt.router.PUT("/users/:username", rt.wrap(rt.setMyUsername))
 
@@ -32,10 +36,6 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the unbanUser API.
 	// rt.router.DELETE("/users/:fixedUsername/bans/:banid", rt.wrap(rt.unbanUser))
-
-	//Register the getUserProfile API.
-	rt.router.GET("/users/:fixedUsername", rt.wrap(rt.getUserProfile))
-	// rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
 
 	//Register the getMyStream API.
 	// rt.router.GET("/users/:fixedUsername/myStream/", rt.wrap(rt.getMyStream))
@@ -60,7 +60,7 @@ func (rt *_router) Handler() http.Handler {
 	// -----
 
 	//Register the getUsers API.
-	rt.router.GET("/users/", rt.wrap(rt.GetUsers))
+	// rt.router.GET("/users/", rt.wrap(rt.GetUsers))
 
 	//Register the deleteUsername API.
 	// rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))

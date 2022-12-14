@@ -105,6 +105,50 @@ paths:
     get:
       security:
         - bearerAuthentication: []
+      operationId: getUserProfile
+      tags: ["User-Profile"]
+      summary: Return the User Profile.
+      description: |
+        HOW IT WORKS:
+        Return the current User Profile given in input (as Parameter) the Username. Also here, we request for 
+        authentication of the user that wants to perform this action. 
+        
+        RETURN:
+        The returned value is the requested User's profile object. 
+        
+        RESTRICTIONS:
+        Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user
+        profile iif this has not banned you.
+      
+      parameters:
+        - name: username
+          in: query
+          description: Username passed to return that specific Username.
+          required: true
+          schema:
+            $ref: '#/components/schemas/username'
+
+      responses:
+        '200':
+          description: Ok! User Profile Returned Successfully!.
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/userProfile"}
+              
+        '400': {$ref : '#/components/responses/BadRequest'}
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+        
+        '404': {$ref : '#/components/responses/NotFound'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+
+  /users/pool:
+    summary: Users Pool
+
+    get:
+      security:
+        - bearerAuthentication: []
       operationId: getUsers
       tags: ["User-Handling"]
       summary: WASAPhoto's List of Users.
@@ -207,38 +251,6 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
     
-    get:
-      security:
-        - bearerAuthentication: []
-      operationId: getUserProfile
-      tags: ["User-Profile"]
-      summary: Return the User Profile.
-      description: |
-        HOW IT WORKS:
-        Return the current User Profile given in input the fixedUsername. Also here, we request for 
-        authentication of the user that wants to perform this action. 
-        
-        RETURN:
-        The returned value is the requested User's profile object. 
-        
-        RESTRICTIONS:
-        Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user
-        profile iif this has not banned you.
-      responses:
-        '200':
-          description: Ok! User Profile Returned Successfully!.
-          content:
-            application/json:
-              schema: {$ref: "#/components/schemas/userProfile"}
-              
-        '400': {$ref : '#/components/responses/BadRequest'}
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-        
-        '404': {$ref : '#/components/responses/NotFound'}
-
-        '500': {$ref : '#/components/responses/InternalServerError'}
-
   ### REMARK #
 
   #Notice that I decided to implement the project going also through subfolders. Notice that
