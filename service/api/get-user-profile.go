@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -67,13 +66,12 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
 	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, database.ErrUserNotAuthorized) && !errors.Is(err, sql.ErrNoRows) && !errors.Is(err, database.ErrUserDoesNotExist) {
 
-		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("It can't provide User Profile!")
 		return
 
 		// If error is then equal to ErrNoContent, we can return this Status.
-	} else if errors.Is(err, database.ErrUserDoesNotExist) {
+	} else if errors.Is(err, database.ErrUserDoesNotExist) || errors.Is(err, sql.ErrNoRows) || errors.Is(err, database.ErrNoContent) {
 
 		// If, instead, we have that the error is No Content, we return it, meaning that we haven't found any User with the fixedUsername passed in the platform.
 		w.WriteHeader(http.StatusNotFound)

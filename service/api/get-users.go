@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"log"
@@ -14,12 +15,7 @@ import (
 
 func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// Parse the query string part. To do that, we need to check whether the latitude, longitude and range exists.
-	// If latitude and longitude are specified, we parse them, and we filter results for them. If range is specified,
-	// the value will be parsed and used as a filter. If it's not specified, 10 will be used as default (as specified in
-	// the OpenAPI file).
-	// If one of latitude or longitude is not specified (or both), no filter will be applied.
-
+	// Variables Declaration.
 	var (
 		err   error
 		users []string
@@ -34,7 +30,7 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	if authorization_type != "Bearer" {
 
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Fatalf("The Authentication inserted is not the Bearer Authenticaton.")
+		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		return
 	}
 
@@ -42,27 +38,27 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	if !regex_uuid.MatchString(authorization_token) {
 
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Fatalf("The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
+		log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 		return
 	}
 
-	// Once that we have checked that the Beare Token we have inserted is valid, we can proceed with our api.
-	// Now, get the users from the DB.
+	// If we arrive here, we get a Valid Uuid (that we need to, however, check whether its in the DB and so on).
 	log.Println("The Bearer Authentication we have inserted can proceed in the API.")
+
+	// We can now proceed with our api, getting the users from the DB.
 	users, err = rt.db.GetUsers(authorization_token)
 
 	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
-	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) {
+	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, sql.ErrNoRows) {
 
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatalf("We have encountered a problem in the DB GetUsers retrieval.")
 		ctx.Logger.WithError(err).Error("It can't list users")
 		return
-	} else if errors.Is(err, database.ErrNoContent) {
+	} else if errors.Is(err, database.ErrNoContent) || errors.Is(err, sql.ErrNoRows) {
 
 		// If, instead, we have that the error is No Content, we return it, meaning that we haven't found any other User in the platform.
 		w.WriteHeader(http.StatusNoContent)
-		log.Fatalf("We have no User in the Platform.")
+		log.Println("Err: We have no User in the Platform.")
 		return
 	} else {
 		// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
