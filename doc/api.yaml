@@ -143,8 +143,8 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
-  /users/pool:
-    summary: Users Pool
+  /users/pool/:
+    summary: Users Pool Collection
 
     get:
       security:

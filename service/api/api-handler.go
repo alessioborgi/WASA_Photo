@@ -60,7 +60,7 @@ func (rt *_router) Handler() http.Handler {
 	// -----
 
 	//Register the getUsers API.
-	// rt.router.GET("/users/", rt.wrap(rt.GetUsers))
+	rt.router.GET("/users/pool/", rt.wrap(rt.GetUsers))
 
 	//Register the deleteUsername API.
 	// rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))
