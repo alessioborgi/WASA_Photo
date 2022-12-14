@@ -16,8 +16,6 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 	// First check whether there exists a User with the inserted Username.
 	_, errUserPresence := db.CheckUserPresence(username)
-	// var exists = 0
-	// err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
 
 	// Check whether the error is "Ok". If we have it to be Ok, it means it is already present in the DB.
 	if errors.Is(errUserPresence, Ok) {

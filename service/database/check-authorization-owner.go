@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 )
 
@@ -13,7 +14,7 @@ const (
 	NOTPRESENT    = "Not Present"
 )
 
-func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) (string, error) {
+func (db *appdbimpl) CheckAuthorizationOwner(username string, uuid string) (string, error) {
 
 	// First check whether there exists the Uuid in the DataBase.
 	exists, err := db.CheckAuthorizationPresence(uuid)
@@ -30,11 +31,17 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 		// Here we have that the Uuid inserted, is one present in the DB.
 		// Check whether the uuid that is requesting the action is the owner of the profile.
 		var auth bool
-		err := db.c.QueryRow(`SELECT uuid == '?' FROM Users	WHERE fixedUsername == '?'`, uuid, fixedUsername).Scan(&auth)
+		err := db.c.QueryRow(`SELECT uuid == ? FROM Users WHERE username == ?`, uuid, username).Scan(&auth)
 
 		// Check for the error during the Query.
-		if err != nil {
+		if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
+
 			return "", err
+		} else if errors.Is(err, sql.ErrNoRows) {
+
+			// It enters here only if the username we are providing does not exists.
+			log.Println("The username is not present in the DB.")
+			return NOTVALID, ErrUserDoesNotExist
 		} else {
 
 			// Returning "Authorized" if it is the owner, "Not Authorized" otherwise.
@@ -46,7 +53,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 			} else {
 
 				// Here we have that the person is requesting the action is NOT the account owner, thus it is NOT authorized.
-				log.Fatalf("User NOT recognized as the Account Owner.")
+				log.Println("User NOT recognized as the Account Owner.")
 				return NOTAUTHORIZED, nil
 			}
 		}

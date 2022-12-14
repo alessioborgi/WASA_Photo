@@ -51,12 +51,12 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	log.Println("The Bearer Authentication we have inserted can proceed in the API.")
 	users, err = rt.db.GetUsers(authorization_token)
 
-	// If we receive an error divers from ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
-	if err != nil && !errors.Is(err, database.ErrNoContent) {
+	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
+	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) {
 
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Fatalf("We have encountered a problem in the DB GetUsers retrieval.")
-		ctx.Logger.WithError(err).Error("can't list users")
+		ctx.Logger.WithError(err).Error("It can't list users")
 		return
 	} else if errors.Is(err, database.ErrNoContent) {
 

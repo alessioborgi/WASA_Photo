@@ -34,7 +34,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.DELETE("/users/:fixedUsername/bans/:banid", rt.wrap(rt.unbanUser))
 
 	//Register the getUserProfile API.
-	// rt.router.GET("/users/:fixedUsername", rt.wrap(rt.getUserProfile))
+	rt.router.GET("/users/:fixedUsername", rt.wrap(rt.getUserProfile))
 	// rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
 
 	//Register the getMyStream API.

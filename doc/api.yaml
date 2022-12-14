@@ -215,7 +215,7 @@ paths:
       summary: Return the User Profile.
       description: |
         HOW IT WORKS:
-        Return the current User Profile given in input the Username. Also here, we request for 
+        Return the current User Profile given in input the fixedUsername. Also here, we request for 
         authentication of the user that wants to perform this action. 
         
         RETURN:
@@ -230,8 +230,8 @@ paths:
           content:
             application/json:
               schema: {$ref: "#/components/schemas/userProfile"}
-
-        '204': {$ref : '#/components/responses/NoContent'}
+              
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
