@@ -2,13 +2,12 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"log"
 )
 
 // DOUBT: Do I have to pass it the entire User Object? Do I have to pass to it the new Username?
 
-func (db *appdbimpl) SetMyUsername(fixedUsername string, newUsername string, uuid string) error {
+func (db *appdbimpl) SetMyUsername(username string, newUsername string, uuid string) error {
 
 	// Selection of the User profile.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -18,9 +17,8 @@ func (db *appdbimpl) SetMyUsername(fixedUsername string, newUsername string, uui
 	// 4) "": Returned if we have some errors.
 
 	// First of all, check the Authorization of the person who is asking the action.
-	authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
+	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
-	fmt.Println(authorization, errAuth)
 	// Check for the error during the Query.
 	if errAuth != nil {
 
@@ -32,15 +30,8 @@ func (db *appdbimpl) SetMyUsername(fixedUsername string, newUsername string, uui
 	if authorization == AUTHORIZED {
 
 		// If the uuid is requesting the action is the actual User Owner.
-		// First of all, I need to check whether the fixedUsername on which uuid wants to do the action exists.
-		_, errUsername := db.CheckFixedUserPresence(fixedUsername)
-		fmt.Println("errUsername is: ", errUsername)
-
-		// Check if strange errors occurs.
-		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, ErrUserDoesNotExist) && !errors.Is(errUsername, Ok) {
-			log.Println("Err: Strange error during the Check of User Presence")
-			return errUsername
-		}
+		// First of all, I need to check whether the username on which uuid wants to do the action exists.
+		_, errUsername := db.CheckUserPresence(username)
 
 		// Check whether theUsername I am trying to update, does not exists.
 		if errors.Is(errUsername, ErrUserDoesNotExist) {
@@ -48,10 +39,30 @@ func (db *appdbimpl) SetMyUsername(fixedUsername string, newUsername string, uui
 			return ErrUserDoesNotExist
 		}
 
-		// Here I arrive if the Username I am trying to update exists. I have the fixedUsername passed in input.
+		// Check if strange errors occurs.
+		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+			log.Println("Err: Strange error during the Check of User Presence")
+			return errUsername
+		}
 
+		// Here I arrive if the Username I am trying to update exists(Ok). I have the username passed in input.
+
+		// I need to check only whether the newUsername I passed is already present in the DB.
+		_, errNewUsername := db.CheckUserPresence(newUsername)
+
+		// Check whether the newUsername I am trying to insert, already exists.
+		if errors.Is(errNewUsername, Ok) {
+			return Ok
+		}
+		// Check if strange errors occurs.
+		if !errors.Is(errNewUsername, nil) && !errors.Is(errNewUsername, ErrUserDoesNotExist) {
+			log.Println("Err: Strange error during the Check of User Presence")
+			return errUsername
+		}
+
+		// If we arrive here, we have that the no User has chosen the newUsername, thus we can proceed.
 		// Perform the Update of the Username.
-		res, errUpdate := db.c.Exec(`UPDATE Users SET username=? WHERE fixedUsername=?`, newUsername, fixedUsername)
+		_, errUpdate := db.c.Exec(`UPDATE Users SET username=? WHERE username=?`, newUsername, username)
 
 		// Check if some strage error occurred during the update.
 		if !errors.Is(errUpdate, nil) {
@@ -59,17 +70,8 @@ func (db *appdbimpl) SetMyUsername(fixedUsername string, newUsername string, uui
 			return errUpdate
 		}
 
-		// Here arrives if no strange errors occurred.
-		affected, err := res.RowsAffected()
-		if !errors.Is(err, nil) {
-			log.Println("Err: Error during the rowsAffected retrieval.")
-			return err
-		} else if affected == 0 {
-			// If we didn't modified any row, then the User didn't exist.
-			log.Println("Err: You didn't modified any row, meaning that the User doesn't exists.")
-			return ErrUserDoesNotExist
-		}
 		return nil
+
 	}
 
 	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.

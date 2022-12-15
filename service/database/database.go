@@ -148,7 +148,7 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
 	// DeleteUsername(fixedUsername string, uuid string) error
-	DeleteUsername(username string) error
+	DeleteUsername(username string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// GetPhotos() returns the list of Photos of a given user, given in input a fixedUsername.

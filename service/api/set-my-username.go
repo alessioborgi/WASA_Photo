@@ -15,7 +15,7 @@ import (
 func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var fixedUsername Username
+	var username Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -40,21 +40,21 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 
 	// If we arrive here, we get a Valid Uuid (that we need to, however, check whether its in the DB and so on).
 
-	// We can take from now from the path the fixedUsername of the Users to which will be changed the Username.
-	fixedUsername.Name = ps.ByName("fixedUsername")
-	log.Println("The fixedUsername that will update its Username is: ", fixedUsername.Name)
+	// We can take from now from the path the username of the Users to which will be changed the Username.
+	username.Name = ps.ByName("username")
+	log.Println("The username that will update its Username is: ", username.Name)
 
-	if fixedUsername.Name == "" {
+	if username.Name == "" {
 
-		// If the fixedUsername is empty, there is a bad request.
+		// If the username is empty, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received an Empty fixedUsername.")
+		log.Println("Err: The Update cannot be done because it has received an Empty username.")
 		return
-	} else if !regex_fixedUsername.MatchString(fixedUsername.Name) {
+	} else if !regex_username.MatchString(username.Name) {
 
-		// If the fixedUsername does not respect its Regex, there is a bad request.
+		// If the username does not respect its Regex, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received a not valid fixedUsername.")
+		log.Println("Err: The Update cannot be done because it has received a not valid username.")
 		return
 	} else {
 
@@ -89,7 +89,7 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 			// If we arrive here, there is no error and the newUsername respects its regex.
 			// We can therefore proceed in the Username Update.
 			// Call the DB action and wait for its response.
-			err := rt.db.SetMyUsername(fixedUsername.Name, newUsername.Name, authorization_token)
+			err := rt.db.SetMyUsername(username.Name, newUsername.Name, authorization_token)
 			if errors.Is(err, database.ErrUserDoesNotExist) {
 
 				// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
@@ -102,12 +102,18 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 				w.WriteHeader(http.StatusUnauthorized)
 				log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
 				return
+			} else if errors.Is(err, database.Ok) {
+
+				// In this case we have already a user having the NewUsername as Username
+				w.WriteHeader(http.StatusBadRequest)
+				log.Println("Err: The newUsername we are trying to insert is already present. ")
+				return
 			} else if !errors.Is(err, nil) {
 				// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 				// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 				// the Username of the User that triggered the error.
 				w.WriteHeader(http.StatusInternalServerError)
-				ctx.Logger.WithError(err).WithField("fixedUsername", fixedUsername.Name).Error("User not present in WASAPhoto. Can't update the Username.")
+				ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 				return
 			} else {
 

@@ -1,46 +1,74 @@
 package database
 
-import "log"
+import (
+	"errors"
+	"log"
+)
 
-func (db *appdbimpl) DeleteUsername(username string) error {
+func (db *appdbimpl) DeleteUsername(username string, uuid string) error {
 	// Deletion of the User profile. Here we can distinguish two cases:
-	//1) We have that the User Profile can can be deleted since the user is requesting the action is the user owner.
-	//2) We have that the User Profile cannot can be deleted since the user is requesting the action is NOT the user owner.
-	// authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
+	// Here, you have 4 options, stored in the "authorization" variable:
+	// 1) AUTHORIZED: The action requester is the Profile Owner.
+	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner.
+	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
+	// 4) "": Returned if we have some errors.
 
-	//Check for the error during the Query.
-	// if errAuth != nil {
-	// 	return errAuth
-	// } else {
-	// 	if authorization == "Authorized" {
+	// First of all, check the Authorization of the person who is asking the action.
+	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
-	// Perform the actual Deletion of the User profile from the DB.
-	res, errDeletion := db.c.Exec(`DELETE FROM Users WHERE username=?`, username)
-	if errDeletion != nil {
-		log.Fatalf("Error encountered during the User Deletion in the DB.")
-		return errDeletion
-	} else {
+	// Check for the error during the Query.
+	if errAuth != nil {
+		return errAuth
+	}
 
-		// If we arrive here, no error occurred.
-		// Check whether the deletion action is actually happened.
-		affected, err := res.RowsAffected()
-		if err != nil {
-			return err
-		} else if affected == 0 {
+	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
+	if authorization == AUTHORIZED {
 
-			// If we didn't delete any row, then the User didn't exist.
+		// If the uuid is requesting the action is the actual User Owner.
+
+		// First of all, I need to check whether the fixedUsername on which uuid wants to do the action exists.
+		_, errUsername := db.CheckUserPresence(username)
+
+		// Check whether the fixedUsername I am trying to delete, does not exists.
+		if errors.Is(errUsername, ErrUserDoesNotExist) {
+			log.Println("Err: The fixedUsername I am trying to delete, does not exists.")
 			return ErrUserDoesNotExist
-		} else {
-
-			// If we are here, the Deletion Action has actually deleted the User Profile.
-			log.Println("User correctly deleted from the DB")
-			return nil
 		}
 
-		// 	} else {
-		// 		//If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
-		// 		return ErrUserNotAuthorized
-		// 	}
-		// }
+		// Check if strange errors occurs.
+		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+			log.Println("Err: Strange error during the Check of User Presence")
+			return errUsername
+		}
+
+		// Here I arrive if the fixedUsername I am trying to delete exists(Ok). I have the fixedUsername passed in input.
+
+		// Perform the actual Deletion of the User profile from the DB.
+		_, errDeletion := db.c.Exec(`DELETE FROM Users WHERE username=?`, username)
+		if errDeletion != nil {
+			log.Fatalf("Error encountered during the User Deletion in the DB.")
+			return errDeletion
+		}
+
+		return Ok
 	}
+
+	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
+	if authorization == NOTAUTHORIZED {
+
+		//If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
+		return ErrUserNotAuthorized
+	}
+
+	// Check if we have a NOTVALID auth, i.e., the Uuuid is not present in the DB.
+	if authorization == NOTVALID {
+
+		log.Println("Err: The Uuid you are providing is not present.")
+		return ErrUserNotAuthorized
+	}
+
+	// If we arrive here, we encountered other types of problem.
+	log.Println("Err: Unexpected Error.")
+	return errAuth
 }

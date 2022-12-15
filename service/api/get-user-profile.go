@@ -44,45 +44,46 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// If we arrive here, we get a Valid Uuid (that we need to, however, check whether its in the DB and so on).
+	// We can take from the path the username of the User I want to know info of.
+	username_search := ps.ByName("username")
+	log.Println("The username we want to know info is: ", username_search)
 
-	// We can now get the Username(from query) of the user I am searching for from the URL.
-	// If I have no username parameter, I will have an error BadRequest.
-	if !r.URL.Query().Has("username") {
+	if username_search == "" {
 
+		// If the username is empty, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Username Parameter has not been inserted.")
+		log.Println("Err: The User Profile Retrieval cannot be done because it has received an Empty username.")
+		return
+	} else if !regex_username.MatchString(username_search) {
+
+		// If the username does not respect its Regex, there is a bad request.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The User Profile Retrieval cannot be done because it has received a not valid username.")
 		return
 	}
 
-	// Since no error has been detected, we can get the Username.
-	username_search := r.URL.Query().Get("username")
-
-	// We arrive here, we can get the fixedUsername.
-	log.Println("You are searching for profile retrieval of the Username: ", username_search)
+	// If we arrive here, a non-empty Username has been requested.
 
 	// Getting the entire User Profile from the DB.
 	profile, err = rt.db.GetUserProfile(username_search, authorization_token)
+	if errors.Is(err, database.ErrUserDoesNotExist) || errors.Is(err, sql.ErrNoRows) || errors.Is(err, database.ErrNoContent) {
 
-	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
-	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, database.ErrUserNotAuthorized) && !errors.Is(err, sql.ErrNoRows) && !errors.Is(err, database.ErrUserDoesNotExist) {
-
-		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).Error("It can't provide User Profile!")
+		// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Username that was requested, is not a WASAPhoto User.")
 		return
-
-		// If error is then equal to ErrNoContent, we can return this Status.
-	} else if errors.Is(err, database.ErrUserDoesNotExist) || errors.Is(err, sql.ErrNoRows) || errors.Is(err, database.ErrNoContent) {
-
-		// If, instead, we have that the error is No Content, we return it, meaning that we haven't found any User with the fixedUsername passed in the platform.
-		w.WriteHeader(http.StatusNotFound)
-		log.Println("Err: We have no User with that fixedUsername in the Platform.")
-		return
-
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
-		// If we arrive here, the Uuid we have inserted, is not a Uuid present in the DB. Thus it is not Authorized.
+		// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Println("Err: We have not the requester Uuid in the Platform.")
+		log.Println("Err: The Uuid that requested the Username, has not a valid Uuid.")
+		return
+	} else if !errors.Is(err, nil) {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+		// the Username of the User that triggered the error.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(err).WithField("username", username_search).Error("User not present in WASAPhoto. Can't update the Username.")
 		return
 	} else {
 
