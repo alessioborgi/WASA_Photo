@@ -14,7 +14,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
 	// 4) "": Returned if we have some errors.
 	// First of all, check the Authorization of the person who is asking the action .
-	authorization, errAuth := db.CheckAuthorizationOwner(username, uuid)
+	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
 	//Check for the error during the Query.
 	if errAuth != nil {

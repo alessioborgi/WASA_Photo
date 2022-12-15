@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
 	"github.com/alessioborgi/WASA_Photo/service/database"
@@ -12,33 +14,33 @@ import (
 
 func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	// As first thing, we take the authorization token Uuid.
-	// authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
-	// authorization_type, authorization_token := authorization_header[0], authorization_header[1]
-
-	// log.Println("The authorization Type is:", authorization_type, "and the Authorization Token is:", authorization_token)
-	// if authorization_type != "Bearer" {
-
-	// 	// If the Authorization we have inserted is not the Bearer ones, stop.
-	// 	log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	return
-	// } else if !regex_uuid.MatchString(authorization_token) {
-
-	// 	// If the Authorization we have inserted does not respect its Regex, stop.
-	// 	log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	return
-	// } else {
-
-	// 	// Here, we can proceed with our api.
-	// 	// First, get the users from the DB.
-	// 	log.Println("The Bearer Authentication we have inserted can proceed in the API. ")
-
-	// 	// Secondly, we take from the path the username that is requested to be deleted.
-	// 	// Get the Username of the user I am searching for from the URL.
-
+	// Variable Declaration
 	var fixedUsername Username
+
+	// Getting the Authorization Token.
+	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
+	authorization_type, authorization_token := authorization_header[0], authorization_header[1]
+	log.Println("The authorization Type is:", authorization_type, "and the Authorization Token is:", authorization_token)
+
+	// We first need to check whether the authorization we have been providing is the Bearer Authentication.
+	if authorization_type != "Bearer" {
+
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
+		return
+	}
+
+	// We then need to check whether the Bearer Token we are passing mastched its regex.
+	if !regex_uuid.MatchString(authorization_token) {
+
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
+		return
+	}
+
+	// If we arrive here, we get a Valid Uuid (that we need to, however, check whether its in the DB and so on).
+
+	// We can take from now from the path the fixedUsername of the Users to which will be changed the Username.
 	fixedUsername.Name = ps.ByName("fixedUsername")
 	log.Println("The fixedUsername that will update its Username is: ", fixedUsername.Name)
 
@@ -66,7 +68,7 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 		err := json.NewDecoder(r.Body).Decode(&newUsername)
 		log.Println("The Username will be Updated to: ", newUsername.Name)
 
-		if err != nil {
+		if !errors.Is(err, nil) {
 
 			// The body was not a parseable JSON, reject it.
 			w.WriteHeader(http.StatusBadRequest)
@@ -87,14 +89,20 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 			// If we arrive here, there is no error and the newUsername respects its regex.
 			// We can therefore proceed in the Username Update.
 			// Call the DB action and wait for its response.
-			err := rt.db.SetMyUsername(fixedUsername.Name, newUsername.Name)
-			if err == database.ErrUserDoesNotExist {
+			err := rt.db.SetMyUsername(fixedUsername.Name, newUsername.Name, authorization_token)
+			if errors.Is(err, database.ErrUserDoesNotExist) {
 
 				// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
-				w.WriteHeader(http.StatusNotFound)
+				w.WriteHeader(http.StatusBadRequest)
 				log.Println("Err: The Username that was requested to be updated, is not a WASAPhoto User.")
 				return
-			} else if err != nil {
+			} else if errors.Is(err, database.ErrUserNotAuthorized) {
+
+				// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
+				w.WriteHeader(http.StatusUnauthorized)
+				log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
+				return
+			} else if !errors.Is(err, nil) {
 				// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 				// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 				// the Username of the User that triggered the error.
@@ -104,8 +112,9 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 			} else {
 
 				// If we arrive here, it means that the Username, has been correctly updated.
-				log.Println("The Username has been correctly Updated!")
 				w.WriteHeader(http.StatusNoContent)
+				log.Println("The Username has been correctly Updated!")
+				return
 			}
 		}
 	}

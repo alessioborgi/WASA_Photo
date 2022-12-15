@@ -219,6 +219,8 @@ paths:
       responses:
         "204":
           description: OK! Username Updated Successfully!.
+        
+        '400': {$ref : '#/components/responses/BadRequest'}
           
         '403': {$ref : '#/components/responses/UnAuthorized'}
 

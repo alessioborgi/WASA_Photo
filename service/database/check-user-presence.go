@@ -9,7 +9,7 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 
 	// Check whether the uuid that is requesting the action is the owner of the profile.
 	var exists = 0
-	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
+	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username = ?`, username).Scan(&exists)
 
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
@@ -20,7 +20,7 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 		// The User already Exists.
 
 		var fixedUsername string
-		errFixedUsername := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE username == ?`, username).Scan(&fixedUsername)
+		errFixedUsername := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE username = ?`, username).Scan(&fixedUsername)
 		if errFixedUsername != nil {
 			log.Println("Err: Unexpected Error!")
 			return "", err
