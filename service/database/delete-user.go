@@ -2,10 +2,11 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
-func (db *appdbimpl) DeleteUsername(username string, uuid string) error {
+func (db *appdbimpl) DeleteUser(username string, uuid string) error {
 	// Deletion of the User profile. Here we can distinguish two cases:
 	// Here, you have 4 options, stored in the "authorization" variable:
 	// 1) AUTHORIZED: The action requester is the Profile Owner.
@@ -46,7 +47,8 @@ func (db *appdbimpl) DeleteUsername(username string, uuid string) error {
 		// Perform the actual Deletion of the User profile from the DB.
 		_, errDeletion := db.c.Exec(`DELETE FROM Users WHERE username=?`, username)
 		if errDeletion != nil {
-			log.Fatalf("Error encountered during the User Deletion in the DB.")
+			fmt.Println(errDeletion)
+			log.Println("Error encountered during the User Deletion in the DB.")
 			return errDeletion
 		}
 

@@ -16,10 +16,7 @@ import (
 func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variables Declaration.
-	var (
-		err   error
-		users []string
-	)
+	var users []string
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -46,7 +43,7 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	log.Println("The Bearer Authentication we have inserted can proceed in the API.")
 
 	// We can now proceed with our api, getting the users from the DB.
-	users, err = rt.db.GetUsers(authorization_token)
+	users, err := rt.db.GetUsers(authorization_token)
 
 	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
 	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, sql.ErrNoRows) {

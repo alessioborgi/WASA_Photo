@@ -31,11 +31,9 @@ const user_table = `CREATE TABLE IF NOT EXISTS Users (
 const ban_table = `CREATE TABLE IF NOT EXISTS Bans (
 	fixedUsernameBanner TEXT NOT NULL, 
 	fixedUsernameBanned TEXT NOT NULL,
-	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	Motivation TEXT NOT NULL DEFAULT "Spam",
 	PRIMARY KEY (fixedUsernameBanner, fixedUsernameBanned),
-	FOREIGN KEY (fixedUsernameBanner) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsernameBanned) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	FOREIGN KEY (fixedUsernameBanner) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsernameBanned) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
@@ -43,8 +41,8 @@ const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
 	fixedUsernameFollowing TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	PRIMARY KEY (fixedUsername, fixedUsernameFollowing),
-	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsernameFollowing) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsernameFollowing) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 // ----- PHOTO-RELATED: -----
@@ -60,7 +58,7 @@ const photo_table = `CREATE TABLE IF NOT EXISTS Photos (
 	latitude FLOAT,
 	longitude FLOAT,
 	PRIMARY KEY (photoid, fixedUsername),
-	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE 
+	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE 
 	);`
 
 // Notice that here I declared (commentid,photoid, fixedUsername) as PK. Commenter is not needed since it can make more than one comment.
@@ -72,9 +70,9 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	commenterFixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	PRIMARY KEY (commentid, photoid, fixedUsername),
-	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (commenterFixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (commenterFixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 // Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
@@ -87,9 +85,9 @@ const (
 	fixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	PRIMARY KEY (likeid, photoid, fixedUsername),
-	FOREIGN KEY (likeid) REFERENCES UserProfile (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (photoid) REFERENCES Photo (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsername) REFERENCES UserProfle (fixedUsername) ON DELETE CASCADE
+	FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
+	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
 	query_presence_ban     = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
@@ -105,6 +103,8 @@ const (
 	delete_comments = `DROP TABLE Comments;`
 	delete_likes    = `DROP TABLE Likes;`
 	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
+
+	turn_on_fk = `PRAGMA foreign_keys = ON`
 )
 
 var (

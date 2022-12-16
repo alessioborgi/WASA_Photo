@@ -11,7 +11,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) deleteUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -61,7 +61,7 @@ func (rt *_router) deleteUsername(w http.ResponseWriter, r *http.Request, ps htt
 	// If we arrive here, a non-empty and respecting-regex Username has been requested to be deleted.
 
 	// Call the DB action and wait for its response.
-	err := rt.db.DeleteUsername(username, authorization_token)
+	err := rt.db.DeleteUser(username, authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that was requested to be deleted, is not in the WASAPhoto Platform.

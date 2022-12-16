@@ -125,5 +125,3 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 		}
 	}
 }
-
-// }

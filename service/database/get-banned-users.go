@@ -1,59 +1,131 @@
 package database
 
-import "fmt"
+import (
+	"errors"
+	"log"
+)
 
-func (db *appdbimpl) GetBannedUsers(fixedUsername string, uuid string) ([]Ban, error) {
+func (db *appdbimpl) GetBannedUsers(username string, uuid string) ([]string, error) {
+
+	// Retrieving the Users Ban List.
+	// Here, you have 4 options, stored in the "authorization" variable:
+	// 1) AUTHORIZED: The action requester is the Profile Owner. It can proceed to retieved its list of Banned usernames.
+	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner. It cannot Ban.
+	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
+	// 4) "": Returned if we have some errors.
+
 	// Variable for returning the slice of Bans.
-	var banList []Ban
+	var banFixedList []string
 
-	// Selection of the Ban List. Here we can distinguish two cases:
-	//1) When the User that is requesting the action is the profile owner that is requesting the action is not Banned. Return its Banned List.
-	//2) When the User that is requesting the action is NOT the profile owner. Return an empty list since it is not authorized.
+	// 0.1) First of all, I need to check whether the username that want to add the Ban exists (that must be also the uuid itself, check later).
+	fixedUsername, errfixedUsername := db.CheckUserPresence(username)
+
+	// Check whether the Username I am trying to update, does not exists.
+	if errors.Is(errfixedUsername, ErrUserDoesNotExist) {
+		log.Println("Err: The Username I am trying to get the Banned User List, does not exists.")
+		return nil, ErrUserDoesNotExist
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Ok) {
+		log.Println("Err: Strange error during the Check of User Presence")
+		return nil, errfixedUsername
+	}
+
+	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
 
-	//Check for the error during the Query.
-	if errAuth != nil {
+	// Check for the error during the Query.
+	if !errors.Is(errAuth, nil) {
+
+		// Check whether we have received some errors during the Authentication.
 		return nil, errAuth
-	} else {
-
-		// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
-		if authorization == "Authorized" {
-
-			//If you are the Owner of the Profile, select your Banned Users' List.
-			//Note that in the Query below, we do not need to check also whether the uuid that is requesting the action is the profile owner, since we already have this certainty.
-			bans, err := db.c.Query(`SELECT * 
-			FROM Bans
-			WHERE fixedUsernameBanner == '?'
-			ORDER BY uploadDate DESC`, fixedUsername)
-
-			//Check for the error during the Query.
-			if err != nil {
-				return nil, err
-			} else {
-				//Defer the bans closure. This is a Best-Practice.
-				defer func() { _ = bans.Close() }()
-
-				// Here we read the resultset and we build the list to be returned.
-				for bans.Next() {
-					var b Ban
-					err = bans.Scan(&b.FixedUsernameBanner, &b.FixedUsernameBanned, &b.UploadDate, &b.Motivation)
-					if err != nil {
-						return nil, err
-					}
-
-					//Append to the banList if no error occurs.
-					banList = append(banList, b)
-				}
-				if bans.Err() != nil {
-					return nil, err
-				} else {
-					return banList, nil
-				}
-			}
-		} else {
-			//In the case you are not the profile owner, i.e. you result as "unauthorized", you must receive any BanList information.
-			fmt.Println("You cannot have the Ban List you are requiring!")
-			return nil, ErrUserDoesNotExist
-		}
 	}
+
+	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
+	if authorization == AUTHORIZED {
+
+		// If the uuid is requesting the action is the actual User Owner.
+
+		// If you are the Owner of the Profile, select your Banned Users' List.
+		// Note that in the Query below, we do not need to check also whether the uuid that is requesting the action is the profile owner, since we already have this certainty.
+		bans, err := db.c.Query(`SELECT fixedUsernameBanned
+			FROM Bans
+			WHERE fixedUsernameBanner == ?`, fixedUsername)
+
+		// Check if we have encountered some error in the retrieval of the query.
+		if !errors.Is(err, nil) {
+
+			// We check first whether the users retrieval caused an error.
+			log.Println("Err: Error encountered during the Query in the DB.")
+			return nil, err
+		}
+
+		// If no error occur, we can proceed on elaborating the DB Response.
+		log.Println("No error encountered during the Query in the DB.")
+		defer func() { _ = bans.Close() }()
+
+		// Here we read the resultset and we build the list of Usernames to be returned.
+		var u string
+		for bans.Next() {
+			err = bans.Scan(&u)
+			if !errors.Is(err, nil) {
+				log.Println("Err: Error encountered during the scan.")
+				return nil, err
+			}
+
+			// Add up to the UsernameList the fixedUsername.
+			banFixedList = append(banFixedList, u)
+		}
+
+		// If we have encountered some error in the Users variable.
+		if bans.Err() != nil {
+			log.Println("Err: Error encountered on Users")
+			return nil, err
+		}
+
+		// Then, check whether the returned list has length equal to zero. Return No Content if so.
+		if len(banFixedList) == 0 {
+			return nil, ErrNoContent
+		}
+
+		// We now need to retrieve the Usernames from the fixedUsername Banned List.
+		var banList []string
+		var usr string
+		for i := 0; i < len(banFixedList); i++ {
+			err := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername == ?`, banFixedList[i]).Scan(&usr)
+			if !errors.Is(err, nil) {
+
+				// If we encounter some error during the Username Retrieval.
+				log.Println("Err: Error encountered during the Username retrieval in the DB.")
+				return nil, err
+			}
+
+			// Add up to the UsernameList the Username.
+			banList = append(banList, usr)
+
+		}
+		// If we arrive here, we have a result with at least one Username, return it.
+		return banList, nil
+	}
+
+	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
+	if authorization == NOTAUTHORIZED {
+
+		// If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
+		return nil, ErrUserNotAuthorized
+	}
+
+	// Check if we have a NOTVALID auth, i.e., the Uuid is not present in the DB.
+	if authorization == NOTVALID {
+
+		log.Println("Err: The Uuid you are providing is not present.")
+		return nil, ErrUserNotAuthorized
+	}
+
+	// If we arrive here, we encountered other types of problem.
+	log.Println("Err: Unexpected Error.")
+	return nil, errAuth
+
 }

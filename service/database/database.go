@@ -76,13 +76,13 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// SetMyUsername(), given the fixedUsername in input together with a newUsername, updates the User's Username.
 	// SetMyUsername(username string, newUsername string, uuid string) error
-	SetMyUsername(fixedUsername string, newUsername string, uuid string) error
+	SetMyUsername(username string, newUsername string, uuid string) error
 
 	// USER's PHOTO COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// UploadPhoto() creates a new User's Photo(Post) in the database, given in input the Photo Object. It returns an Photo Object.
 	// UploadPhoto(photo Photo, uuid string) (Photo, error)
-	UploadPhoto(username string, photo Photo) (Photo, error)
+	// UploadPhoto(username string, photo Photo) (Photo, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// DeletePhoto() removes a User's Photo given the fixedUsername and the photoId in input.
@@ -99,8 +99,8 @@ type AppDatabase interface {
 
 	// PARTICULAR BAN:
 	// (Security Required: Needs Uuid of the action requester).
-	// BanUser() creates a new User's Ban in the database, given in input the Ban Object. It returns a Ban Object.
-	// BanUser(ban Ban, uuid string) (Ban, error)
+	// BanUser() creates a new User's Ban in the database, given in input the username of the profile owner and the username of the person I want to ban. It returns nothing.
+	BanUser(username string, usernameBanned string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnbanUser() removes a User's Ban given the fixedUsername, and the BanId(i.e., the fixedUsername of the Banned Person).
@@ -148,7 +148,7 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
 	// DeleteUsername(fixedUsername string, uuid string) error
-	DeleteUsername(username string, uuid string) error
+	DeleteUser(username string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// GetPhotos() returns the list of Photos of a given user, given in input a fixedUsername.
@@ -180,8 +180,8 @@ type AppDatabase interface {
 
 	// USER's BANS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
-	// GetBannedUsers() returns the list of User's Bans, given in input a fixedUsername.
-	// GetBannedUsers(fixedUsername string, uuid string) ([]Ban, error)
+	// GetBannedUsers() returns the list of User's Bans, given in input a username.
+	GetBannedUsers(username string, uuid string) ([]string, error)
 
 	// USER's FOLLOWERS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
@@ -212,11 +212,19 @@ func New(db *sql.DB) (AppDatabase, error) {
 		return nil, errors.New("Database is required when building a AppDatabase")
 	}
 
+	// Used to Turn On the foreign Key Mechanism.
+	_, err1 := db.Exec(turn_on_fk)
+	if !errors.Is(err1, nil) {
+		log.Println("Error Encountered during the FK Turning on")
+	} else {
+		log.Println("FK correclty Turned On.")
+	}
+
 	// This code is only used during development if we do some change on the database schema.
 	// for i := 0; i < len(delete_tables); i++ {
 	// 	_, err := db.Exec(delete_tables[i])
-	// 	if err != nil {
-	// 		log.Fatalf("Error Encountered during the Table Deletion")
+	// 	if !errors.Is(err, nil) {
+	// 		log.Println("Error Encountered during the Table Deletion", i)
 	// 	} else {
 	// 		log.Println("Table", i, "deleted correctly.")
 	// 	}
@@ -233,14 +241,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 			// If the table is not present, create it.
 			table_creation := database[i]
 			_, err = db.Exec(table_creation)
-			if err != nil {
+			if !errors.Is(err, nil) {
 				log.Println("Error in Creating the Database Structure of the table: ", i)
 				return nil, fmt.Errorf("Error in Creating the Database Structure: %w", err)
 			} else {
 				fmt.Println("Creation of the table number: ", i, "succeeded!")
 			}
 		} else {
-			log.Println("The Table is already present!")
+			log.Println("The Table", i, "is already present!")
 		}
 	}
 

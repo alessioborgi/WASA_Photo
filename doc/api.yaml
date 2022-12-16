@@ -229,7 +229,7 @@ paths:
     delete:
       security:
         - bearerAuthentication: []
-      operationId: deleteUsername
+      operationId: deleteUser
       tags: ["User-Handling"]
       summary: Delete your Username.
       description: |
@@ -831,30 +831,22 @@ paths:
       summary: Banning a User.
       description: |
         HOW IT WORKS:
-        Given in input the Banner username, and a ban Id of the username we want to ban, ban
+        Given in input the Banner username, and a usernname of the person I want ot ban, ban
         it. Also here, we request for authentication of the user that wants to perform this
         action. 
         
         RETURN:
-        It will then return back in output the banid(that corresponds to the username of the 
-        banned user) iff successful.
+        It will then return back the simple responses iff successful.
         
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USERS that are both the Creators of the
         Ban and the Owner of the User Profile. Thus, we can only Ban people if we are the 
         account owners. 
-      
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/ban"}
 
       responses:
-        "201":
-          description: Created! User Ban Added Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ban' }
+        '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 

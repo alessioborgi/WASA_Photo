@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -12,11 +13,10 @@ import (
 )
 
 // Add user to logged user's banned users list
-func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getBannedUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
 	var username Username
-	var usernameBanned Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -43,48 +43,32 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// We can take now the Username that is requesting the action, i.e., that wants to Ban another user.
 	username.Name = ps.ByName("username")
-	log.Println("The username that want to Ban is Username is: ", username.Name)
+	log.Println("The username that want to know the Bans is: ", username.Name)
 
 	if username.Name == "" {
 
 		// If the username is empty, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received an Empty username.")
+		log.Println("Err: The Banned User Retrieval cannot be done because it has received an Empty username.")
 		return
 	} else if !regex_username.MatchString(username.Name) {
 
 		// If the username does not respect its Regex, there is a bad request.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received a not valid username.")
+		log.Println("Err: The Banned User Retrieval cannot be done because it has received a not valid username.")
 		return
 	}
 
-	// We can take now the usernameBanned that is going to be banned.
-	usernameBanned.Name = ps.ByName("usernameBanned")
-	log.Println("The username that will be Banned is: ", usernameBanned.Name)
+	// If we arrive here, there is no error and we can proceed on retrieving the banned users of Username.
+	// We can therefore proceed in the Bans Retrieval by calling the DB action and wait for its response.
+	users, err := rt.db.GetBannedUsers(username.Name, authorization_token)
 
-	if usernameBanned.Name == "" {
-
-		// If the usernameBanned is empty, there is a bad request.
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received an Empty usernameBanned.")
-		return
-	} else if !regex_username.MatchString(usernameBanned.Name) {
-
-		// If the usernameBanned does not respect its Regex, there is a bad request.
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Update cannot be done because it has received a not valid usernameBanned.")
-		return
-	}
-
-	// If we arrive here, there is no error and the username can ban the usernamebanned since both are respecting their regex.
-	// We can therefore proceed in the Ban by calling the DB action and wait for its response.
-	err := rt.db.BanUser(username.Name, usernameBanned.Name, authorization_token)
+	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Username that requested the action or the username that is going to be banned, is not a WASAPhoto User.")
+		log.Println("Err: The Username that was requested to be updated, is not a WASAPhoto User.")
 		return
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
@@ -92,11 +76,11 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
 		return
-	} else if errors.Is(err, database.ErrBadRequest) {
+	} else if errors.Is(err, database.ErrNoContent) {
 
-		// In this case, we have that the profile is trying to self-ban.
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Uuid that requested to self-Ban.")
+		// In this case we have no Username in the list of Banned Usernames.
+		w.WriteHeader(http.StatusOK)
+		log.Println("There is no Username in the list of Banned Usernames. ")
 		return
 	} else if !errors.Is(err, nil) {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
@@ -106,10 +90,10 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 		return
 	} else {
-
-		// If we arrive here, it means that the Username, has correctly Banned the other.
-		w.WriteHeader(http.StatusNoContent)
-		log.Println("The User has correclty Banned bannedUsername")
-		return
+		// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
+		w.WriteHeader(http.StatusOK)
+		log.Println("We can correctly return the list of Banned Usernames.")
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(users)
 	}
 }

@@ -23,7 +23,7 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the uploadPhoto API.
 	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
-	rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
+	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
 
 	//Register the followUser API.
 	// rt.router.PUT("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.followUser))
@@ -33,7 +33,7 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the banUser API.
 	// rt.router.PUT("/users/:fixedUsername/bans/:banid", rt.wrap(rt.banUser))
-	// rt.router.PUT("/users/:fixedUsername/bans/:banid", rt.wrap(rt.banUser))
+	rt.router.PUT("/users/:username/bans/:usernameBanned", rt.wrap(rt.banUser))
 
 	//Register the unbanUser API.
 	// rt.router.DELETE("/users/:fixedUsername/bans/:banid", rt.wrap(rt.unbanUser))
@@ -65,7 +65,7 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the deleteUsername API.
 	// rt.router.DELETE("/users/:fixedUsername", rt.wrap(rt.deleteUsername))
-	rt.router.DELETE("/users/:username", rt.wrap(rt.deleteUsername))
+	rt.router.DELETE("/users/:username", rt.wrap(rt.deleteUser))
 
 	//Register the getPhotos API.
 	// rt.router.GET("/users/:fixedUsername/photos/", rt.wrap(rt.getPhotos))
@@ -86,7 +86,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.GET("/users/:fixedUsername/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
 
 	//Register the getBannedUsers API.
-	// rt.router.GET("/users/:fixedUsername/bans/", rt.wrap(rt.getBannedUsers))
+	rt.router.GET("/users/:username/bans/", rt.wrap(rt.getBannedUsers))
 
 	//Register the getFollowers API.
 	// rt.router.GET("/users/:fixedUsername/followers/", rt.wrap(rt.getFollowers))
