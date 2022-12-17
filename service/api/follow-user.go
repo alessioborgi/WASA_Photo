@@ -89,7 +89,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	} else if errors.Is(err, database.Ok) {
 
 		// In this case, we have that the Follow was already present.
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		log.Println("The Follow was already present.")
 		return
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {

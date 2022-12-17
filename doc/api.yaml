@@ -716,18 +716,10 @@ paths:
         the user that wants to put a like, has been banned by the owner of the photo, and 
         when the liker is the owner of the photo. 
         
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/like"}
-
       responses:
-        "201":
-          description: Created! Photo's Like Added Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/like'}
-        
+        '204': 
+           description: OK! A existing Photo's Like has been added.
+
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
@@ -876,12 +868,11 @@ paths:
         is the actual ORIGINAL BAN ADDER. Otherwise, it cannot. Thus, only the user that
         has actually banned a user, can also delete the ban, whenever it wants. 
       responses:
-        "204": 
-          description: OK! User Ban deleted successfully!
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
+        '204': {$ref : '#/components/responses/NoContent'}
 
-        '404': {$ref : '#/components/responses/NotFound'}
+        '400': {$ref : '#/components/responses/BadRequest'}
+
+        '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
@@ -924,14 +915,14 @@ paths:
                 minItems: 0
                 maxItems: 100000
                 description: Array of Followers.
-                items: { $ref: "#/components/schemas/follow" }
+                items: { $ref: "#/components/schemas/username" }
         
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
@@ -971,14 +962,14 @@ paths:
                 minItems: 0
                 maxItems: 100000
                 description: Array of Followings.
-                items: { $ref: "#/components/schemas/follow" }
+                items: { $ref: "#/components/schemas/username" }
         
         '204': {$ref : '#/components/responses/NoContent'}
         
+        '400': {$ref : '#/components/responses/BadRequest'}
+
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
     
 
@@ -1014,7 +1005,6 @@ paths:
         path, since I cannot follow my own profile (or better, it does not make any sense).
 
       responses:
-        '200': {description: Ok! User Follow already present!}
 
         '204': {$ref : '#/components/responses/NoContent'}
 

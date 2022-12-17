@@ -80,7 +80,7 @@ func (rt *_router) getFollowings(w http.ResponseWriter, r *http.Request, ps http
 	} else if errors.Is(err, database.ErrNoContent) {
 
 		// In this case we have no Username in the list of Followings Usernames.
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		log.Println("There is no Username in the list of Followings Usernames. ")
 		return
 	} else if !errors.Is(err, nil) {
