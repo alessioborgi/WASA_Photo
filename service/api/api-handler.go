@@ -26,7 +26,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
 
 	//Register the followUser API.
-	// rt.router.PUT("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.followUser))
+	rt.router.PUT("/users/:username/followings/:usernameFollowing", rt.wrap(rt.followUser))
 
 	//Register the unfollowUser API.
 	// rt.router.DELETE("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.unfollowUser))
@@ -36,7 +36,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:username/bans/:usernameBanned", rt.wrap(rt.banUser))
 
 	//Register the unbanUser API.
-	// rt.router.DELETE("/users/:fixedUsername/bans/:banid", rt.wrap(rt.unbanUser))
+	rt.router.DELETE("/users/:username/bans/:usernameBanned", rt.wrap(rt.unbanUser))
 
 	//Register the getMyStream API.
 	// rt.router.GET("/users/:fixedUsername/myStream/", rt.wrap(rt.getMyStream))

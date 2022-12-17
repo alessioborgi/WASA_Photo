@@ -844,6 +844,8 @@ paths:
         account owners. 
 
       responses:
+        '200': {description: Ok! User Ban already present!}
+
         '204': {$ref : '#/components/responses/NoContent'}
 
         '400': {$ref : '#/components/responses/BadRequest'}
@@ -1010,18 +1012,13 @@ paths:
         that the actual fixedUsername must be the fixedUsername of the username passed in input. Moreover, in the 
         Request Body, obviously, we cannot pass a username that is equal to the username in the 
         path, since I cannot follow my own profile (or better, it does not make any sense).
-      
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/follow"}
 
       responses:
-        "201":
-          description: Created! User Started to Follow Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/follow' }
+        '200': {description: Ok! User Follow already present!}
+
+        '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -1516,24 +1513,6 @@ components:
           $ref: "#/components/schemas/uploadDate"
         motivation:
           $ref: "#/components/schemas/motivation"
-
-
-    ### SCHEMAS FOR ../FOLLOW #
-    follow:
-      title: follow
-      type: object
-      description: |
-        This is the entire Follow object. It will have the followid, i.e. the 
-        ID of the follow, that coincides with the fixedUsername of the person I want to
-        follow. Moreover, I want to imdicate the date and time of when the follow action
-        has been delivered.  
-      properties: 
-        followID: 
-          $ref: "#/components/schemas/fixedUsername"
-        uploadDate:
-          $ref: "#/components/schemas/uploadDate"
-
-
 
   ##### PARAMETERS ##
   parameters:

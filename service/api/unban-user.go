@@ -12,7 +12,7 @@ import (
 )
 
 // Add user to logged user's banned users list
-func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
 	var username Username
@@ -43,7 +43,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// We can take now the Username that is requesting the action, i.e., that wants to Ban another user.
 	username.Name = ps.ByName("username")
-	log.Println("The username that want to Ban is Username is: ", username.Name)
+	log.Println("The username that banned is Username is: ", username.Name)
 
 	if username.Name == "" {
 
@@ -61,7 +61,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// We can take now the usernameBanned that is going to be banned.
 	usernameBanned.Name = ps.ByName("usernameBanned")
-	log.Println("The username that will be Banned is: ", usernameBanned.Name)
+	log.Println("The username that is Banned is: ", usernameBanned.Name)
 
 	if usernameBanned.Name == "" {
 
@@ -79,30 +79,29 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here, there is no error and the username can ban the usernamebanned since both are respecting their regex.
 	// We can therefore proceed in the Ban by calling the DB action and wait for its response.
-	err := rt.db.BanUser(username.Name, usernameBanned.Name, authorization_token)
-	if errors.Is(err, database.ErrUserDoesNotExist) {
+	err := rt.db.UnbanUser(username.Name, usernameBanned.Name, authorization_token)
+	if errors.Is(err, database.ErrBanDoesNotExist) {
 
-		// In this case, we have that the Username that requested the action, is not present..
+		// In this case, we have that the Ban is not present in the WASAPhoto Platform.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Username that requested the action or the username that is going to be banned, is not a WASAPhoto User. ")
-		return
-	} else if errors.Is(err, database.Ok) {
-
-		// In this case, we have that the Ban was already present.
-		w.WriteHeader(http.StatusOK)
-		log.Println("The Ban was already present.")
+		log.Println("Err: The Ban that was requested, is not in WASAPhoto Platform.")
 		return
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
 		// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
+		log.Println("Err: The Uuid that requested to remove the Ban, is not the Profile Owner.")
+		return
+	} else if errors.Is(err, database.ErrUserDoesNotExist) {
+		// In this case, we have that the Username is not present in the WASA Platform.
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Uuid that requested to remove the Ban, is not the Profile Owner.")
 		return
 	} else if errors.Is(err, database.ErrBadRequest) {
 
 		// In this case, we have that the profile is trying to self-ban.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Uuid that requested to self-Ban.")
+		log.Println("Err: The Uuid that requested to eliminate a self-Ban.")
 		return
 	} else if !errors.Is(err, nil) {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
@@ -113,9 +112,9 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	} else {
 
-		// If we arrive here, it means that the Username, has correctly Banned the other.
+		// If we arrive here, it means that the Ban has been correclty deleted.
 		w.WriteHeader(http.StatusNoContent)
-		log.Println("The User has correclty Banned bannedUsername")
+		log.Println("The Ban has been correclty deleted.")
 		return
 	}
 }

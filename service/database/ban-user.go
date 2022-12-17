@@ -26,7 +26,7 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 
 	// Check whether theUsername I am trying to update, does not exists.
 	if errors.Is(errUsername, ErrUserDoesNotExist) {
-		log.Println("Err: The Username I am trying to update, does not exists.")
+		log.Println("Err: The fixedUsernameBanner, does not exists.")
 		return ErrUserDoesNotExist
 	}
 
@@ -51,6 +51,20 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 		return errusernameBanned
 	}
 
+	// 0.3) Thirdly, we should check whether there exists the same Ban already.
+	errBanRetrieval := db.CheckBanPresence(fixedUsernameBanner, fixedUsernameBanned)
+	if errors.Is(errBanRetrieval, Ok) {
+		log.Println("Err: The Ban already exists.")
+		return Ok
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
+		log.Println("Err: Strange error during the Check of Ban Presence")
+		return errBanRetrieval
+	}
+
+	// If we arrive here, it means that the Ban is not present. Thus we can continue.
 	// First of all, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 

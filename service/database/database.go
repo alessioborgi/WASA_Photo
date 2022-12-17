@@ -47,6 +47,7 @@ var (
 	ErrInternalServerError = errors.New("Internal Server Error!")
 	ErrNoContent           = errors.New("There isn't any object you are searching for in the WASAPhoto Platform!")
 	ErrBadRequest          = errors.New("The action you requested cannot be parsed due to a Bad Request!")
+	ErrBanDoesNotExist     = errors.New("The Ban does not Exists!")
 
 	Created = errors.New("Object Created Correctly.")
 	Ok      = errors.New("Object Returned Correctly.")
@@ -91,7 +92,7 @@ type AppDatabase interface {
 	// PARTICULAR FOLLOW:
 	// (Security Required: Needs Uuid of the action requester).
 	// FollowUser() creates a new User's Follow in the database, given in input the Follow Object. It returns a Follow Object.
-	// FollowUser(follow Follow, uuid string) (Follow, error)
+	FollowUser(username string, usernameFollowing, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnfollowUser() removes a User's Follow given the fixedUsername, and the FollowindId(i.e., the fixedUsername of the Person that the fixedUsername wants to delete from the following list).
@@ -104,7 +105,7 @@ type AppDatabase interface {
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnbanUser() removes a User's Ban given the fixedUsername, and the BanId(i.e., the fixedUsername of the Banned Person).
-	// UnbanUser(fixedUsername string, banId string, uuid string) error
+	UnbanUser(username string, usernameBanned string, uuid string) error
 
 	// PARTICULA USER:
 	// (Security Required: Needs Uuid of the action requester).
@@ -221,14 +222,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 	// }
 
 	// This code is only used during development if we do some change on the database schema.
-	for i := 0; i < len(delete_tables); i++ {
-		_, err := db.Exec(delete_tables[i])
-		if !errors.Is(err, nil) {
-			log.Println("Error Encountered during the Table Deletion", i)
-		} else {
-			log.Println("Table", i, "deleted correctly.")
-		}
-	}
+	// for i := 0; i < len(delete_tables); i++ {
+	// 	_, err := db.Exec(delete_tables[i])
+	// 	if !errors.Is(err, nil) {
+	// 		log.Println("Error Encountered during the Table Deletion", i)
+	// 	} else {
+	// 		log.Println("Table", i, "deleted correctly.")
+	// 	}
+	// }
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
