@@ -48,6 +48,7 @@ var (
 	ErrNoContent           = errors.New("There isn't any object you are searching for in the WASAPhoto Platform!")
 	ErrBadRequest          = errors.New("The action you requested cannot be parsed due to a Bad Request!")
 	ErrBanDoesNotExist     = errors.New("The Ban does not Exists!")
+	ErrFollowDoesNotExist  = errors.New("The Follow does not Exists!")
 
 	Created = errors.New("Object Created Correctly.")
 	Ok      = errors.New("Object Returned Correctly.")
@@ -192,7 +193,7 @@ type AppDatabase interface {
 	// USER's FOLLOWINGS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// GetFollowing() returns the list of User's Followings(Follow Objects), given in input a fixedUsername.
-	// GetFollowing(fixedUsername string, uuid string) ([]Follow, error)
+	GetFollowings(username string, uuid string) ([]string, error)
 
 	// -----
 	// SPECIAL

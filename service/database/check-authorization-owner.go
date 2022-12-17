@@ -81,3 +81,19 @@ func (db *appdbimpl) CheckAuthorizationPresence(uuid string) (string, error) {
 		return NOTPRESENT, nil
 	}
 }
+
+func (db *appdbimpl) GetFixedUsername(uuid string) (string, error) {
+
+	// Variable Declaration.
+	var fixedUsername string
+
+	// Get the fixedUsername from the Uuid.
+	err := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE uuid == ?`, uuid).Scan(&fixedUsername)
+	if err != nil && err != sql.ErrNoRows {
+
+		// Unexpected Error encountered during the query retrieval.
+		log.Println("Err: Unexpected Error!")
+		return "", err
+	}
+	return fixedUsername, nil
+}

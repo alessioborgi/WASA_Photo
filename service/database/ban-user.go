@@ -16,12 +16,12 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
 	// 4) "": Returned if we have some errors.
 
-	// 0.0) As a premature check, check whether the username that is requesting the action is going to sel-ban.
+	// 0.0) As a premature check, check whether the username that is requesting the action is going to self-ban.
 	if username == usernameBanned {
 		return ErrBadRequest
 	}
 
-	// 0.1) First of all, I need to check whether the username that want to add the Ban exists (that must be also the uuid itself, check later).
+	// 0.1) First of all, I need to check whether the username that wants to add the Ban exists (that must be also the uuid itself, check later).
 	fixedUsernameBanner, errUsername := db.CheckUserPresence(username)
 
 	// Check whether theUsername I am trying to update, does not exists.

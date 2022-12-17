@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -13,7 +14,8 @@ func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameB
 
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
-		log.Println("Err: Unexpected Error!")
+		fmt.Println(err)
+		log.Println("Err: Unexpected Error during the Checking of the Ban!")
 		return err
 	} else if exists == 1 {
 		// If no strange error during the Query occurs, and exists = 1, we already have the Ban Exists.

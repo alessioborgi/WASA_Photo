@@ -1,48 +1,130 @@
 package database
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"log"
+)
 
-func (db *appdbimpl) FollowUser(follow Follow, uuid string) (Follow, error) {
+func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string) error {
 
-	// Addition of the User profile. Here we can distinguish two cases:
-	//1) We have that the User can add the follow since the follow action has been requested by the username that is requesting the action.
-	//2) We have that the User cannot add the follow since the follow action has NOT been requested by the username that is requesting the action.
-	//	 Here, you have also to check whether the User that is requesting the profile, has been Banned by the fixedUsername.
-	authorization, errAuth := db.CheckAuthorizationOwner(follow.FixedUsername, uuid)
+	// Adding a User Follow.
+	// Here, you have 4 options, stored in the "authorization" variable:
+	// 1) AUTHORIZED: The action requester is the Profile Owner. It can proceed to add the follow only whether username and usernameFollowing is not the same (we cannot self follow).
+	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner. It cannot follow.
+	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
+	// 4) "": Returned if we have some errors.
 
-	//Check for the error during the Query.
-	if errAuth != nil {
-		return follow, errAuth
-	} else {
-		// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
-
-		if authorization == "Authorized" {
-			//Check first whether the (uuid)user that is requesting the action has been banned by the fixedUsernameFollowing.
-			ban, errBan := db.CheckBan(follow.FixedUsernameFollowing, uuid)
-			//Check for the error during the Query.
-			if errBan != nil {
-				return follow, errBan
-			} else {
-
-				//If no error occurs, checking whether the user was banned by the fixedUsername.
-				if ban == "Not Banned" {
-					//If Not Banned, you can add the follow object without any problem.
-					_, err := db.c.Exec(`INSERT INTO Follows (fixedUsername, fixedUsernameFollowing, uploadDate) VALUES (?, ?, ?)`,
-						follow.FixedUsername, follow.FixedUsernameFollowing, follow.UploadDate)
-					if err != nil {
-						return follow, err
-					} else {
-						return follow, nil
-					}
-				} else {
-					//If the Use was Banned instead, returns nothing.
-					fmt.Println("You cannot have the PhotoList you are requiring!")
-					return follow, ErrUserNotAuthorized
-				}
-			}
-		} else {
-			//If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
-			return follow, ErrUserNotAuthorized
-		}
+	// 0.0) As a premature check, check whether the username that is requesting the action is going to self-follow.
+	if username == usernameFollowing {
+		return ErrBadRequest
 	}
+
+	// 0.1) First of all, I need to check whether the username that wants to add the Ban exists (that must be also the uuid itself, check later).
+	fixedUsername, errUsername := db.CheckUserPresence(username)
+
+	// Check whether the Username that wants to Follow, does not exists.
+	if errors.Is(errUsername, ErrUserDoesNotExist) {
+		log.Println("Err: The fixedUsername, does not exists.")
+		return ErrUserDoesNotExist
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+		log.Println("Err: Strange error during the Check of User Presence")
+		return errUsername
+	}
+
+	// 0.2) Secondly, I need to check only whether the usernameBanned I passed exists in the DB.
+	fixedUsernameFollowing, errusernameBanned := db.CheckUserPresence(usernameFollowing)
+
+	// Check whether the usernameFollowing I am trying to insert, already exists.
+	if errors.Is(errusernameBanned, ErrUserDoesNotExist) {
+		log.Println("Err: The fixedUsernameFollowing I am trying to follow, does not exists.")
+		return ErrUserDoesNotExist
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Ok) {
+		log.Println("Err: Strange error during the Check of UsernameFollowing Presence")
+		return errusernameBanned
+	}
+
+	// 0.3) Thirdly, we should check whether there exists the same Follow already.
+	errFollowRetrieval := db.CheckFollowPresence(fixedUsername, fixedUsernameFollowing)
+	if errors.Is(errFollowRetrieval, Ok) {
+		log.Println("Err: The Follow already exists.")
+		return Ok
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errFollowRetrieval, nil) && !errors.Is(errFollowRetrieval, ErrFollowDoesNotExist) {
+		log.Println("Err: Strange error during the Check of Follow Presence")
+		return errFollowRetrieval
+	}
+
+	// If we arrive here, it means that the Follow is not present. Thus we can continue.
+	// 0.4) We need now to check whether fixedUsername is Banned by fixedUsernameFollowing.
+	errBanRetrieval := db.CheckBanPresence(fixedUsernameFollowing, fixedUsername)
+
+	if errors.Is(errBanRetrieval, Ok) {
+		log.Println("Err: The Ban exists. You cannot Follow it.")
+		return ErrUserNotAuthorized
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
+		log.Println("Err: Strange error during the Check of Ban Presence")
+		return errBanRetrieval
+	}
+
+	fmt.Println("I arrive here2")
+
+	// If we arrive here, it means that the Ban is not present. Thus we can continue.
+
+	// Now, we can finally check the Authorization of the person who is asking the action.
+	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
+
+	// Check for the error during the Query.
+	if !errors.Is(errAuth, nil) {
+
+		// Check whether we have received some errors during the Authentication.
+		return errAuth
+	}
+
+	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
+	if authorization == AUTHORIZED {
+
+		// If the uuid is requesting the action is the actual User Owner.
+		// If Authorized, you can proceed to add up the Follow Object without any problem.
+
+		// If the uuid is requesting the action is the actual User Owner.
+		// If Authorized, you can proceed to add up the Ban Object without any problem.
+		_, err := db.c.Exec(`INSERT INTO Follows (fixedUsername, fixedUsernameFollowing) VALUES (?, ?)`, fixedUsername, fixedUsernameFollowing)
+		if err != nil {
+			return err
+		}
+
+		// The Insertion went well.
+		return nil
+	}
+
+	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
+	if authorization == NOTAUTHORIZED {
+
+		//If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
+		return ErrUserNotAuthorized
+	}
+
+	// Check if we have a NOTVALID auth, i.e., the Uuid is not present in the DB.
+	if authorization == NOTVALID {
+
+		log.Println("Err: The Uuid you are providing is not present.")
+		return ErrUserNotAuthorized
+	}
+
+	// If we arrive here, we encountered other types of problem.
+	log.Println("Err: Unexpected Error.")
+	return errAuth
 }

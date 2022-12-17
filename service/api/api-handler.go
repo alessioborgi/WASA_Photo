@@ -92,7 +92,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.GET("/users/:fixedUsername/followers/", rt.wrap(rt.getFollowers))
 
 	//Register the getFollowings API.
-	// rt.router.GET("/users/:fixedUsername/followings/", rt.wrap(rt.getFollowings))
+	rt.router.GET("/users/:username/followings/", rt.wrap(rt.getFollowings))
 
 	// -----
 	//SPECIAL ROUTES

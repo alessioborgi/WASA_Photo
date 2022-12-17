@@ -35,13 +35,13 @@ const ban_table = `CREATE TABLE IF NOT EXISTS Bans (
 	);`
 
 // The reasoning is that I am going to modify the list of people that I am following.
-// Therefore the path will have the pair (fixedUsernameFollower, fixedUsernameFollowed)
+// Therefore the path will have the pair (fixedUsername, fixedUsernameFollowing)
 const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
-	fixedUsernameFollower TEXT NOT NULL, 
-	fixedUsernameFollowed TEXT NOT NULL,
-	CONSTRAINT fixedUsernameFollower_fixedUsernameFollowed_pk PRIMARY KEY (fixedUsernameFollower, fixedUsernameFollowed),
-	CONSTRAINT fixedUsernameFollower_fk FOREIGN KEY (fixedUsernameFollower) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	CONSTRAINT fixedUsernameFollowed_fk FOREIGN KEY (fixedUsernameFollowed) REFERENCES Users (fixedUsername) ON DELETE CASCADE
+	fixedUsername TEXT NOT NULL, 
+	fixedUsernameFollowing TEXT NOT NULL,
+	CONSTRAINT fixedUsername_fixedUsernameFollowing_pk PRIMARY KEY (fixedUsername, fixedUsernameFollowing),
+	CONSTRAINT fixedUsername_fk FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT fixedUsernameFollowing_fk FOREIGN KEY (fixedUsernameFollowing) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 // ----- PHOTO-RELATED: -----
