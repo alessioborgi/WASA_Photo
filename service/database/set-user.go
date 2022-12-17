@@ -7,7 +7,7 @@ import (
 
 // DOUBT: Do I have to pass it the entire User Object? Do I have to pass to it the new Username?
 
-func (db *appdbimpl) SetMyUsername(username string, newUsername string, uuid string) error {
+func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 
 	// Selection of the User profile.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -17,33 +17,31 @@ func (db *appdbimpl) SetMyUsername(username string, newUsername string, uuid str
 	// 4) "": Returned if we have some errors.
 
 	// 0.1) First of all, I need to check whether the username on which uuid wants to do the action exists (that must be also the uuid itself, check later).
-	_, errUsername := db.CheckUserPresence(username)
+	// This is for getting the fixedUsername from the username.
+	fixedUsername, errFixedUsername := db.GetFixedUsername(uuid)
 
-	// Check whether theUsername I am trying to update, does not exists.
-	if errors.Is(errUsername, ErrUserDoesNotExist) {
-		log.Println("Err: The Username I am trying to update, does not exists.")
-		return ErrUserDoesNotExist
+	// Check whether the Username I am trying to update with the newUsername, does not exists.
+	if !errors.Is(errFixedUsername, nil) {
+		log.Println("Err: Error!")
+		return ErrBadRequest
+	}
+
+	// Let's now check whether the Username we want to insert is already present in the WASAPhoto Platform.
+	_, errUsername := db.CheckUserPresence(user.Username)
+
+	// Check whether the Username I am trying to update with the newUsername, does not exists.
+	if errors.Is(errUsername, Ok) {
+		log.Println("Err: The newUsername is already a WASAPhoto Username. Error!")
+		return ErrBadRequest
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
 
-	// 0.2) Secondly, I need to check only whether the newUsername I passed is already present in the DB.
-	_, errNewUsername := db.CheckUserPresence(newUsername)
-
-	// Check whether the newUsername I am trying to insert, already exists.
-	if errors.Is(errNewUsername, Ok) {
-		return Ok
-	}
-	// Check if strange errors occurs.
-	if !errors.Is(errNewUsername, nil) && !errors.Is(errNewUsername, ErrUserDoesNotExist) {
-		log.Println("Err: Strange error during the Check of User Presence")
-		return errUsername
-	}
-
+	user.FixedUsername = fixedUsername
 	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
@@ -58,8 +56,20 @@ func (db *appdbimpl) SetMyUsername(username string, newUsername string, uuid str
 	if authorization == AUTHORIZED {
 
 		// If the uuid is requesting the action is the actual User Owner.
-		// Perform the Update of the Username.
-		_, errUpdate := db.c.Exec(`UPDATE Users SET username=? WHERE username=?`, newUsername, username)
+		log.Println("The User is Authorized to change its own Profile Information.")
+		// Get the CurrentProfile.
+		// userProfile, errGetProfile := db.GetUserProfile(username, uuid)
+
+		// // Check for the error during the Query.
+		// if !errors.Is(errGetProfile, nil) {
+
+		// 	// Check whether we have received some errors during the Authentication.
+		// 	return User{}, errGetProfile
+		// }
+
+		// Perform the Update of the User.
+		_, errUpdate := db.c.Exec(`UPDATE Users SET username=?, biography=?, name=?, surname=?, dateOfBirth=?, email=?, nationality=?, gender=? WHERE fixedUsername=?`,
+			user.Username, user.Biography, user.Name, user.Surname, user.DateOfBirth, user.Email, user.Nationality, user.Gender, fixedUsername)
 
 		// Check if some strage error occurred during the update.
 		if !errors.Is(errUpdate, nil) {

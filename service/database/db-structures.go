@@ -7,22 +7,20 @@ package database
 
 // Create a User structure.
 type User struct {
-	FixedUsername     string //Primary Key (PK).
-	Uuid              string
-	Username          string
-	Biography         string //Optional
-	DateOfCreation    string
-	NumberOfPhotos    int64
-	TotNumberLikes    int64
-	TotNumberComments int64
-	NumberFollowers   int64
-	NumberFollowing   int64
-	Name              string
-	Surname           string
-	DateOfBirth       string
-	Email             string
-	Nationality       string
-	Gender            string
+	FixedUsername   string //Primary Key (PK).
+	Uuid            string
+	Username        string
+	Biography       string //Optional
+	DateOfCreation  string
+	NumberOfPhotos  int64
+	NumberFollowers int64
+	NumberFollowing int64
+	Name            string
+	Surname         string
+	DateOfBirth     string
+	Email           string
+	Nationality     string
+	Gender          string
 }
 
 type Photo struct {
@@ -56,17 +54,9 @@ type Like struct {
 type Ban struct {
 	FixedUsernameBanner string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the User that wants to Ban the other fixedUsername).
 	FixedUsernameBanned string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the User Banned.
-	UploadDate          string
-	Motivation          string
 }
 
 type Follow struct {
 	FixedUsername          string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the person that wants to follow someone.
 	FixedUsernameFollowing string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the person he wants to Follow.
-	UploadDate             string
 }
-
-// // Create a JSON Error Message Structure.
-// type JSONErrorMsg struct {
-// 	Message string
-// }

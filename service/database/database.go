@@ -77,7 +77,12 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// SetMyUsername(), given the fixedUsername in input together with a newUsername, updates the User's Username.
 	// SetMyUsername(username string, newUsername string, uuid string) error
-	SetMyUsername(username string, newUsername string, uuid string) error
+	// SetMyUsername(username string, newUsername string, uuid string) error
+
+	// (Security Required: Needs Uuid of the action requester).
+	// SetUser(), given the fixedUsername in input together with a newUsername, updates the User's Username.
+	// SetMyUsername(username string, newUsername string, uuid string) error
+	SetUser(username string, user User, uuid string) error
 
 	// USER's PHOTO COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).

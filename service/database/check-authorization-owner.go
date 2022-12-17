@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -33,6 +34,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 		var auth bool
 		err := db.c.QueryRow(`SELECT uuid == ? FROM Users WHERE fixedUsername == ?`, uuid, fixedUsername).Scan(&auth)
 
+		fmt.Println(err)
 		// Check for the error during the Query.
 		if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 

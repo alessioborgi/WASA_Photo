@@ -17,8 +17,11 @@ func (rt *_router) Handler() http.Handler {
 	//Register the getUserProfile API.
 	rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
 
+	//Register the setMyUserName API.
+	// rt.router.PATCH("/users/:username", rt.wrap(rt.setMyUserName))
+
 	//Register the setMyUsername API.
-	rt.router.PUT("/users/:username", rt.wrap(rt.setMyUsername))
+	rt.router.PUT("/users/:username", rt.wrap(rt.setUser))
 
 	//Register the uploadPhoto API.
 	// rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))

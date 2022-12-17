@@ -11,7 +11,10 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
+require github.com/pkg/errors v0.9.1 // indirect
+
 require (
+	github.com/evanphx/json-patch v0.5.2
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
