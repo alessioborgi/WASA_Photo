@@ -52,8 +52,8 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Actual User insertion in the DB. Insertion of the actual uuid, username and (after), update the fixedUsername.
 		// The rest of the User is completely Standard, in such a way to have that the user is not obliged to add nothing else.
-		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"", uuid.String(), username, "", now, 0, 0, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
+		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"", uuid.String(), username, "", now, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 
 		// Check whether we have experienced an error from the User Insertion.
 		if errCretion != nil {

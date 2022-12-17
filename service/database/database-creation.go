@@ -8,14 +8,12 @@ package database
 // UNIQUE is used for saying that the value must be unique among all rows.
 // Note that photoProfile and Biography coul also be NULL.
 const user_table = `CREATE TABLE IF NOT EXISTS Users (
-	fixedUsername TEXT NOT NULL PRIMARY KEY, 
+	fixedUsername TEXT PRIMARY KEY, 
 	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
 	biography TEXT,
 	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
-	totNumberLikes INTEGER NOT NULL DEFAULT 0,
-	totNumberComments INTEGER NOT NULL DEFAULT 0,
 	numberFollowers INTEGER NOT NULL DEFAULT 0,
 	numberFollowing INTEGER NOT NULL DEFAULT 0,
 	name TEXT NOT NULL,
@@ -31,18 +29,19 @@ const user_table = `CREATE TABLE IF NOT EXISTS Users (
 const ban_table = `CREATE TABLE IF NOT EXISTS Bans (
 	fixedUsernameBanner TEXT NOT NULL, 
 	fixedUsernameBanned TEXT NOT NULL,
-	PRIMARY KEY (fixedUsernameBanner, fixedUsernameBanned),
-	FOREIGN KEY (fixedUsernameBanner) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsernameBanned) REFERENCES Users (fixedUsername) ON DELETE CASCADE
+	CONSTRAINT fixedUsernameBanner_fixedUsernameBanned_pk PRIMARY KEY (fixedUsernameBanner, fixedUsernameBanned),
+	CONSTRAINT fixedUsernameBanner_fk FOREIGN KEY (fixedUsernameBanner) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT fixedUsernameBanned_fk FOREIGN KEY (fixedUsernameBanned) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
+// The reasoning is that I am going to modify the list of people that I am following.
+// Therefore the path will have the pair (fixedUsernameFollower, fixedUsernameFollowed)
 const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
-	fixedUsername TEXT NOT NULL, 
-	fixedUsernameFollowing TEXT NOT NULL,
-	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (fixedUsername, fixedUsernameFollowing),
-	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsernameFollowing) REFERENCES Users (fixedUsername) ON DELETE CASCADE
+	fixedUsernameFollower TEXT NOT NULL, 
+	fixedUsernameFollowed TEXT NOT NULL,
+	CONSTRAINT fixedUsernameFollower_fixedUsernameFollowed_pk PRIMARY KEY (fixedUsernameFollower, fixedUsernameFollowed),
+	CONSTRAINT fixedUsernameFollower_fk FOREIGN KEY (fixedUsernameFollower) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT fixedUsernameFollowed_fk FOREIGN KEY (fixedUsernameFollowed) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 // ----- PHOTO-RELATED: -----
@@ -57,8 +56,8 @@ const photo_table = `CREATE TABLE IF NOT EXISTS Photos (
 	numberComments INTEGER NOT NULL DEFAULT 0,
 	latitude FLOAT,
 	longitude FLOAT,
-	PRIMARY KEY (photoid, fixedUsername),
-	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE 
+	CONSTRAINT photoid_fixedUsername PRIMARY KEY (photoid, fixedUsername),
+	CONSTRAINT fixedUsername_photo_fk FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE 
 	);`
 
 // Notice that here I declared (commentid,photoid, fixedUsername) as PK. Commenter is not needed since it can make more than one comment.
@@ -69,10 +68,10 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	phrase TEXT NOT NULL,
 	commenterFixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (commentid, photoid, fixedUsername),
-	FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (commenterFixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
+	CONSTRAINT commentid_photoid_fixedUsername_pk PRIMARY KEY (commentid, photoid, fixedUsername),
+	CONSTRAINT photoid_comment_fk FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
+	CONSTRAINT fixedUsername_comment_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT commenterFixedUsername_comment_fk FOREIGN KEY (commenterFixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 // Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
@@ -84,11 +83,12 @@ const (
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	PRIMARY KEY (likeid, photoid, fixedUsername),
-	FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
-	FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
+	CONSTRAINT likeid_photoid_fixedUsername_pk PRIMARY KEY (likeid, photoid, fixedUsername),
+	CONSTRAINT photoid_like_fk FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
+	CONSTRAINT fixedUsername_like_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
+
 	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
 	query_presence_ban     = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
 	query_presence_follow  = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follows';`

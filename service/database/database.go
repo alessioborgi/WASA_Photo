@@ -213,22 +213,22 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	// Used to Turn On the foreign Key Mechanism.
-	_, err1 := db.Exec(turn_on_fk)
-	if !errors.Is(err1, nil) {
-		log.Println("Error Encountered during the FK Turning on")
-	} else {
-		log.Println("FK correclty Turned On.")
-	}
+	// _, err1 := db.Exec(turn_on_fk)
+	// if !errors.Is(err1, nil) {
+	// 	log.Println("Error Encountered during the FK Turning on")
+	// } else {
+	// 	log.Println("FK correctly Turned On.")
+	// }
 
 	// This code is only used during development if we do some change on the database schema.
-	// for i := 0; i < len(delete_tables); i++ {
-	// 	_, err := db.Exec(delete_tables[i])
-	// 	if !errors.Is(err, nil) {
-	// 		log.Println("Error Encountered during the Table Deletion", i)
-	// 	} else {
-	// 		log.Println("Table", i, "deleted correctly.")
-	// 	}
-	// }
+	for i := 0; i < len(delete_tables); i++ {
+		_, err := db.Exec(delete_tables[i])
+		if !errors.Is(err, nil) {
+			log.Println("Error Encountered during the Table Deletion", i)
+		} else {
+			log.Println("Table", i, "deleted correctly.")
+		}
+	}
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
@@ -267,8 +267,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 	} else if exists == 0 {
 
 		// If no user is in the Users Table, go beyond and add the Admin User Profile.
-		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
 
 		if errCretion != nil {
 			log.Fatalf("Error During Alessio's Account Creation")

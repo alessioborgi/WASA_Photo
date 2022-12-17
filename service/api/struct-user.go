@@ -40,16 +40,14 @@ var (
 // Create a User structure.
 // (Option + 9 on mac for putting the ` character). They are used for allowing to put the name as JSON RFC Standard Specifications.
 type User struct {
-	FixedUsername     string       `json:"fixedUsername"`
-	Username          string       `json:"username"`
-	Biography         string       `json:"biography"`
-	PersonalInfo      PersonalInfo `json:"personalInfo"`
-	DateOfCreation    Date         `json:"dateOfCreation"`
-	NumberOfPhotos    int64        `json:"numberOfPhotos"`
-	TotNumberLikes    int64        `json:"totNumberLikes"`
-	TotNumberComments int64        `json:"totNumberComments"`
-	NumberFollowers   int64        `json:"numberFollowers"`
-	NumberFollowing   int64        `json:"numberFollowing"`
+	FixedUsername   string       `json:"fixedUsername"`
+	Username        string       `json:"username"`
+	Biography       string       `json:"biography"`
+	PersonalInfo    PersonalInfo `json:"personalInfo"`
+	DateOfCreation  Date         `json:"dateOfCreation"`
+	NumberOfPhotos  int64        `json:"numberOfPhotos"`
+	NumberFollowers int64        `json:"numberFollowers"`
+	NumberFollowing int64        `json:"numberFollowing"`
 }
 
 type Username struct {
@@ -177,8 +175,6 @@ func (user *User) ValidUser() bool {
 		user.PersonalInfo.Gender.ValidGender() &&
 		user.DateOfCreation.ValidDateofCreation() &&
 		user.NumberOfPhotos >= 0 &&
-		user.TotNumberLikes >= 0 &&
-		user.TotNumberComments >= 0 &&
 		user.NumberFollowers >= 0 &&
 		user.NumberFollowing >= 0
 }
@@ -192,8 +188,6 @@ func (u *User) FromDatabase(user database.User) {
 	u.Biography = user.Biography
 	u.DateOfCreation = Date(user.DateOfCreation)
 	u.NumberOfPhotos = user.NumberOfPhotos
-	u.TotNumberLikes = user.TotNumberLikes
-	u.TotNumberComments = user.TotNumberComments
 	u.NumberFollowers = user.NumberFollowers
 	u.NumberFollowing = user.NumberFollowing
 
@@ -211,20 +205,18 @@ func (u *User) FromDatabase(user database.User) {
 // DOUBT: What to do with the UUID?
 func (u *User) ToDatabase() database.User {
 	return database.User{
-		FixedUsername:     u.FixedUsername,
-		Username:          u.Username,
-		Biography:         u.Biography,
-		DateOfCreation:    string(u.DateOfCreation),
-		NumberOfPhotos:    u.NumberOfPhotos,
-		TotNumberLikes:    u.TotNumberLikes,
-		TotNumberComments: u.TotNumberComments,
-		NumberFollowers:   u.NumberFollowers,
-		NumberFollowing:   u.NumberFollowing,
-		Name:              u.PersonalInfo.Name,
-		Surname:           u.PersonalInfo.Surname,
-		DateOfBirth:       string(u.PersonalInfo.DateOfBirth),
-		Email:             string(u.PersonalInfo.Email),
-		Nationality:       u.PersonalInfo.Nationality,
-		Gender:            string(u.PersonalInfo.Gender),
+		FixedUsername:   u.FixedUsername,
+		Username:        u.Username,
+		Biography:       u.Biography,
+		DateOfCreation:  string(u.DateOfCreation),
+		NumberOfPhotos:  u.NumberOfPhotos,
+		NumberFollowers: u.NumberFollowers,
+		NumberFollowing: u.NumberFollowing,
+		Name:            u.PersonalInfo.Name,
+		Surname:         u.PersonalInfo.Surname,
+		DateOfBirth:     string(u.PersonalInfo.DateOfBirth),
+		Email:           string(u.PersonalInfo.Email),
+		Nationality:     u.PersonalInfo.Nationality,
+		Gender:          string(u.PersonalInfo.Gender),
 	}
 }

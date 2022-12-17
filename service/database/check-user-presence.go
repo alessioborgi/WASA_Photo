@@ -27,7 +27,7 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 		} else {
 
 			// If we arrive here we have that the username has been correclty retrieved. We can therefore return it.
-			log.Println("fixedUsername correctly from the Database.")
+			log.Println("fixedUsername correctly retrieved from the Database.")
 			return fixedUsername, Ok
 		}
 	} else {
