@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -11,7 +10,7 @@ func (db *appdbimpl) CheckFollowPresence(fixedUsername string, fixedUsernameFoll
 	// Check whether there exists a Follow between fixedUsername and fixedUsernameFollowing.
 	var exists = 0
 	err := db.c.QueryRow(`SELECT COUNT(fixedUsernameFollowing) FROM Follows WHERE fixedUsername = ? AND fixedUsernameFollowing = ?`, fixedUsername, fixedUsernameFollowing).Scan(&exists)
-	fmt.Println(err)
+
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {
 		log.Println("Err: Unexpected Error!")

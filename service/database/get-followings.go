@@ -7,7 +7,7 @@ import (
 
 func (db *appdbimpl) GetFollowings(username string, uuid string) ([]string, error) {
 
-	// Retrieving the Users Ban List.
+	// Retrieving the Users Followings List.
 	// Here, you have 4 options, stored in the "authorization" variable:
 	// 1) AUTHORIZED: The action requester is the Profile Owner. It can proceed to retrieve its list of Followings usernames.
 	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner. It cannot get the list.

@@ -16,20 +16,18 @@ func (rt *_router) Handler() http.Handler {
 
 	//Register the getUserProfile API.
 	rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
-	// rt.router.GET("/users/", rt.wrap(rt.getUserProfile))
 
 	//Register the setMyUsername API.
 	rt.router.PUT("/users/:username", rt.wrap(rt.setMyUsername))
 
 	//Register the uploadPhoto API.
-	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
-	// rt.router.POST("/users/:fixedUsername/photos/", rt.wrap(rt.uploadPhoto))
+	// rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
 	//Register the followUser API.
 	rt.router.PUT("/users/:username/followings/:usernameFollowing", rt.wrap(rt.followUser))
 
 	//Register the unfollowUser API.
-	// rt.router.DELETE("/users/:fixedUsername/followings/:followingid", rt.wrap(rt.unfollowUser))
+	rt.router.DELETE("/users/:username/followings/:usernameFollowing", rt.wrap(rt.unfollowUser))
 
 	//Register the banUser API.
 	// rt.router.PUT("/users/:fixedUsername/bans/:banid", rt.wrap(rt.banUser))
@@ -89,7 +87,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:username/bans/", rt.wrap(rt.getBannedUsers))
 
 	//Register the getFollowers API.
-	// rt.router.GET("/users/:fixedUsername/followers/", rt.wrap(rt.getFollowers))
+	rt.router.GET("/users/:username/followers/", rt.wrap(rt.getFollowers))
 
 	//Register the getFollowings API.
 	rt.router.GET("/users/:username/followings/", rt.wrap(rt.getFollowings))

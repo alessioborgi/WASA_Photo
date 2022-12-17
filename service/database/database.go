@@ -72,7 +72,6 @@ type AppDatabase interface {
 	// SESSION:
 	// DoLogin() creates a new Username given in input a Username. If does not already exists and returns a uuid, or,  if it already exists, simply returns a uuid.
 	DoLogin(username string) (string, error)
-	// DoLogin(user User) (string, error) //Maybe in this way?
 
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
@@ -97,7 +96,7 @@ type AppDatabase interface {
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnfollowUser() removes a User's Follow given the fixedUsername, and the FollowindId(i.e., the fixedUsername of the Person that the fixedUsername wants to delete from the following list).
-	// UnfollowUser(fixedUsername string, followingId string, uuid string) error
+	UnfollowUser(username string, usernameFollowing string, uuid string) error
 
 	// PARTICULAR BAN:
 	// (Security Required: Needs Uuid of the action requester).
@@ -112,7 +111,6 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// GetUserProfile() returns the User Profile requested given in input the fixedUsername.
 	GetUserProfile(username string, uuid string) (User, error)
-	// GetUserProfile(username string) (User, error)
 
 	// USER STREAM:
 	// (Security Required: Needs Uuid of the action requester).
@@ -188,7 +186,7 @@ type AppDatabase interface {
 	// USER's FOLLOWERS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// GetFollowers() returns the list of User's Followers(Follow Objects), given in input a fixedUsername.
-	// GetFollowers(fixedUsername string, uuid string) ([]Follow, error)
+	GetFollowers(username string, uuid string) ([]string, error)
 
 	// USER's FOLLOWINGS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).

@@ -1036,12 +1036,12 @@ paths:
         has actually followed a user, can also delete it, whenever it wants. This means that 
         the user that performs this action should be on its own profile.
       responses:
-        "204": 
-          description: OK! User Follow deleted successfully!
+        "204": {description: OK! User Follow deleted successfully!}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
           
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
-        '404': {$ref : '#/components/responses/NotFound'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
