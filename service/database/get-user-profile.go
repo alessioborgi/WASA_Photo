@@ -1,7 +1,7 @@
 package database
 
 import (
-	"database/sql"
+	"errors"
 	"log"
 )
 
@@ -31,44 +31,66 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 	// 1) First, check the authorization. In the you are AUTHORIZED and NOTAUTHORIZED, you are authorized to view all authorization information.
 	if authorization == AUTHORIZED || authorization == NOTAUTHORIZED {
 
-		// First, check whether the username you are searching is present.
-		var exists = 0
-		err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE username == ?`, username).Scan(&exists)
+		// First of all, I need to check whether the username on which uuid wants to do the action exists.
+		fixedUsername, errUsername := db.CheckUserPresence(username)
 
-		// Check whether we have encountered some error during the Query.
-		if err != nil && err != sql.ErrNoRows {
-			log.Println("Err: Unexpected Error during the Query!")
-			return User{}, err
+		// Check whether the fixedUsername I am trying to delete, does not exists.
+		if errors.Is(errUsername, ErrUserDoesNotExist) {
+			log.Println("Err: The fixedUsername I am trying to get the profile of, does not exists.")
+			return User{}, ErrUserDoesNotExist
 		}
 
-		// Check whether we have the username we are searching for in the DB.
-		if exists == 1 {
+		// Check if strange errors occurs.
+		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+			log.Println("Err: Strange error during the Check of User Presence")
+			return User{}, errUsername
+		}
 
-			// The User Exists.
-			log.Println("The User Exists in the WASAPhoto Platform!")
+		// The User Exists.
+		log.Println("The User Exists in the WASAPhoto Platform!")
 
-			// Retrieve all the Profile Data from the DB.
-			err := db.c.QueryRow(`SELECT *
+		// If the User was not "Authorized", i.e. it is not the Profile Owner, it must be checked whether you are banned or not.
+		// 0.1) First of all, I need to check whether the username that wants to know the Followers of exists.
+		fixedUsernameRequester, errfixedUsernameRequester := db.GetFixedUsername(uuid)
+
+		// Check if strange errors occurs.
+		if !errors.Is(errfixedUsernameRequester, nil) {
+			log.Println("Err: Unexpected Error in the Username Requester Retrieval ")
+			return User{}, errfixedUsernameRequester
+		}
+
+		// If we arrive here, we have correclty retrieved the Requester Username.
+		// Proceed to check whether it is Banned or not.
+		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
+		// fmt.Println(errBanRetrieval)
+		if errors.Is(errBanRetrieval, Ok) {
+			log.Println("Err: The Ban exists. You cannot get its Profile.")
+			return User{}, ErrUserNotAuthorized
+		}
+
+		// Check if strange errors occurs.
+		if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
+			log.Println("Err: Strange error during the Check of Ban Presence")
+			return User{}, errBanRetrieval
+		}
+
+		// If we arrive here, the user is not Banned and we can retrieve all the Profile Data from the DB.
+		err := db.c.QueryRow(`SELECT *
 							FROM Users
 							WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
 
-			// Check for the error during the Query.
-			if err != nil {
+		// Check for the error during the Query.
+		if err != nil {
 
-				// If we have encountered some errors in the Query retrieval.
-				log.Println("Err: Unexpected Error! During the Query Retrieval!")
-				return User{}, err
-			}
-
-			// Otherwise we have retrieved the User Profile Correctly
-			log.Println("User Profile retrieved correctly!")
-			return user, nil
-		} else {
-
-			// The User Does not exists(exists = 0).
-			log.Println("Err: User Does Not Exist!")
-			return User{}, ErrUserDoesNotExist
+			// If we have encountered some errors in the Query retrieval.
+			log.Println("Err: Unexpected Error! During the Query Retrieval!")
+			return User{}, err
 		}
+
+		// Otherwise we have retrieved the User Profile Correctly
+		log.Println("User Profile retrieved correctly!")
+		return user, nil
+
 	} else if authorization == NOTVALID {
 
 		log.Println("Err: The Uuid you are providing or the fixedUsername is not present.")
@@ -79,39 +101,4 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		// If we arrive here, we encountered other types of problems.
 		return User{}, errAuth
 	}
-
-	// }
-	// } else {
-	//In the case you are not the profile owner, i.e. you result as "unauthorized", you must have a restricted View of the User profile (i.e, it must not see the Personal Data).
-
-	//Check first whether the user that is requesting the action has been banned by the fixedUsername.
-
-	// ban, errBan := db.CheckBan(fixedUsername, uuid)
-
-	//Check for the error during the Query.
-	// if errBan != nil {
-	// 	return User{}, errBan
-	// } else {
-
-	//Checking whether the user was banned by the fixedUsername.
-	// if ban == "Not Banned" {
-	//If we are Not Banned, we proceed to return the User Data (restricted View).
-	//Notice that here, I could have also used a View instead of a query with all these selected columns. I have just opted for the worst choice, since it is very verbose.
-	// err := db.c.QueryRow(`SELECT fixedusername, username, biography, dateOfCreation, numberOfPhotos, totNumberLikes, totNumberComments, numberFollowers, numberFollowing
-	// FROM Users
-	// WHERE username == '?'`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.TotNumberLikes, &user.TotNumberComments, &user.NumberFollowers, &user.NumberFollowing)
-
-	// //Check for the error during the Query.
-	// if err != nil {
-	// 	return User{}, err
-	// } else {
-	// 	return user, nil
-	// }
-	// 			} else {
-	// 				//If the Use was Banned instead, return the empty User.
-	// 				return User{}, nil
-	// 			}
-	// 		}
-	// 	}
-	// }
 }

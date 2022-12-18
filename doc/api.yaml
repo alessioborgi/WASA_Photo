@@ -1251,27 +1251,6 @@ components:
       pattern: ^.*$
       example: male
 
-    personalInfo:
-      title: personalInfo
-      type: object
-      description: |
-        This is the personalInfo object. This groups the set of personal information 
-        we request the User to insert(all of them are not required). 
-      properties: 
-        name:
-          $ref: "#/components/schemas/name"
-        surname:
-          $ref: "#/components/schemas/surname"
-        dateOfBirth:
-          $ref: "#/components/schemas/dateOfBirth"
-        email:
-          $ref: "#/components/schemas/email"
-        nationality:
-          $ref: '#/components/schemas/nationality'
-        gender:
-          $ref: "#/components/schemas/gender"
-
-
     dateOfCreation:
       title: dateOfCreation
       type: string
@@ -1288,20 +1267,6 @@ components:
       description: Current number of Photos(Posts).
       default: 0
       example: 120
-
-    totNumberLikes:
-      title: totNumberLikes
-      type: integer
-      description: Current total number of likes.
-      default: 0
-      example: 1800
-    
-    totNumberComments:
-      title: totNumberComments
-      type: integer
-      description: Current total number of comments.
-      default: 0
-      example: 70
     
     numberFollowers:
       title: numberFollowers
@@ -1335,20 +1300,27 @@ components:
           $ref: "#/components/schemas/username"
         biography:
           $ref: "#/components/schemas/biography"
-        personalInfo:
-          $ref: "#/components/schemas/personalInfo"
         dateOfCreation:
           $ref: "#/components/schemas/dateOfCreation"
         numberPhotos:
           $ref: "#/components/schemas/numberPhotos"
-        totNumberLikes:
-          $ref: "#/components/schemas/totNumberLikes"
-        numberComments:
-          $ref: "#/components/schemas/totNumberComments"
         numberFollowers:
           $ref: "#/components/schemas/numberFollowers"
         numberFollowing:
           $ref: "#/components/schemas/numberFollowing"  
+        name:
+          $ref: "#/components/schemas/name"
+        surname:
+          $ref: "#/components/schemas/surname"
+        dateOfBirth:
+          $ref: "#/components/schemas/dateOfBirth"
+        email:
+          $ref: "#/components/schemas/email"
+        nationality:
+          $ref: '#/components/schemas/nationality'
+        gender:
+          $ref: "#/components/schemas/gender"
+        
 
 
     ### SCHEMAS FOR ../PHOTO #
@@ -1475,13 +1447,16 @@ components:
       properties: 
         commentid: 
           $ref: "#/components/schemas/commentid"
-        commenterUsername: 
+        photoid:
+          $ref: "#/components/schemas/photoid"
+        fixedUsername: 
+          $ref: "#/components/schemas/fixedUsername"
+        commenterFixedUsername: 
           $ref: "#/components/schemas/fixedUsername"
         phrase:
           $ref: "#/components/schemas/phrase"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
-
     
     ### SCHEMAS FOR ../LIKES #
     like:
@@ -1495,8 +1470,10 @@ components:
       properties: 
         likeid: 
           $ref: "#/components/schemas/fixedUsername"
-        uploadDate:
-          $ref: "#/components/schemas/uploadDate"
+        photoid:
+          $ref: "#/components/schemas/photoid"
+        fixedUsername:
+          $ref: "#/components/schemas/fixedUsername"
 
     
     ### SCHEMAS FOR ../BANS #    
@@ -1524,13 +1501,11 @@ components:
         can ban each person once only), the date and time of when the ban has been
         delivered, and the motivation of the Ban.  
       properties: 
-        banid: 
+        fixedUsernameBanner: 
           $ref: "#/components/schemas/fixedUsername"
-        uploadDate:
-          $ref: "#/components/schemas/uploadDate"
-        motivation:
-          $ref: "#/components/schemas/motivation"
-
+        fixedUsernameBanned:
+          $ref: "#/components/schemas/fixedUsername"
+      
   ##### PARAMETERS ##
   parameters:
     ### USER PARAMETERS#

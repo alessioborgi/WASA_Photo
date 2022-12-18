@@ -32,7 +32,7 @@ type Uuid string
 var (
 	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
 	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
-	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`) //123e4567-e89b-12d3-a456-426614174000
+	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
 	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) //Without February Check.
 
 	current_year, c_month, current_day = time.Now().Date()
@@ -60,16 +60,6 @@ type User struct {
 type Username struct {
 	Name string `json:"username"`
 }
-
-// Ceation of a sub-Structure that handles the Personal Information of the User.
-// type PersonalInfo struct {
-// 	Name        string `json:"name"`
-// 	Surname     string `json:"surname"`
-// 	DateOfBirth Date   `json:"dateOfBirth"`
-// 	Email       Email  `json:"email"`
-// 	Nationality string `json:"nationality"`
-// 	Gender      Gender `json:"gender"`
-// }
 
 // Declaring a Method for checking the Username validity w.r.t. its regex.
 func (username Username) ValidUsername(regex regexp.Regexp) bool {
@@ -143,7 +133,7 @@ func (user *User) ValidUser() bool {
 // -----                -----
 
 // Function for handling the population of the struct with data from the DB.
-func (u *User) FromDatabase(user database.User) {
+func (u *User) FromDatabase(user database.User, db database.AppDatabase) {
 	u.FixedUsername = user.FixedUsername
 	u.Username = user.Username
 	u.Biography = user.Biography

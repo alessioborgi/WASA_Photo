@@ -91,7 +91,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		log.Println("Profile Retrieval Succedeed")
 
 		// Construct the Profile Struct from the DB
-		user.FromDatabase(profile)
+		user.FromDatabase(profile, rt.db)
 
 		// Set the User Profile all to 200 ("OK"), and send the User Profile to the User.
 		w.WriteHeader(http.StatusOK)

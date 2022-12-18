@@ -45,18 +45,7 @@ type Comment struct {
 }
 
 type Like struct {
-	Likeid        string //Primary Key (PK). This corresponds to the Username of the Liker.
-	PhotoId       int64  //Primary & Foreign Key (PK, FK).
-	FixedUsername string //Primary & Foreign Key (PK, FK).
-	UploadDate    string
-}
-
-type Ban struct {
-	FixedUsernameBanner string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the User that wants to Ban the other fixedUsername).
-	FixedUsernameBanned string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the User Banned.
-}
-
-type Follow struct {
-	FixedUsername          string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the person that wants to follow someone.
-	FixedUsernameFollowing string //Primary & Foreign Key (PK, FK). This corresponds to the fixedUsername of the person he wants to Follow.
+	Likeid        string //Primary & Foreign Key (PK, FK). This corresponds to the LikerFixedUsername!!!!. This map to the User.
+	PhotoId       int64  //Primary & Foreign Key (PK, FK). This map to the Photo.
+	FixedUsername string //Primary & Foreign Key (PK, FK). This map to the Photo.
 }

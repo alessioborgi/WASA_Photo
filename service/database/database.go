@@ -202,6 +202,9 @@ type AppDatabase interface {
 	// SPECIAL
 	// -----
 
+	// GetUsername is useful for getting the Username given the fixedUsername in input.
+	GetUsername(fixedUsername string) (string, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned).
 	Ping() error
 }
@@ -226,14 +229,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 	// }
 
 	// This code is only used during development if we do some change on the database schema.
-	// for i := 0; i < len(delete_tables); i++ {
-	// 	_, err := db.Exec(delete_tables[i])
-	// 	if !errors.Is(err, nil) {
-	// 		log.Println("Error Encountered during the Table Deletion", i)
-	// 	} else {
-	// 		log.Println("Table", i, "deleted correctly.")
-	// 	}
-	// }
+	for i := 0; i < len(delete_tables); i++ {
+		_, err := db.Exec(delete_tables[i])
+		if !errors.Is(err, nil) {
+			log.Println("Error Encountered during the Table Deletion", i)
+		} else {
+			log.Println("Table", i, "deleted correctly.")
+		}
+	}
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string

@@ -99,3 +99,19 @@ func (db *appdbimpl) GetFixedUsername(uuid string) (string, error) {
 	}
 	return fixedUsername, nil
 }
+
+func (db *appdbimpl) GetUsername(fixedUsername string) (string, error) {
+
+	// Variable Declaration.
+	var username string
+
+	// Get the fixedUsername from the Uuid.
+	err := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername == ?`, fixedUsername).Scan(&fixedUsername)
+	if err != nil && err != sql.ErrNoRows {
+
+		// Unexpected Error encountered during the query retrieval.
+		log.Println("Err: Unexpected Error!")
+		return "", err
+	}
+	return username, nil
+}
