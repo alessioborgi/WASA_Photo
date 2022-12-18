@@ -49,13 +49,11 @@ const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
 const photo_table = `CREATE TABLE IF NOT EXISTS Photos (
 	photoid INTEGER NOT NULL, 
 	fixedUsername TEXT NOT NULL,
-	filename BLOB NOT NULL,
+	filename TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	phrase TEXT,
 	numberLikes INTEGER NOT NULL DEFAULT 0,
 	numberComments INTEGER NOT NULL DEFAULT 0,
-	latitude FLOAT,
-	longitude FLOAT,
 	CONSTRAINT photoid_fixedUsername PRIMARY KEY (photoid, fixedUsername),
 	CONSTRAINT fixedUsername_photo_fk FOREIGN KEY (fixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE 
 	);`

@@ -23,8 +23,7 @@ func ValidComment(comment Comment) bool {
 		comment.PhotoId >= 0 &&
 		regex_username.MatchString(comment.Username) &&
 		regex_username.MatchString(comment.CommenterUsername) &&
-		len(comment.Phrase) >= 5 && len(comment.Phrase) <= 1000 &&
-		comment.UploadDate.ValidUploadDate()
+		len(comment.Phrase) >= 5 && len(comment.Phrase) <= 1000
 }
 
 // -----                -----

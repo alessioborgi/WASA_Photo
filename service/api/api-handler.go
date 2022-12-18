@@ -40,7 +40,7 @@ func (rt *_router) Handler() http.Handler {
 
 	// PHOTO-RELATED
 	//Register the uploadPhoto API.
-	// rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
+	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
 	// Register the likePhoto API.
 	// rt.router.PUT("/users/:fixedUsername/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.likePhoto))

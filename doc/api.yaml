@@ -1353,33 +1353,6 @@ components:
       default: 0000-01-01T00:00:00Z
       example: 2022-11-03T08:30:00Z
 
-    latitude:
-      title: latitude
-      type: number
-      description: Location Latitude in decimal degrees format.
-      format: float
-      minimum: -90
-      maximum: 90
-      example: 12.34
-        
-    longitude:
-      title: longitude
-      type: number
-      description: Location Longitude in decimal degrees format.
-      format: float
-      minimum: -180
-      maximum: 180
-      example: 56.78
-    
-    #Location Including (Longitude, Latitude)
-    location: 
-      title: location
-      type: object
-      description: Object including both Longitude and Latitude.
-      properties:
-        latitude: {$ref: "#/components/schemas/latitude"}
-        longitude: {$ref: "#/components/schemas/longitude"}
-
     phrase:
       title: phrase
       type: string
@@ -1419,8 +1392,6 @@ components:
           $ref: "#/components/schemas/fileName"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
-        location: 
-          $ref: "#/components/schemas/location"
         phrase: 
           $ref: "#/components/schemas/phrase"
         numberLikes:

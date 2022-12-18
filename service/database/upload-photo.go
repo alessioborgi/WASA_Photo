@@ -1,68 +1,80 @@
 package database
 
-import "log"
+import (
+	"errors"
+	"log"
+)
 
-func (db *appdbimpl) UploadPhoto(username string, photo Photo) (Photo, error) {
+func (db *appdbimpl) UploadPhoto(username string, photo Photo, uuid string) error {
 
-	// Adding a User Photo. Here we can distinguish two cases:
-	//1) We have that the User can add the photo since the photo insertion action has been requested by the profile owner's coinciding with the action requester.
-	//2) We have that the User cannot add the photo since the photo insertion action has NOT been requested by the profile owner's coinciding with the action requester.
+	// Selection of the User profile.
+	// Here, you have 4 options, stored in the "authorization" variable:
+	// 1) AUTHORIZED: The action requester is the Profile Owner. It can Add the photo.
+	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner. It cannot Add the photo.
+	// 3) NOT VALID: The action requester has not inserted a valid Uuid, since it's not present in the DB.
+	// 4) "": Returned if we have some errors.
 
-	// authorization, errAuth := db.CheckAuthorizationOwner(photo.FixedUsername, uuid)
+	// Let's now check whether the Username we want to insert is already present in the WASAPhoto Platform.
+	_, errUsername := db.CheckUserPresence(username)
 
-	//Check for the error during the Query.
-	// if errAuth != nil {
-	// 	return photo, errAuth
-	// } else {
-	// Go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
-
-	// if authorization == "Authorized" {
-
-	//If Authorized, you can proceed to add up the Photo Object without any problem.
-
-	// As first thing I need to retrieve the fixedUsername of the Username.
-	var fixedUsername string
-	err := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE username == ?`, username).Scan(&fixedUsername)
-	if err != nil {
-		log.Fatalf("Failed to Retrieve fixedUsername from the DB")
-		return Photo{}, err
-	} else {
-		// If we arrive here, we correctly retrieved the fixedUsername.
-		log.Println("fixedUsername Retrieval Succeeded from the DB!")
-
-		// We can therefore proceed to Insert the photo.
-		res, err := db.c.Exec(`INSERT INTO Photos (photoid, fixedUsername, filename, uploadDate, phrase, numberLikes, numberComments, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			photo.Photoid, fixedUsername, photo.Filename, now, photo.Phrase, 0, 0, photo.Latitude, photo.Longitude)
-		if err != nil {
-			return Photo{}, err
-		} else {
-			// User Created Successfully.
-			log.Println("User's Photo Creation Succeeded!")
-
-			// User's fixedUsername Update.
-			lastInsertID, err := res.LastInsertId()
-			if err != nil {
-				log.Fatalf("Photo's photoid retrieval Error")
-				return Photo{}, err
-			} else {
-				log.Println("Photo's photoid retrieval Succedeed.")
-				var old_photoid = photo.Photoid
-				var a = lastInsertID
-				_, errUpdate := db.c.Exec(`UPDATE Photos SET photoid=? WHERE fixedUsername = ? AND photoid = ?`, string(rune(a)), username, old_photoid)
-				if errUpdate != nil {
-					log.Fatalf("Error During Updatating")
-					return Photo{}, errUpdate
-				} else {
-					log.Println("fixedUsername Update Succeeded")
-					return photo, nil
-				}
-			}
-		}
+	// Check whether the Username I am trying to update with the newUsername, does not exists.
+	if errors.Is(errUsername, ErrUserDoesNotExist) {
+		log.Println("Err: The Username is trying to update the photo does not exists. Error!")
+		return ErrBadRequest
 	}
 
-	// 	} else {
-	// 		//If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
-	// 		return photo, ErrUserNotAuthorized
-	// 	}
-	// }
+	// Check if strange errors occurs.
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+		log.Println("Err: Strange error during the Check of User Presence")
+		return errUsername
+	}
+
+	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
+	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
+
+	// Check for the error during the Query.
+	if !errors.Is(errAuth, nil) {
+
+		// Check whether we have received some errors during the Authentication.
+		return errAuth
+	}
+
+	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
+	if authorization == AUTHORIZED {
+
+		// If the uuid is requesting the action is the actual User Owner.
+		log.Println("The User is Authorized to add a Photo")
+
+		// We can execute the Insertion.
+		_, errInsertion := db.c.Exec(`INSERT INTO Photos (photoid, fixedUsername, filename, uploadDate, phrase, numberLikes, numberComments) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			photo.Photoid, photo.FixedUsername, photo.Filename, photo.UploadDate, photo.Phrase, photo.NumberLikes, photo.NumberComments)
+
+		// Check if some strage error occurred during the update.
+		if !errors.Is(errInsertion, nil) {
+			log.Println("Err: Error during Photo Insertion.")
+			return errInsertion
+		}
+
+		// 4 - return mediaID
+		return nil
+	}
+
+	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
+	if authorization == NOTAUTHORIZED {
+
+		// If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
+		return ErrUserNotAuthorized
+	}
+
+	// Check if we have a NOTVALID auth, i.e., the Uuid is not present in the DB.
+	if authorization == NOTVALID {
+
+		log.Println("Err: The Uuid you are providing is not present.")
+		return ErrUserNotAuthorized
+	}
+
+	// If we arrive here, we encountered other types of problem.
+	log.Println("Err: Unexpected Error.")
+	return errAuth
 }

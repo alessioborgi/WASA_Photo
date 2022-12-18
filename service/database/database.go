@@ -75,11 +75,6 @@ type AppDatabase interface {
 
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
-	// SetMyUsername(), given the fixedUsername in input together with a newUsername, updates the User's Username.
-	// SetMyUsername(username string, newUsername string, uuid string) error
-	// SetMyUsername(username string, newUsername string, uuid string) error
-
-	// (Security Required: Needs Uuid of the action requester).
 	// SetUser(), given the fixedUsername in input together with a newUsername, updates the User's Username.
 	// SetMyUsername(username string, newUsername string, uuid string) error
 	SetUser(username string, user User, uuid string) error
@@ -87,8 +82,7 @@ type AppDatabase interface {
 	// USER's PHOTO COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// UploadPhoto() creates a new User's Photo(Post) in the database, given in input the Photo Object. It returns an Photo Object.
-	// UploadPhoto(photo Photo, uuid string) (Photo, error)
-	// UploadPhoto(username string, photo Photo) (Photo, error)
+	UploadPhoto(username string, photo Photo, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// DeletePhoto() removes a User's Photo given the fixedUsername and the photoId in input.
@@ -205,6 +199,12 @@ type AppDatabase interface {
 	// GetUsername is useful for getting the Username given the fixedUsername in input.
 	GetUsername(fixedUsername string) (string, error)
 
+	// GetLastPhotoId is useful for getting back the lastPhotoId.
+	GetLastPhotoId(username string) (int64, error)
+
+	// CheckUserPresence given in input the username, returns the fixedUsername.
+	CheckUserPresence(username string) (string, error)
+
 	// Ping checks whether the database is available or not (in that case, an error will be returned).
 	Ping() error
 }
@@ -229,14 +229,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 	// }
 
 	// This code is only used during development if we do some change on the database schema.
-	for i := 0; i < len(delete_tables); i++ {
-		_, err := db.Exec(delete_tables[i])
-		if !errors.Is(err, nil) {
-			log.Println("Error Encountered during the Table Deletion", i)
-		} else {
-			log.Println("Table", i, "deleted correctly.")
-		}
-	}
+	// for i := 0; i < len(delete_tables); i++ {
+	// 	_, err := db.Exec(delete_tables[i])
+	// 	if !errors.Is(err, nil) {
+	// 		log.Println("Error Encountered during the Table Deletion", i)
+	// 	} else {
+	// 		log.Println("Table", i, "deleted correctly.")
+	// 	}
+	// }
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string

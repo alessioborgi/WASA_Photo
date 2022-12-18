@@ -10,7 +10,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-var now = time.Now()
+var now = time.Now().String()
 
 func (db *appdbimpl) DoLogin(username string) (string, error) {
 

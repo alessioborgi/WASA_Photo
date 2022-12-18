@@ -26,13 +26,11 @@ type User struct {
 type Photo struct {
 	Photoid        int64  //Primary Key (PK).
 	FixedUsername  string //Primary & Foreign Key (PK, FK).
-	Filename       byte
+	Filename       string // This will be the path(local url) to the photo.
 	UploadDate     string
 	Phrase         string //Optional.
 	NumberLikes    int64
 	NumberComments int64
-	Latitude       float64
-	Longitude      float64
 }
 
 type Comment struct {
