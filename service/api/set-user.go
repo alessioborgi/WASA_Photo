@@ -61,7 +61,7 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	// If we arrive here, a non-empty Username has been requested to be updated.
 	// Let's therefore take the json from the body in order to see what is the newUsername.
 
-	// Read the new content for the fountain from the request body.
+	// Read the new content for the User from the request body.
 	var newUser User
 
 	// Getting the Username from the JSON.
@@ -87,8 +87,6 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here, there is no error and the newUser is Valid.
 	log.Println("The NewUser received has passed the Validation Process.")
-
-	// newUser.Username = username.Name
 
 	// We can therefore proceed in the User Update.
 	// Call the DB action and wait for its response.

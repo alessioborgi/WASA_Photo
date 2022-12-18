@@ -41,7 +41,9 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 		return errUsername
 	}
 
+	// Set the fixedUsername of the new user.
 	user.FixedUsername = fixedUsername
+
 	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
@@ -57,15 +59,6 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 
 		// If the uuid is requesting the action is the actual User Owner.
 		log.Println("The User is Authorized to change its own Profile Information.")
-		// Get the CurrentProfile.
-		// userProfile, errGetProfile := db.GetUserProfile(username, uuid)
-
-		// // Check for the error during the Query.
-		// if !errors.Is(errGetProfile, nil) {
-
-		// 	// Check whether we have received some errors during the Authentication.
-		// 	return User{}, errGetProfile
-		// }
 
 		// Perform the Update of the User.
 		_, errUpdate := db.c.Exec(`UPDATE Users SET username=?, biography=?, name=?, surname=?, dateOfBirth=?, email=?, nationality=?, gender=? WHERE fixedUsername=?`,

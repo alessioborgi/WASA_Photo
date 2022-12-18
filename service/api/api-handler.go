@@ -18,7 +18,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:username", rt.wrap(rt.getUserProfile))
 
 	//Register the setMyUserName API.
-	// rt.router.PATCH("/users/:username", rt.wrap(rt.setMyUserName))
+	rt.router.PATCH("/users/:username", rt.wrap(rt.setMyUserName))
 
 	//Register the setMyUsername API.
 	rt.router.PUT("/users/:username", rt.wrap(rt.setUser))

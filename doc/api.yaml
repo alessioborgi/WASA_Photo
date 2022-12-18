@@ -105,6 +105,142 @@ paths:
     get:
       security:
         - bearerAuthentication: []
+      operationId: getUsers
+      tags: ["User-Handling"]
+      summary: WASAPhoto's List of Users.
+      description: |
+        HOW IT WORKS:
+        Return the list of the Users registered to WASAPhoto.
+        
+        RETURN:
+        The returned value is an array of Usernames. 
+        
+        RESTRICTIONS:
+        Note that this action is allowed to EVERY USER that is logged in. Notice that we 
+        require here for authentication because of the fact that you should be first 
+        registered/logged-in in order to obtain the whole list of users. This list should
+        be filtered by returning all the users that are registered in WASAPhoto that you
+        are allowed to see (i.e., all except for the ones that have banned the user that is
+        requesting this list).
+
+      responses:
+        '200':
+          description: Ok! List of registered Users Returned Successfully!.
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                maxItems: 1000000
+                description: Array of Usernames of the WASAPhoto's Users.
+                items: 
+                  $ref: "#/components/schemas/username"
+
+        '204': {$ref : '#/components/responses/NoContent'}
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+        
+        '500': {$ref : '#/components/responses/InternalServerError'}
+
+  /users/{fixedUsername}:
+    summary: Specific fixedUsername Profile of the User Collection.
+    parameters: 
+      #I need to provide for a fixedUsername of the person I am looking for.
+      - $ref : "#/components/parameters/fixedUsername"
+    
+    patch:
+      security:
+      - bearerAuthentication: []
+      operationId: setMyUserName
+      tags: ["User-Handling"]
+      summary: Change you username.
+      description: |
+        Change the (variable) Username with the new value passed in input (newUsername, in the body). 
+        Also here, we request for authentication of the user that wants to perform this action.
+        
+        RETURN:
+        Return nothing.
+        
+        RESTRICTIONS:
+        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
+        change of Username can be done by ONLY the user that is the Profile Owner. 
+        Otherwise, it cannot. 
+
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/username" }
+      responses: 
+        '204': {description: OK! Username Updated Successfully!.}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
+          
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+
+    put:
+      security:
+        - bearerAuthentication: []
+      operationId: setUser
+      tags: ["User-Handling"]
+      summary: Change your User.
+      description: |
+        HOW IT WORKS:
+        Change the User with the new values passed in input (in the body). 
+        Also here, we request for authentication of the user that wants to perform this action.
+        
+        RETURN:
+        Return nothing.
+        
+        RESTRICTIONS:
+        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
+        change of Username can be done by ONLY the user that is the Profile Owner. 
+        Otherwise, it cannot. 
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/username"}
+
+      responses:
+        '204': {description: OK! Username Updated Successfully!.}
+        
+        '400': {$ref : '#/components/responses/BadRequest'}
+          
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+    
+    delete:
+      security:
+        - bearerAuthentication: []
+      operationId: deleteUser
+      tags: ["User-Handling"]
+      summary: Delete your Username.
+      description: |
+        HOW IT WORKS:
+        Remove the User profile, given in input the username. Also here, we request for 
+        authentication of the user that wants to perform this action. 
+        
+        RETURN:
+        Return the fixedUsername in response, in case of successful deletion.
+        
+        RESTRICTIONS:
+        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
+        deletion of the user(account) can be done by ONLY if the user that is deleting the
+        account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
+        
+      responses:
+        "204": 
+          description: OK! User Profile deleted successfully! 
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+
+        '500': {$ref : '#/components/responses/InternalServerError'}
+    
+    get:
+      security:
+        - bearerAuthentication: []
       operationId: getUserProfile
       tags: ["User-Profile"]
       summary: Return the User Profile.
@@ -143,115 +279,6 @@ paths:
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
-  /users/pool/:
-    summary: Users Pool Collection
-
-    get:
-      security:
-        - bearerAuthentication: []
-      operationId: getUsers
-      tags: ["User-Handling"]
-      summary: WASAPhoto's List of Users.
-      description: |
-        HOW IT WORKS:
-        Return the list of the Users registered to WASAPhoto.
-        
-        RETURN:
-        The returned value is an array of Usernames. 
-        
-        RESTRICTIONS:
-        Note that this action is allowed to EVERY USER that is logged in. Notice that we 
-        require here for authentication because of the fact that you should be first 
-        registered/logged-in in order to obtain the whole list of users. This list should
-        be filtered by returning all the users that are registered in WASAPhoto that you
-        are allowed to see (i.e., all except for the ones that have banned the user that is
-        requesting this list).
-
-      responses:
-        '200':
-          description: Ok! List of registered Users Returned Successfully!.
-          content:
-            application/json:
-              schema:
-                type: array
-                minItems: 0
-                maxItems: 1000000
-                description: Array of Usernames of the WASAPhoto's Users.
-                items: 
-                  $ref: "#/components/schemas/username"
-
-        '204': {$ref : '#/components/responses/NoContent'}
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-        
-        '500': {$ref : '#/components/responses/InternalServerError'}
-
-
-  /users/{fixedUsername}:
-    summary: Specific fixedUsername Profile of the User Collection.
-    parameters: 
-      #I need to provide for a fixedUsername of the person I am looking for.
-      - $ref : "#/components/parameters/fixedUsername"
-
-    put:
-      security:
-        - bearerAuthentication: []
-      operationId: setMyUserName
-      tags: ["User-Handling"]
-      summary: Change your Username.
-      description: |
-        HOW IT WORKS:
-        Change the (variable) Username with the new value passed in input (newUsername, in the body). 
-        Also here, we request for authentication of the user that wants to perform this action.
-        
-        RETURN:
-        Return the fixedUsername of the User in case of the change is successful.
-        
-        RESTRICTIONS:
-        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
-        change of Username can be done by ONLY the user that is the Profile Owner. 
-        Otherwise, it cannot. 
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: "#/components/schemas/username"}
-
-      responses:
-        "204":
-          description: OK! Username Updated Successfully!.
-        
-        '400': {$ref : '#/components/responses/BadRequest'}
-          
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-
-        '500': {$ref : '#/components/responses/InternalServerError'}
-    
-    delete:
-      security:
-        - bearerAuthentication: []
-      operationId: deleteUser
-      tags: ["User-Handling"]
-      summary: Delete your Username.
-      description: |
-        HOW IT WORKS:
-        Remove the User profile, given in input the username. Also here, we request for 
-        authentication of the user that wants to perform this action. 
-        
-        RETURN:
-        Return the fixedUsername in response, in case of successful deletion.
-        
-        RESTRICTIONS:
-        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
-        deletion of the user(account) can be done by ONLY if the user that is deleting the
-        account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
-        
-      responses:
-        "204": 
-          description: OK! User Profile deleted successfully! 
-        
-        '403': {$ref : '#/components/responses/UnAuthorized'}
-
-        '500': {$ref : '#/components/responses/InternalServerError'}
     
   ### REMARK #
 
