@@ -75,15 +75,16 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 // Here the key (likeid, photoid, fixedUsername), means that likeid(fixedUsername) has put a like on the photoid photo of the user(fixedUsername).
 // LikeId = fixedUsername of the Liker
 // fixedUsername = fixedusername of the person being liked.
+// LikeId puts like at a fixedUsername's photoId.
 const (
 	like_table = `CREATE TABLE IF NOT EXISTS Likes (
 	likeid TEXT NOT NULL, 
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL,
 	CONSTRAINT likeid_photoid_fixedUsername_pk PRIMARY KEY (likeid, photoid, fixedUsername),
-	CONSTRAINT photoid_like_fk FOREIGN KEY (photoid) REFERENCES Users (photoid) ON DELETE CASCADE,
-	CONSTRAINT fixedUsername_like_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE,
-	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Photos (fixedUsername) ON DELETE CASCADE
+	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT photoid_like_fk FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
+	CONSTRAINT fixedUsername_like_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE
 	);`
 
 	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
