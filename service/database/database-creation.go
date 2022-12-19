@@ -84,7 +84,58 @@ const (
 	CONSTRAINT photoid_fixedUsername_fk FOREIGN KEY (photoid, fixedUsername) REFERENCES Photos(photoid, fixedUsername) ON DELETE CASCADE,
 	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
+)
 
+// Triggers Creation.
+const (
+	number_photos = `CREATE TRIGGER number_Photos
+	AFTER INSERT
+	   ON Photos
+	BEGIN
+		UPDATE Users
+			SET numberOfPhotos = numberOfPhotos + 1
+			WHERE Users.fixedUsername = new.fixedUsername;
+	END;`
+
+	number_followers = `CREATE TRIGGER number_Followers
+	AFTER INSERT
+	   ON Follows
+	BEGIN
+		UPDATE Users
+			SET numberFollowers = numberFollowers + 1
+			WHERE Users.fixedUsername = new.fixedUsernameFollowing;
+	END;`
+
+	number_followings = `CREATE TRIGGER number_Followings
+	AFTER INSERT
+	   ON Follows
+	BEGIN
+		UPDATE Users
+			SET numberFollowing = numberFollowing + 1
+			WHERE Users.fixedUsername = new.fixedUsername;
+	END;`
+
+	number_likes = `CREATE TRIGGER number_Likes
+	AFTER INSERT
+	   ON Likes
+	BEGIN
+		UPDATE Photos
+			SET numberLikes = numberLikes + 1
+			WHERE Photos.photoid = new.photoid AND Photos.fixedUsername = new.FixedUsername;
+	END;`
+
+	number_comments = `CREATE TRIGGER number_Comments
+	AFTER INSERT
+	   ON Comments
+	BEGIN
+		UPDATE Photos
+			SET numberComments = numberComments + 1
+			WHERE Photos.photoid = new.photoid AND Photos.fixedUsername = new.FixedUsername;
+	END;`
+)
+
+// Query and Declarations.
+const (
 	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`
 	query_presence_ban     = `SELECT name FROM sqlite_master WHERE type='table' AND name='Bans';`
 	query_presence_follow  = `SELECT name FROM sqlite_master WHERE type='table' AND name='Follows';`
@@ -100,11 +151,19 @@ const (
 	delete_likes    = `DROP TABLE Likes;`
 	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
 
+	query_trigger_numberPhotos    = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Photos';`
+	query_trigger_numberFollowers = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followers';`
+	query_trigger_numberFollowing = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followings';`
+	query_trigger_numberLikes     = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Likes';`
+	query_trigger_numberComments  = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Comments';`
+
 	turn_on_fk = `PRAGMA foreign_keys = ON`
 )
 
 var (
-	database             = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
-	query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
-	delete_tables        = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+	database               = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
+	query_table_presence   = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
+	delete_tables          = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+	triggers               = []string{number_photos, number_followers, number_followings, number_likes, number_comments}
+	query_trigger_presence = []string{query_trigger_numberPhotos, query_trigger_numberFollowers, query_trigger_numberFollowing, query_trigger_numberLikes, query_trigger_numberComments}
 )

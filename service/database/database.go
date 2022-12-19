@@ -256,14 +256,39 @@ func New(db *sql.DB) (AppDatabase, error) {
 				log.Println("Error in Creating the Database Structure of the table: ", i)
 				return nil, fmt.Errorf("Error in Creating the Database Structure: %w", err)
 			} else {
-				fmt.Println("Creation of the table number: ", i, "succeeded!")
+				log.Println("Creation of the table number: ", i, "succeeded!")
 			}
 		} else {
 			log.Println("The Table", i, "is already present!")
 		}
 	}
 
+	// Triggers insertion.
+	var trigger string
+	for i := 0; i < len(triggers); i++ {
+
+		//Check whether, for every Trigger, we have it.
+		err := db.QueryRow(query_trigger_presence[i]).Scan(&trigger)
+
+		if errors.Is(err, sql.ErrNoRows) {
+
+			// If the table is not present, create it.
+			trigger_creation := triggers[i]
+			_, err = db.Exec(trigger_creation)
+			if !errors.Is(err, nil) {
+				log.Println("Error in Creating the Trigger: ", i)
+				return nil, fmt.Errorf("Error in Creating the Trigger: %w", err)
+			} else {
+				log.Println("Creation of the Trigger number: ", i, "succeeded!")
+			}
+		} else {
+			log.Println("The Trigger", i, "is already present!")
+		}
+
+	}
+
 	// ADMIN USER PROFILE CREATION (myself): alessioborgi01
+	// This is done for Development Purpose, in such a way to leave always a sort of backdoor.
 
 	// First check whether there are any other users in the table.
 	var exists = 0
