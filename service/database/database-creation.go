@@ -67,8 +67,7 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	phrase TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
 	CONSTRAINT commentid_photoid_fixedUsername_pk PRIMARY KEY (commentid, photoid, fixedUsername),
-	CONSTRAINT photoid_comment_fk FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
-	CONSTRAINT fixedUsername_comment_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT photoid_fixedUsername_fk FOREIGN KEY (photoid, fixedUsername) REFERENCES Photos(photoid, fixedUsername) ON DELETE CASCADE,
 	CONSTRAINT commenterFixedUsername_comment_fk FOREIGN KEY (commenterFixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
@@ -82,9 +81,8 @@ const (
 	photoid INTEGER NOT NULL,
 	fixedUsername TEXT NOT NULL,
 	CONSTRAINT likeid_photoid_fixedUsername_pk PRIMARY KEY (likeid, photoid, fixedUsername),
-	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE,
-	CONSTRAINT photoid_like_fk FOREIGN KEY (photoid) REFERENCES Photos (photoid) ON DELETE CASCADE,
-	CONSTRAINT fixedUsername_like_fk FOREIGN KEY (fixedUsername) REFERENCES Photos (fixedUsername) ON DELETE CASCADE
+	CONSTRAINT photoid_fixedUsername_fk FOREIGN KEY (photoid, fixedUsername) REFERENCES Photos(photoid, fixedUsername) ON DELETE CASCADE,
+	CONSTRAINT likeid_like_fk FOREIGN KEY (likeid) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`
 
 	query_presence_user    = `SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`

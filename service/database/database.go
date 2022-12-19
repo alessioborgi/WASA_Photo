@@ -278,6 +278,12 @@ func New(db *sql.DB) (AppDatabase, error) {
 	} else if exists == 0 {
 
 		// If no user is in the Users Table, go beyond and add the Admin User Profile.
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u4", "33333333-3333-3333-3333-333333333333", "alice05", "I am the WASAPhoto Owner's Sister", now, 0, 0, 0, "Alice", "Borgi", "2005-12-16", "alice.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u3", "22222222-2222-2222-2222-222222222222", "andrea71", "I am the WASAPhoto Owner's Dad", now, 0, 0, 0, "Andrea", "Borgi", "1971-09-06", "andrea.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u2", "11111111-1111-1111-1111-111111111111", "anna69", "I am the WASAPhoto Owner's Mum", now, 0, 0, 0, "Anna", "Mauti", "1969-07-29", "anna.1952442@studenti.uniroma1.it", "Italian", "female")
 		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
 
