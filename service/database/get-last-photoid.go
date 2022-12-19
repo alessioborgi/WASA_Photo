@@ -28,7 +28,7 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 	var photoid_existence = 0
 
 	errPhotoId := db.c.QueryRow(`SELECT COUNT(photoid) FROM Photos WHERE fixedUsername = ?`, fixedUsername).Scan(&photoid_existence)
-	if errors.Is(errPhotoId, sql.ErrNoRows) {
+	if errors.Is(errPhotoId, sql.ErrNoRows) || photoid_existence == 0 {
 
 		// If we have no rows, we return that the photoid must be 1
 		log.Println("No photos yet. Inserting First Photo!")

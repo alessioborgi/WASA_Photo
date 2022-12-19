@@ -196,6 +196,9 @@ type AppDatabase interface {
 	// SPECIAL
 	// -----
 
+	// GetLastFixedUsername is used for getting the last fixedUsername+1, to be used in the DB.
+	GetLastFixedUsername() (string, error)
+
 	// GetUsername is useful for getting the Username given the fixedUsername in input.
 	GetUsername(fixedUsername string) (string, error)
 
@@ -221,12 +224,12 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	// Used to Turn On the foreign Key Mechanism.
-	// _, err1 := db.Exec(turn_on_fk)
-	// if !errors.Is(err1, nil) {
-	// 	log.Println("Error Encountered during the FK Turning on")
-	// } else {
-	// 	log.Println("FK correctly Turned On.")
-	// }
+	_, err1 := db.Exec(turn_on_fk)
+	if !errors.Is(err1, nil) {
+		log.Println("Error Encountered during the FK Turning on")
+	} else {
+		log.Println("FK correctly Turned On.")
+	}
 
 	// This code is only used during development if we do some change on the database schema.
 	// for i := 0; i < len(delete_tables); i++ {

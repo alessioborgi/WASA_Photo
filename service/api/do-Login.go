@@ -18,6 +18,12 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Getting the Username from the Body JSON.
 	err := json.NewDecoder(r.Body).Decode(&username)
+	if err != nil {
+
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Body was not a Parseable JSON!")
+		return
+	}
 	log.Println("The Username that will be added is: ", username)
 
 	// First check whether we have encountered some error in the Body Retrieval.

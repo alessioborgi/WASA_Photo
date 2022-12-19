@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -46,14 +45,23 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		// The User deos not Exists.
 		log.Println("The User does not exists!")
 
-		//Uuid Generation.
+		// Uuid Generation.
 		var uuid = uuid.Must(uuid.NewV4())
 		log.Println("Generated UUID", uuid)
 
+		// Getting the last fixedUsername + 1
+		fixedUsername, errfixedUsername := db.GetLastFixedUsername()
+		if errfixedUsername != nil {
+
+			// Last fixedUsername failed to be retrieved.
+			log.Println("Err: Last fixedUsername failed to be retrieved")
+			return "", errfixedUsername
+		}
+
 		// Actual User insertion in the DB. Insertion of the actual uuid, username and (after), update the fixedUsername.
 		// The rest of the User is completely Standard, in such a way to have that the user is not obliged to add nothing else.
-		res, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"", uuid.String(), username, "", now, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
+		_, errCretion := db.c.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			fixedUsername, uuid.String(), username, "", now, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 
 		// Check whether we have experienced an error from the User Insertion.
 		if errCretion != nil {
@@ -64,33 +72,33 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		// The User has been Created successfully.
 		log.Println("User Creation Succeeded!")
 
-		// User's fixedUsername Update with the last id fixedUsername.
-		lastInsertID, err := res.LastInsertId()
+		// // User's fixedUsername Update with the last id fixedUsername.
+		// lastInsertID, err := res.LastInsertId()
 
-		//Check whether we have some error in the LastId retrieval.
-		if err != nil {
-			log.Println("Err: User fixedUsername retrieval Error")
-			return "", err
-		}
+		// //Check whether we have some error in the LastId retrieval.
+		// if err != nil {
+		// 	log.Println("Err: User fixedUsername retrieval Error")
+		// 	return "", err
+		// }
 
-		// The lastId was retrieved successfully.
-		log.Println("User fixedUsername retrieval Succedeed.")
+		// // The lastId was retrieved successfully.
+		// log.Println("User fixedUsername retrieval Succedeed.")
 
-		// Build up the lastInsertId
-		last_id := lastInsertID
-		last := "u" + strconv.Itoa(int(last_id))
+		// // Build up the lastInsertId
+		// last_id := lastInsertID
+		// last := "u" + strconv.Itoa(int(last_id))
 
-		// Perform an Update of the fixedUsername on the User just created.
-		_, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername=? WHERE username = ?`, last, username)
+		// // Perform an Update of the fixedUsername on the User just created.
+		// _, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername=? WHERE username = ?`, last, username)
 
-		// Check whether we have some errors during the update in the DB.
-		if errUpdate != nil {
-			log.Println("Err: Error During Updatating")
-			return "", errUpdate
-		}
+		// // Check whether we have some errors during the update in the DB.
+		// if errUpdate != nil {
+		// 	log.Println("Err: Error During Updatating")
+		// 	return "", errUpdate
+		// }
 
-		// If we arrive here, we have successfully created the User.
-		log.Println("fixedUsername Update Succeeded")
+		// // If we arrive here, we have successfully created the User.
+		// log.Println("fixedUsername Update Succeeded")
 		return uuid.String(), Created
 	}
 
