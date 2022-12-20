@@ -42,6 +42,9 @@ func (rt *_router) Handler() http.Handler {
 	//Register the uploadPhoto API.
 	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
+	// Register the deletePhoto API.
+	rt.router.DELETE("/users/:username/photos/:photoid", rt.wrap(rt.deletePhoto))
+
 	// Register the likePhoto API.
 	// rt.router.PUT("/users/:username/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.likePhoto))
 
@@ -53,9 +56,6 @@ func (rt *_router) Handler() http.Handler {
 
 	// Register the uncommentPhoto API.
 	// rt.router.DELETE("/users/:username/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto))
-
-	// Register the deletePhoto API.
-	// rt.router.DELETE("/users/:username/photos/:photoid", rt.wrap(rt.deletePhoto))
 
 	// Register the getMyStream API.
 	// rt.router.GET("/users/:username/myStream/", rt.wrap(rt.getMyStream))

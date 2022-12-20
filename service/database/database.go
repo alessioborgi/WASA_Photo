@@ -76,7 +76,6 @@ type AppDatabase interface {
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
 	// SetUser(), given the fixedUsername in input together with a newUsername, updates the User's Username.
-	// SetMyUsername(username string, newUsername string, uuid string) error
 	SetUser(username string, user User, uuid string) error
 
 	// USER's PHOTO COLLECTION:
@@ -85,8 +84,8 @@ type AppDatabase interface {
 	UploadPhoto(username string, photo Photo, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
-	// DeletePhoto() removes a User's Photo given the fixedUsername and the photoId in input.
-	// DeletePhoto(fixedUsername string, photoId int, uuid string) error
+	// DeletePhoto() removes a User's Photo given the username and the photoId in input. Returns the filename path and an error.
+	DeletePhoto(username string, photoid string, uuid string) (string, error)
 
 	// PARTICULAR FOLLOW:
 	// (Security Required: Needs Uuid of the action requester).

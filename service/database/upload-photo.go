@@ -56,7 +56,8 @@ func (db *appdbimpl) UploadPhoto(username string, photo Photo, uuid string) erro
 			return errInsertion
 		}
 
-		// 4 - return mediaID
+		// Photo Insertion Successful.
+		log.Println("Photo Insertion Successful.")
 		return nil
 	}
 
