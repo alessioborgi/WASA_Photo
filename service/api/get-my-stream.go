@@ -13,7 +13,7 @@ import (
 )
 
 // Get all media of a user with userid in the path
-func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
 	var username Username
@@ -43,7 +43,7 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 
 	// We can take from now from the path the username of the Users to which will be changed the Username.
 	username.Name = ps.ByName("username")
-	log.Println("The User that owns the Photos I am going to get is: ", username.Name)
+	log.Println("The User that I am going to get the Stream is: ", username.Name)
 
 	if username.Name == "" {
 
@@ -65,31 +65,31 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 	log.Println("I can proceed since I have received a valid Username.")
 
 	// Getting the list of photos
-	photoListDB, err := rt.db.GetPhotos(username.Name, authorization_token)
+	photoListDB, err := rt.db.GetMyStream(username.Name, authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that was requested to get the list of photos, is not in the WASAPhoto Platform.
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Username that was requested to get the list of photos, is not a WASAPhoto User.")
+		log.Println("Err: The Username that was requested to get the list of stream photos, is not a WASAPhoto User.")
 		return
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
 		// In this case, we have that the Uuid is not the same as the Profile Owner and that is has been banned, thus it cannot proceed.
 		w.WriteHeader(http.StatusUnauthorized)
-		log.Println("Err: The Uuid that requested to get the Followings List has been banned by the Username.")
+		log.Println("Err: The Uuid that requested to get the Stream Photo List is not the profile Owner.")
 		return
 	} else if errors.Is(err, database.ErrNoContent) {
 
-		// In this case we have no Username in the list of Followings Usernames.
+		// In this case we have no Photo in the stream.
 		w.WriteHeader(http.StatusNoContent)
-		log.Println("There is no Photos for this Username.")
+		log.Println("There is no Photos in the Stream for this Username.")
 		return
 	} else if !errors.Is(err, nil) {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 		// the Username of the User that triggered the error.
 		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't get the list of Followings.")
+		ctx.Logger.WithError(err).WithField("Stream", username.Name).Error("Err: Can't get the stream of Photos.")
 		return
 	}
 
@@ -99,7 +99,7 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 		var photo Photo
 		err = photo.FromDatabase(photoListDB[i], rt.db)
 		if err != nil {
-			ctx.Logger.WithError(err).Error("error: can't map photo from database to API")
+			ctx.Logger.WithError(err).Error("error: Can't map photo from database to API")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

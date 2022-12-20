@@ -58,7 +58,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/users/:username/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto))
 
 	// Register the getMyStream API.
-	// rt.router.GET("/users/:username/myStream/", rt.wrap(rt.getMyStream))
+	rt.router.GET("/users/:username/myStream/", rt.wrap(rt.getMyStream))
 
 	// -----
 	// OPTIONAL ROUTES

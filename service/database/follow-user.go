@@ -96,7 +96,7 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 		// If Authorized, you can proceed to add up the Follow Object without any problem.
 
 		// If the uuid is requesting the action is the actual User Owner.
-		// If Authorized, you can proceed to add up the Ban Object without any problem.
+		// If Authorized, you can proceed to add up the Follow Object without any problem.
 		_, err := db.c.Exec(`INSERT INTO Follows (fixedUsername, fixedUsernameFollowing) VALUES (?, ?)`, fixedUsername, fixedUsernameFollowing)
 		if err != nil {
 			return err

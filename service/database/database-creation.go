@@ -35,7 +35,8 @@ const ban_table = `CREATE TABLE IF NOT EXISTS Bans (
 	);`
 
 // The reasoning is that I am going to modify the list of people that I am following.
-// Therefore the path will have the pair (fixedUsername, fixedUsernameFollowing)
+// Therefore the path will have the pair (fixedUsername, fixedUsernameFollowing).
+// The fixedUsername is following fixedUsernameFollowing.
 const follow_table = `CREATE TABLE IF NOT EXISTS Follows (
 	fixedUsername TEXT NOT NULL, 
 	fixedUsernameFollowing TEXT NOT NULL,
