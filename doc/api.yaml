@@ -231,8 +231,7 @@ paths:
         account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
         
       responses:
-        "204": 
-          description: OK! User Profile deleted successfully! 
+        "204": {description: OK! User Profile deleted successfully!}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -327,11 +326,7 @@ paths:
             schema: {$ref: "#/components/schemas/photo"}
 
       responses:
-        "201":
-          description: Created! Photo Posted Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/photo' }
+        "204": {description: Photo Creation Successful}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -406,8 +401,7 @@ paths:
         is the actual ORIGINAL PHOTO ADDER. Otherwise, it cannot. Thus, only the user that
         has actually posted the photo can delete it. 
       responses:
-        "204": 
-          description: OK! Photo deleted successfully!
+        "204": {description: OK! Photo deleted successfully!}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -486,11 +480,7 @@ paths:
             schema: {$ref: "#/components/schemas/comment"}
 
       responses:
-        "201":
-          description: Created! Photo's Comment Posted Successfully!
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/comment' }
+        "204": {description: Photo's Comment Posted Successfully!}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -567,7 +557,7 @@ paths:
         deletion of the comment can be done ONLY if the user that is deleting the comment
         is the actual ORIGINAL COMMENTER. Otherwise, it cannot.
       responses:
-        "204": 
+        '204': 
           description: OK! Photo's Comment deleted successfully!
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
@@ -667,8 +657,7 @@ paths:
         when the liker is the owner of the photo. 
         
       responses:
-        '204': 
-           description: OK! A existing Photo's Like has been added.
+        '204': {description: OK! A existing Photo's Like has been added.}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -698,8 +687,7 @@ paths:
         deletion of the like can be done by ONLY if the user that is deleting the like
         is the actual original liker. Otherwise, it cannot.
       responses:
-        "204": 
-          description: OK! Photo's Like deleted successfully!
+        '204': {description: OK! Photo's Like deleted successfully!}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -786,7 +774,6 @@ paths:
         account owners. 
 
       responses:
-        '200': {description: Ok! User Ban already present!}
 
         '204': {$ref : '#/components/responses/NoContent'}
 
@@ -1371,29 +1358,13 @@ components:
 
     
     ### SCHEMAS FOR ../BANS #    
-    motivation:
-      title: motivation
-      type: string
-      description: Ban Motivation.
-      minLength: 4
-      maxLength: 13
-      enum:
-      - Spam
-      - Bad Behaviour
-      - Threats
-      pattern: ^.*$
-      default: Spam
-      example: Spam
-    
-
     ban:
       title: ban
       type: object
       description: |
         This is the entire Ban object. It will have the banID, i.e. the 
         ID of the ban that coincides with the fixedUsername of the Banned Person (since we
-        can ban each person once only), the date and time of when the ban has been
-        delivered, and the motivation of the Ban.  
+        can ban each person once only).  
       properties: 
         fixedUsernameBanner: 
           $ref: "#/components/schemas/fixedUsername"
