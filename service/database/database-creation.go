@@ -66,7 +66,7 @@ const comment_table = `CREATE TABLE IF NOT EXISTS Comments (
 	commenterFixedUsername TEXT NOT NULL,
 	phrase TEXT NOT NULL,
 	uploadDate TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",
-	CONSTRAINT commentid_photoid_fixedUsername_pk PRIMARY KEY (commentid, photoid, fixedUsername),
+	CONSTRAINT commentid_photoid_fixedUsername_pk PRIMARY KEY (commentid),
 	CONSTRAINT photoid_fixedUsername_fk FOREIGN KEY (photoid, fixedUsername) REFERENCES Photos(photoid, fixedUsername) ON DELETE CASCADE,
 	CONSTRAINT commenterFixedUsername_comment_fk FOREIGN KEY (commenterFixedUsername) REFERENCES Users (fixedUsername) ON DELETE CASCADE
 	);`

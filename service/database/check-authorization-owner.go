@@ -91,7 +91,14 @@ func (db *appdbimpl) GetFixedUsername(uuid string) (string, error) {
 
 	// Get the fixedUsername from the Uuid.
 	err := db.c.QueryRow(`SELECT fixedUsername FROM Users WHERE uuid == ?`, uuid).Scan(&fixedUsername)
-	if err != nil && err != sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
+
+		// The user does not exists.
+		log.Println("Err: UserDoesNotExists!")
+		return "", ErrUserDoesNotExist
+	}
+
+	if err != nil {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")

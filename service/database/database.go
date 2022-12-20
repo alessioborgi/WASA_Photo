@@ -39,17 +39,18 @@ import (
 
 // Errors Declaration
 var (
-	ErrUserDoesNotExist    = errors.New("The User does not Exists!")
-	ErrPhotoDoesNotExist   = errors.New("The Photo does not Exists!")
-	ErrCommentDoesNotExist = errors.New("The Comment does not Exists!")
-	ErrUserNotAuthorized   = errors.New("The User not Authorized!")
-	ErrUserProfileOwner    = errors.New("The User is the Profile Owner!")
-	ErrInternalServerError = errors.New("Internal Server Error!")
-	ErrNoContent           = errors.New("There isn't any object you are searching for in the WASAPhoto Platform!")
-	ErrBadRequest          = errors.New("The action you requested cannot be parsed due to a Bad Request!")
-	ErrBanDoesNotExist     = errors.New("The Ban does not Exists!")
-	ErrFollowDoesNotExist  = errors.New("The Follow does not Exists!")
-	ErrLikeDoesNotExists   = errors.New("The Like does not Exists!")
+	ErrUserDoesNotExist     = errors.New("The User does not Exists!")
+	ErrPhotoDoesNotExist    = errors.New("The Photo does not Exists!")
+	ErrCommentDoesNotExist  = errors.New("The Comment does not Exists!")
+	ErrUserNotAuthorized    = errors.New("The User not Authorized!")
+	ErrUserProfileOwner     = errors.New("The User is the Profile Owner!")
+	ErrInternalServerError  = errors.New("Internal Server Error!")
+	ErrNoContent            = errors.New("There isn't any object you are searching for in the WASAPhoto Platform!")
+	ErrBadRequest           = errors.New("The action you requested cannot be parsed due to a Bad Request!")
+	ErrBanDoesNotExist      = errors.New("The Ban does not Exists!")
+	ErrFollowDoesNotExist   = errors.New("The Follow does not Exists!")
+	ErrLikeDoesNotExists    = errors.New("The Like does not Exists!")
+	ErrCommentDoesNotExists = errors.New("The Comment does not Exists!")
 
 	Created = errors.New("Object Created Correctly.")
 	Ok      = errors.New("Object Returned Correctly.")
@@ -127,7 +128,7 @@ type AppDatabase interface {
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UncommentPhoto() removes a User's Photo Comment given the fixedUsername, the photoId and the commentId in input.
-	// UncommentPhoto(fixedUsername string, photoId int, commentId int, uuid string) error
+	UncommentPhoto(username string, photoid string, commentid string, uuid string) error
 
 	// USER STREAM:
 	// (Security Required: Needs Uuid of the action requester).

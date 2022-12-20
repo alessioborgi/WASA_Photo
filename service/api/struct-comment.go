@@ -21,6 +21,11 @@ type Phrase struct {
 	phrase string `json:"phrase"`
 }
 
+// Declaring a Method for checking the Username validity w.r.t. its regex.
+func (phrase Phrase) ValidPhrase() bool {
+	return len(phrase.phrase) >= 5
+}
+
 // ----- FINAL COMMENT FUNCTION -----
 
 // Function Method used to check for the User Validity.
