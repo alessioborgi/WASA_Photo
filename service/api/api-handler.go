@@ -21,9 +21,6 @@ func (rt *_router) Handler() http.Handler {
 	// Register the setMyUserName API.
 	rt.router.PATCH("/users/:username", rt.wrap(rt.setMyUserName))
 
-	// Register the setMyUsername API.
-	rt.router.PUT("/users/:username", rt.wrap(rt.setUser))
-
 	// FOLLOW-RELATED
 	// Register the followUser API.
 	rt.router.PUT("/users/:username/followings/:usernameFollowing", rt.wrap(rt.followUser))
@@ -70,20 +67,17 @@ func (rt *_router) Handler() http.Handler {
 	// Register the deleteUsername API.
 	rt.router.DELETE("/users/:username", rt.wrap(rt.deleteUser))
 
+	// Register the setUser API.
+	rt.router.PUT("/users/:username", rt.wrap(rt.setUser))
+
 	// Register the getPhotos API.
 	rt.router.GET("/users/:username/photos/", rt.wrap(rt.getPhotos))
-
-	// Register the setPhoto API.
-	// rt.router.PUT("/users/:username/photos/:photoid", rt.wrap(rt.setPhoto))
 
 	// Register the getPhoto API.
 	rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhoto))
 
 	// Register the getPhotoComments API.
 	// rt.router.GET("/users/:username/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
-
-	// Register the setComment API.
-	// rt.router.PUT("/users/:username/photos/:photoid/comments/:commentid", rt.wrap(rt.setComment))
 
 	// Register the getPhotoLikes API.
 	// rt.router.GET("/users/:username/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
