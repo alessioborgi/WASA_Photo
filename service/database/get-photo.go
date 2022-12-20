@@ -115,3 +115,30 @@ func (db *appdbimpl) GetPhoto(username string, photoid string, uuid string) (Pho
 	return Photo{}, errAuth
 
 }
+
+// -----
+// To get the photo back:
+// -----
+
+// import (
+// 	"io"
+// 	"log"
+// 	"net/http"
+// 	"os"
+
+// 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+// 	"github.com/julienschmidt/httprouter"
+// )
+
+// // get photo from photos folder
+// func (rt *_router) getPhotoView(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+// 	//
+// 	img, err := os.Open("./service/api/photos/u1-photo-1.jpeg")
+// 	if err != nil {
+// 		log.Fatal(err) // perhaps handle this nicer
+// 	}
+// 	defer img.Close()
+// 	w.Header().Set("Content-Type", "image/jpeg") // <-- set the content-type header
+// 	io.Copy(w, img)
+
+// }

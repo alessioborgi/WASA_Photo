@@ -76,11 +76,14 @@ func (rt *_router) Handler() http.Handler {
 	// Register the getPhoto API.
 	rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhoto))
 
+	// Register the getPhotoView API.
+	// // rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhotoView))
+
 	// Register the getPhotoComments API.
 	// rt.router.GET("/users/:username/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
 
 	// Register the getPhotoLikes API.
-	// rt.router.GET("/users/:username/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
+	rt.router.GET("/users/:username/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
 
 	// Register the getBannedUsers API.
 	rt.router.GET("/users/:username/bans/", rt.wrap(rt.getBannedUsers))

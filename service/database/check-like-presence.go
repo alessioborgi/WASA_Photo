@@ -9,7 +9,7 @@ func (db *appdbimpl) CheckLikePresence(fixedUsername string, photoid string, lik
 
 	// Check whether there exists a Like between likeid(fixedUsernameLiker) and fixedUsername, in photid.
 	var exists = 0
-	err := db.c.QueryRow(`SELECT COUNT(likeid) FROM Likes WHERE fixedUsername = ? AND photoid = ?`, fixedUsername, photoid).Scan(&exists)
+	err := db.c.QueryRow(`SELECT COUNT(likeid) FROM Likes WHERE fixedUsername = ? AND photoid = ? AND likeid = ?`, fixedUsername, photoid, likeid).Scan(&exists)
 
 	// Check for the error during the Query.
 	if err != nil && err != sql.ErrNoRows {

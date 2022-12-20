@@ -156,10 +156,6 @@ type AppDatabase interface {
 
 	// PARTICULAR PHOTO:
 	// (Security Required: Needs Uuid of the action requester).
-	// SetPhoto() updates a User's Photo, replacing it with the new value of the Phrase in the argument, in addition to a fixedUsername of the User and the PhotoId.
-	// SetPhoto(fixedUsername string, photoId int, newPhrase string, uuid string) error
-
-	// (Security Required: Needs Uuid of the action requester).
 	// GetPhoto() return a User's Photo, given the fixedUsername and the photoid in input.
 	GetPhoto(username string, photoid string, uuid string) (Photo, error)
 
@@ -168,15 +164,10 @@ type AppDatabase interface {
 	// GetPhotoComments() returns the list of Photos's Comments of a given User Photo, given in input a fixedUsername, and the photoId.
 	// GetPhotoComments(fixedUsername string, photoId int, uuid string) ([]Comment, error)
 
-	// PARTICULAR COMMENT:
-	// (Security Required: Needs Uuid of the action requester).
-	// SetComment(), given the fixedUsername in input together with a photoId, a commentId and a newComment(Phrase), updates the User's Username.
-	// SetComment(fixedUsername string, photoId int, commentId int, newComment string, uuid string) error
-
 	// USER's PHOTO LIKES:
 	// (Security Required: Needs Uuid of the action requester).
 	// GetPhotoLikes() returns the list of Photos's Likes of a given User Photo, given in input a fixedUsername, and the photoId.
-	// GetPhotoLikes(fixedUsername string, photoId int, uuid string) ([]Like, error)
+	GetPhotoLikes(username string, photoid string, uuid string) ([]string, error)
 
 	// USER's BANS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
