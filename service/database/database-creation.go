@@ -196,7 +196,7 @@ const (
 	delete_photos   = `DROP TABLE Photos;`
 	delete_comments = `DROP TABLE Comments;`
 	delete_likes    = `DROP TABLE Likes;`
-	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
+	// delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
 
 	query_trigger_numberPhotos             = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Photos';`
 	query_trigger_numberFollowers          = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followers';`
@@ -213,9 +213,9 @@ const (
 )
 
 var (
-	database               = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
-	query_table_presence   = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
-	delete_tables          = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+	database             = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
+	query_table_presence = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
+	// delete_tables          = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
 	triggers               = []string{number_photos, number_followers, number_followings, number_likes, number_comments, number_photos_deletion, number_followers_deletion, number_followings_deletion, number_likes_deletion, number_comments_deletion}
 	query_trigger_presence = []string{query_trigger_numberPhotos, query_trigger_numberFollowers, query_trigger_numberFollowing, query_trigger_numberLikes, query_trigger_numberComments, query_trigger_numberPhotos_deletion, query_trigger_numberFollowers_deletion, query_trigger_numberFollowing_deletion, query_trigger_numberLikes_deletion, query_trigger_numberComments_deletion}
 )

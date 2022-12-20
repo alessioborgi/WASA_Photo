@@ -2,12 +2,9 @@ package api
 
 import (
 	"errors"
-	"time"
 
 	"github.com/alessioborgi/WASA_Photo/service/database"
 )
-
-var current_hour, current_minute, current_second = time.Now().Clock()
 
 type Photo struct {
 	Photoid        int64  `json:"photoid"`

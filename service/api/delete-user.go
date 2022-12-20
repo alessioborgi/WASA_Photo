@@ -19,7 +19,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 	log.Println("The authorization Type is:", authorization_type, "and the Authorization Token is:", authorization_token)
 
 	// We first need to check whether the authorization we have been providing is the Bearer Authentication.
-	if authorization_type != "Bearer" {
+	if authorization_type != BEARER {
 
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")

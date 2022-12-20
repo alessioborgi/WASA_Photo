@@ -11,6 +11,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+const BEARER = "Bearer"
+
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Username variable declaration.
