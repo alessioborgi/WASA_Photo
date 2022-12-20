@@ -17,6 +17,10 @@ type Comment struct {
 	UploadDate        DateTime `json:"uploadDate"`
 }
 
+type Phrase struct {
+	phrase string `json:"phrase"`
+}
+
 // ----- FINAL COMMENT FUNCTION -----
 
 // Function Method used to check for the User Validity.

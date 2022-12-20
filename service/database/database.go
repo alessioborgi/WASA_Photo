@@ -123,7 +123,7 @@ type AppDatabase interface {
 	// USER's PHOTO COMMENTS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// CommentPhoto() creates a new User's Photo Comment in the database, given in input the Comment Object. It returns a Comment Object.
-	// CommentPhoto(comment Comment, uuid string) (Comment, error)
+	CommentPhoto(username string, photoid string, phrase string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UncommentPhoto() removes a User's Photo Comment given the fixedUsername, the photoId and the commentId in input.

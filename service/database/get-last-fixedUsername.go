@@ -45,7 +45,7 @@ func (db *appdbimpl) GetLastFixedUsername() (string, error) {
 			log.Println("Err: Error encountered during the string-to-integer convertion.")
 			return "", errConvert
 		}
-		fmt.Println(intFixedUsername)
+
 		// Add up to the UsernameList the fixedUsername.
 		fixedUsernameList = append(fixedUsernameList, intFixedUsername)
 	}
