@@ -132,6 +132,52 @@ const (
 			SET numberComments = numberComments + 1
 			WHERE Photos.photoid = new.photoid AND Photos.fixedUsername = new.FixedUsername;
 	END;`
+
+	// DELETION TRIGGERS
+	number_photos_deletion = `CREATE TRIGGER number_Photos_Deletion
+	AFTER DELETE
+	   ON Photos
+	BEGIN
+		UPDATE Users
+			SET numberOfPhotos = numberOfPhotos - 1
+			WHERE Users.fixedUsername = old.fixedUsername;
+	END;`
+
+	number_followers_deletion = `CREATE TRIGGER number_Followers_Deletion
+	AFTER DELETE
+	   ON Follows
+	BEGIN
+		UPDATE Users
+			SET numberFollowers = numberFollowers - 1
+			WHERE Users.fixedUsername = old.fixedUsernameFollowing;
+	END;`
+
+	number_followings_deletion = `CREATE TRIGGER number_Followings_Deletion
+	AFTER DELETE
+	   ON Follows
+	BEGIN
+		UPDATE Users
+			SET numberFollowing = numberFollowing - 1
+			WHERE Users.fixedUsername = old.fixedUsername;
+	END;`
+
+	number_likes_deletion = `CREATE TRIGGER number_Likes_Deletion
+	AFTER DELETE
+	   ON Likes
+	BEGIN
+		UPDATE Photos
+			SET numberLikes = numberLikes - 1
+			WHERE Photos.photoid = old.photoid AND Photos.fixedUsername = old.FixedUsername;
+	END;`
+
+	number_comments_deletion = `CREATE TRIGGER number_Comments_Deletion
+	AFTER DELETE
+	   ON Comments
+	BEGIN
+		UPDATE Photos
+			SET numberComments = numberComments - 1
+			WHERE Photos.photoid = old.photoid AND Photos.fixedUsername = old.FixedUsername;
+	END;`
 )
 
 // Query and Declarations.
@@ -151,11 +197,16 @@ const (
 	delete_likes    = `DROP TABLE Likes;`
 	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
 
-	query_trigger_numberPhotos    = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Photos';`
-	query_trigger_numberFollowers = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followers';`
-	query_trigger_numberFollowing = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followings';`
-	query_trigger_numberLikes     = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Likes';`
-	query_trigger_numberComments  = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Comments';`
+	query_trigger_numberPhotos             = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Photos';`
+	query_trigger_numberFollowers          = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followers';`
+	query_trigger_numberFollowing          = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followings';`
+	query_trigger_numberLikes              = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Likes';`
+	query_trigger_numberComments           = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Comments';`
+	query_trigger_numberPhotos_deletion    = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Photos_Deletion';`
+	query_trigger_numberFollowers_deletion = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followers_Deletion';`
+	query_trigger_numberFollowing_deletion = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Followings_Deletion';`
+	query_trigger_numberLikes_deletion     = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Likes_Deletion';`
+	query_trigger_numberComments_deletion  = `SELECT name FROM sqlite_master WHERE type = 'trigger' AND name='number_Comments_Deletion';`
 
 	turn_on_fk = `PRAGMA foreign_keys = ON`
 )
@@ -164,6 +215,6 @@ var (
 	database               = []string{user_table, ban_table, follow_table, photo_table, comment_table, like_table}
 	query_table_presence   = []string{query_presence_user, query_presence_ban, query_presence_follow, query_presence_photo, query_presence_comment, query_presence_like}
 	delete_tables          = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
-	triggers               = []string{number_photos, number_followers, number_followings, number_likes, number_comments}
-	query_trigger_presence = []string{query_trigger_numberPhotos, query_trigger_numberFollowers, query_trigger_numberFollowing, query_trigger_numberLikes, query_trigger_numberComments}
+	triggers               = []string{number_photos, number_followers, number_followings, number_likes, number_comments, number_photos_deletion, number_followers_deletion, number_followings_deletion, number_likes_deletion, number_comments_deletion}
+	query_trigger_presence = []string{query_trigger_numberPhotos, query_trigger_numberFollowers, query_trigger_numberFollowing, query_trigger_numberLikes, query_trigger_numberComments, query_trigger_numberPhotos_deletion, query_trigger_numberFollowers_deletion, query_trigger_numberFollowing_deletion, query_trigger_numberLikes_deletion, query_trigger_numberComments_deletion}
 )
