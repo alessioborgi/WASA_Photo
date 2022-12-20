@@ -43,22 +43,22 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
 	// Register the likePhoto API.
-	// rt.router.PUT("/users/:fixedUsername/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.likePhoto))
+	// rt.router.PUT("/users/:username/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.likePhoto))
 
 	// Register the unlikePhoto API.
-	// rt.router.DELETE("/users/:fixedUsername/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.unlikePhoto))
+	// rt.router.DELETE("/users/:username/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.unlikePhoto))
 
 	// Register the commentPhoto API.
-	// rt.router.POST("/users/:fixedUsername/photos/:photoid/comments", rt.wrap(rt.commentPhoto))
+	// rt.router.POST("/users/:username/photos/:photoid/comments", rt.wrap(rt.commentPhoto))
 
 	// Register the uncommentPhoto API.
-	// rt.router.DELETE("/users/:fixedUsername/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto))
+	// rt.router.DELETE("/users/:username/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto))
 
 	// Register the deletePhoto API.
-	// rt.router.DELETE("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.deletePhoto))
+	// rt.router.DELETE("/users/:username/photos/:photoid", rt.wrap(rt.deletePhoto))
 
 	// Register the getMyStream API.
-	// rt.router.GET("/users/:fixedUsername/myStream/", rt.wrap(rt.getMyStream))
+	// rt.router.GET("/users/:username/myStream/", rt.wrap(rt.getMyStream))
 
 	// -----
 	// OPTIONAL ROUTES
@@ -71,22 +71,22 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/users/:username", rt.wrap(rt.deleteUser))
 
 	// Register the getPhotos API.
-	// rt.router.GET("/users/:fixedUsername/photos/", rt.wrap(rt.getPhotos))
+	rt.router.GET("/users/:username/photos/", rt.wrap(rt.getPhotos))
 
 	// Register the setPhoto API.
-	// rt.router.PUT("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.setPhoto))
+	// rt.router.PUT("/users/:username/photos/:photoid", rt.wrap(rt.setPhoto))
 
 	// Register the getPhoto API.
-	// rt.router.GET("/users/:fixedUsername/photos/:photoid", rt.wrap(rt.getPhoto))
+	rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhoto))
 
 	// Register the getPhotoComments API.
-	// rt.router.GET("/users/:fixedUsername/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
+	// rt.router.GET("/users/:username/photos/:photoid/comments", rt.wrap(rt.getPhotoComments))
 
 	// Register the setComment API.
-	// rt.router.PUT("/users/:fixedUsername/photos/:photoid/comments/:commentid", rt.wrap(rt.setComment))
+	// rt.router.PUT("/users/:username/photos/:photoid/comments/:commentid", rt.wrap(rt.setComment))
 
 	// Register the getPhotoLikes API.
-	// rt.router.GET("/users/:fixedUsername/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
+	// rt.router.GET("/users/:username/photos/:photoid/likes/", rt.wrap(rt.getPhotoLikes))
 
 	// Register the getBannedUsers API.
 	rt.router.GET("/users/:username/bans/", rt.wrap(rt.getBannedUsers))

@@ -6,6 +6,8 @@ import (
 	"github.com/alessioborgi/WASA_Photo/service/database"
 )
 
+type DateTime string
+
 type Comment struct {
 	Commentid         int64    `json:"commentid"`
 	PhotoId           int64    `json:"photoid"`

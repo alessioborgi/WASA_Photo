@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"log"
+	"time"
 )
 
 func (db *appdbimpl) UploadPhoto(username string, photo Photo, uuid string) error {
@@ -47,7 +48,7 @@ func (db *appdbimpl) UploadPhoto(username string, photo Photo, uuid string) erro
 
 		// We can execute the Insertion.
 		_, errInsertion := db.c.Exec(`INSERT INTO Photos (photoid, fixedUsername, filename, uploadDate, phrase, numberLikes, numberComments) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-			photo.Photoid, photo.FixedUsername, photo.Filename, photo.UploadDate, photo.Phrase, photo.NumberLikes, photo.NumberComments)
+			photo.Photoid, photo.FixedUsername, photo.Filename, time.Now().Format(time.RFC3339), photo.Phrase, photo.NumberLikes, photo.NumberComments)
 
 		// Check if some strage error occurred during the update.
 		if !errors.Is(errInsertion, nil) {

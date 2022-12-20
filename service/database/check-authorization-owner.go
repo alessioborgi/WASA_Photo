@@ -106,7 +106,7 @@ func (db *appdbimpl) GetUsername(fixedUsername string) (string, error) {
 	var username string
 
 	// Get the fixedUsername from the Uuid.
-	err := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername == ?`, fixedUsername).Scan(&fixedUsername)
+	err := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername = ?`, fixedUsername).Scan(&username)
 	if err != nil && err != sql.ErrNoRows {
 
 		// Unexpected Error encountered during the query retrieval.

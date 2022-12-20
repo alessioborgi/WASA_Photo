@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
 	"github.com/alessioborgi/WASA_Photo/service/database"
@@ -132,9 +131,36 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	// Getting the Photo Phrase from the MultipartFormData.
+	phrase := r.FormValue("phrase")
+
 	// If I arrive here is all Ok. I can proceed to build up the path.
 	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
 	log.Println("The photo name is: ", photo_path)
+
+	// Creatio of the Path URL.
+	photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
+
+	// Creation of a Photo and values assignment.
+	// fmt.Println(photoid, fixedUsername, photo_url, phrase)
+	var newPhoto Photo
+	newPhoto.Photoid = photoid
+	newPhoto.FixedUsername = fixedUsername
+	newPhoto.Filename = photo_url
+	newPhoto.Phrase = phrase
+
+	// Check whether we have that the newPhoto inserted respect its Regex.
+	if !ValidPhoto(newPhoto) {
+
+		// If no error occurs, check whether the newPhoto is a Valid Photo.
+		// In this case it is not. Thus reject it.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The newPhoto received does not respect the Validation Process.")
+		return
+	}
+
+	// If we arrive here, there is no error and the newUser is Valid.
+	log.Println("The NewUser received has passed the Validation Process.")
 
 	// Saving the photo in the Folder.
 	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
@@ -163,24 +189,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	// Creatio of the Path URL.
-	photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
-
-	// Getting the Photo Phrase from the MultipartFormData.
-	phrase := r.FormValue("phrase")
-
-	// Creation of a Photo and values assignment.
-	var photo Photo
-	photo.Photoid = photoid
-	photo.FixedUsername = fixedUsername
-	photo.Filename = photo_url
-	photo.UploadDate = time.Now().String()
-	photo.Phrase = phrase
-	photo.NumberLikes = 0
-	photo.NumberComments = 0
-
 	// Transforming it to a DB struct.
-	photodb := photo.ToDatabase()
+	photodb := newPhoto.ToDatabase(rt.db)
 
 	// We can finally call the Upload of the photo.
 	err := rt.db.UploadPhoto(username.Name, photodb, authorization_token)

@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
+func (db *appdbimpl) GetPhoto(username string, photoid string, uuid string) (Photo, error) {
 
 	// Selection of the User profile.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -20,23 +20,39 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 	// Check whether the Username exists.
 	if errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: The Username I am trying to get the Photos does not exists. Error!")
-		return nil, ErrUserDoesNotExist
+		return Photo{}, ErrUserDoesNotExist
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
 		log.Println("Err: Strange error during the Check of User Presence")
-		return nil, errUsername
+		return Photo{}, errUsername
 	}
 
-	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
+	// If we arrive here, it means that the Username exists. Check whether the photo is present in the DB.
+	_, errPhoto := db.CheckPhotoPresence(photoid, fixedUsername)
+
+	// Check whether the Username exists.
+	if errors.Is(errPhoto, ErrPhotoDoesNotExist) {
+		log.Println("Err: The Photo I am trying to get does not exists. Error!")
+		return Photo{}, ErrPhotoDoesNotExist
+	}
+
+	// Check if strange errors occurs.
+	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
+		log.Println("Err: Strange error during the Check of Photo Presence")
+		return Photo{}, errPhoto
+	}
+
+	// If I arrive here, both the Username and the Photo exists.
+	// Check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
 	// Check for the error during the Query.
 	if !errors.Is(errAuth, nil) {
 
 		// Check whether we have received some errors during the Authentication.
-		return nil, errAuth
+		return Photo{}, errAuth
 	}
 
 	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
@@ -49,7 +65,7 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 		// Check if strange errors occurs.
 		if !errors.Is(errfixedUsernameRequester, nil) {
 			log.Println("Err: Unexpected Error in the Username Requester Retrieval ")
-			return nil, errfixedUsernameRequester
+			return Photo{}, errfixedUsernameRequester
 		}
 
 		// If we arrive here, we have correclty retrieved the Requester Username.
@@ -57,71 +73,45 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
 
 		if errors.Is(errBanRetrieval, Ok) {
-			log.Println("Err: The Ban exists. You cannot get Photos it.")
-			return nil, ErrUserNotAuthorized
+			log.Println("Err: The Ban exists. You cannot get the Photo.")
+			return Photo{}, ErrUserNotAuthorized
 		}
 
 		// Check if strange errors occurs.
 		if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
 			log.Println("Err: Strange error during the Check of Ban Presence")
-			return nil, errBanRetrieval
+			return Photo{}, errBanRetrieval
 		}
 
-		// If we arrive here, the User is either the profile owner or it is not Banned, thus can get the list of photos.
-		// If the uuid is requesting the action is the actual User Owner, get the list of Photos.
-		photos, err := db.c.Query(`SELECT *
+		// If we arrive here, the User is either the profile owner or it is not Banned, thus can get the photo.
+		var photo Photo
+		err := db.c.QueryRow(`SELECT *
 			FROM Photos
-			WHERE fixedUsername = ?
-			ORDER BY uploadDate DESC`, fixedUsername)
+			WHERE fixedUsername = ? AND photoid = ?
+			ORDER BY uploadDate DESC`, fixedUsername, photoid).Scan(&photo.Photoid, &photo.FixedUsername, &photo.Filename, &photo.UploadDate, &photo.Phrase, &photo.NumberLikes, &photo.NumberComments)
 
 		// Check for the error during the Query.
 		if err != nil {
-			return nil, err
+
+			// If we have encountered some errors in the Query retrieval.
+			log.Println("Err: Unexpected Error! During the Query Retrieval!")
+			return Photo{}, err
 		}
 
-		// If I arrive here, I got some Photos.
-		// Defer the Photos closure. This is a Best-Practice.
-		defer func() { _ = photos.Close() }()
-
-		// Here we read the resultset and we build the list to be returned.
-
-		// Variable Declaration.
-		var photoList []Photo
-
-		for photos.Next() {
-			var p Photo
-			err = photos.Scan(&p.Photoid, &p.FixedUsername, &p.Filename, &p.UploadDate, &p.Phrase, &p.NumberLikes, &p.NumberComments)
-			if err != nil {
-				return nil, err
-			}
-			// Append to the photoList if no error occurs.
-			photoList = append(photoList, p)
-		}
-
-		// If we have encountered some error in the photos variable.
-		if photos.Err() != nil {
-			log.Println("Err: Error encountered on followings")
-			return nil, err
-		}
-
-		// Check whether the list of Photos is empty.
-		if len(photoList) == 0 {
-			return nil, ErrNoContent
-		}
-
-		// If we arrive here, the photoList is not empty, thus, we can return it.
-		return photoList, nil
+		// Otherwise we have retrieved the Photo Correctly.
+		log.Println("Photo retrieved correctly!")
+		return photo, nil
 	}
 
 	// Check if we have a NOTVALID auth, i.e., the Uuid is not present in the DB.
 	if authorization == NOTVALID {
 
 		log.Println("Err: The Uuid you are providing is not present.")
-		return nil, ErrUserNotAuthorized
+		return Photo{}, ErrUserNotAuthorized
 	}
 
 	// If we arrive here, we encountered other types of problem.
 	log.Println("Err: Unexpected Error.")
-	return nil, errAuth
+	return Photo{}, errAuth
 
 }

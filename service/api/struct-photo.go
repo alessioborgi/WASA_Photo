@@ -7,11 +7,6 @@ import (
 	"github.com/alessioborgi/WASA_Photo/service/database"
 )
 
-type (
-	DateTime   string
-	Motivation string
-)
-
 var current_hour, current_minute, current_second = time.Now().Clock()
 
 type Photo struct {
@@ -29,17 +24,17 @@ type Photo struct {
 
 // Function Method used to check for the User Validity.
 func ValidPhoto(photo Photo) bool {
+
 	return photo.Photoid >= 0 &&
-		regex_username.MatchString(photo.Username) &&
-		len(photo.Phrase) >= 5 && len(photo.Phrase) <= 1000 &&
-		photo.NumberLikes >= 0 &&
-		photo.NumberComments >= 0
+		regex_fixedUsername.MatchString(photo.FixedUsername) &&
+		len(photo.Phrase) >= 3 && len(photo.Phrase) <= 1000
 }
 
 var errphoto error
 
 func (p *Photo) FromDatabase(photo database.Photo, db database.AppDatabase) error {
 	p.Photoid = photo.Photoid
+	p.FixedUsername = photo.FixedUsername
 	p.Username, errphoto = db.GetUsername(photo.FixedUsername)
 	if !errors.Is(errphoto, nil) {
 		return errphoto
@@ -52,14 +47,11 @@ func (p *Photo) FromDatabase(photo database.Photo, db database.AppDatabase) erro
 	return nil
 }
 
-func (p *Photo) ToDatabase() database.Photo {
+func (p *Photo) ToDatabase(db database.AppDatabase) database.Photo {
 	return database.Photo{
-		Photoid:        p.Photoid,
-		FixedUsername:  p.FixedUsername,
-		Filename:       p.Filename,
-		UploadDate:     p.UploadDate,
-		Phrase:         p.Phrase,
-		NumberLikes:    p.NumberLikes,
-		NumberComments: p.NumberComments,
+		Photoid:       p.Photoid,
+		FixedUsername: p.FixedUsername,
+		Filename:      p.Filename,
+		Phrase:        p.Phrase,
 	}
 }

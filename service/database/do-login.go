@@ -9,7 +9,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-var now = time.Now().String()
+var now = time.Now().Format(time.RFC3339)
 
 func (db *appdbimpl) DoLogin(username string) (string, error) {
 
@@ -71,31 +71,6 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// The User has been Created successfully.
 		log.Println("User Creation Succeeded!")
-
-		// // User's fixedUsername Update with the last id fixedUsername.
-		// lastInsertID, err := res.LastInsertId()
-
-		// //Check whether we have some error in the LastId retrieval.
-		// if err != nil {
-		// 	log.Println("Err: User fixedUsername retrieval Error")
-		// 	return "", err
-		// }
-
-		// // The lastId was retrieved successfully.
-		// log.Println("User fixedUsername retrieval Succedeed.")
-
-		// // Build up the lastInsertId
-		// last_id := lastInsertID
-		// last := "u" + strconv.Itoa(int(last_id))
-
-		// // Perform an Update of the fixedUsername on the User just created.
-		// _, errUpdate := db.c.Exec(`UPDATE Users SET fixedUsername=? WHERE username = ?`, last, username)
-
-		// // Check whether we have some errors during the update in the DB.
-		// if errUpdate != nil {
-		// 	log.Println("Err: Error During Updatating")
-		// 	return "", errUpdate
-		// }
 
 		// // If we arrive here, we have successfully created the User.
 		// log.Println("fixedUsername Update Succeeded")
