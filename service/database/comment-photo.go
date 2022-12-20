@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (db *appdbimpl) CommentPhoto(username string, photoid string, phrase string, uuid string) error {
+func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comment, uuid string) error {
 
 	// Adding a User Follow.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -96,7 +96,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, phrase string
 
 		// We can now finally insert the Comment in the DB.
 		_, err := db.c.Exec(`INSERT INTO Comments (commentid, photoid, fixedUsername, commenterFixedUsername, phrase, uploadDate) VALUES (?, ?, ?, ?, ?, ?)`,
-			commentid, photoid, fixedUsername, fixedUsernameCommenter, phrase, time.Now().Format(time.RFC3339))
+			commentid, photoid, fixedUsername, fixedUsernameCommenter, comment.Phrase, time.Now().Format(time.RFC3339))
 
 		if err != nil {
 			return err

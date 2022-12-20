@@ -76,10 +76,10 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// Read the Phrase Content from the request body.
-	var phrase Phrase
+	var comment Comment
 
 	// Getting the Username from the JSON.
-	errBody := json.NewDecoder(r.Body).Decode(&phrase)
+	errBody := json.NewDecoder(r.Body).Decode(&comment)
 
 	if !errors.Is(errBody, nil) {
 
@@ -91,7 +91,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	//We have read correctly the body too.
 	// We can therefore proceed in the Comment by calling the DB action and wait for its response.
-	err := rt.db.CommentPhoto(username.Name, photoid, phrase.phrase, authorization_token)
+	err := rt.db.CommentPhoto(username.Name, photoid, comment.ToDatabase(rt.db), authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that requested the action, is not present.
@@ -116,7 +116,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		// the Username of the User that triggered the error.
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).WithField("Comment", phrase).Error("User cannot put comment on the Username photo.")
+		ctx.Logger.WithError(err).WithField("Comment", comment.Phrase).Error("User cannot put comment on the Username photo.")
 		return
 	} else {
 

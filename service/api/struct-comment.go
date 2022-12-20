@@ -30,9 +30,7 @@ func (phrase Phrase) ValidPhrase() bool {
 
 // Function Method used to check for the User Validity.
 func ValidComment(comment Comment) bool {
-	return comment.Commentid >= 0 &&
-		comment.PhotoId >= 0 &&
-		regex_username.MatchString(comment.Username) &&
+	return regex_username.MatchString(comment.Username) &&
 		regex_username.MatchString(comment.CommenterUsername) &&
 		len(comment.Phrase) >= 5 && len(comment.Phrase) <= 1000
 }
@@ -63,11 +61,6 @@ func (c *Comment) FromDatabase(comment database.Comment, db database.AppDatabase
 
 func (c *Comment) ToDatabase(db database.AppDatabase) database.Comment {
 	return database.Comment{
-		// Commentid:              c.Commentid,
-		// PhotoId:                c.PhotoId,
-		// FixedUsername:          c.FixedUsername,
-		// CommenterFixedUsername: c.CommenterFixedUsername,
 		Phrase: c.Phrase,
-		// UploadDate:             string(c.UploadDate),
 	}
 }

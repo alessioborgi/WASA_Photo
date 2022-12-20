@@ -22,7 +22,6 @@ import (
 // type Uuid string
 
 // Declaration of Customized type used after for checking validity (User Profile Personal Info).
-// type Username string
 type Date string
 type Email string
 type Gender string
