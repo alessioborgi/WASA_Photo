@@ -118,7 +118,7 @@ type AppDatabase interface {
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnlikePhoto() removes a User's Photo Like given the fixedUsername, the photoId and the fixedUsername of the Liker in input.
-	// UnlikePhoto(fixedUsername string, photoId int, fixedUsernameLiker string, uuid string) error
+	UnlikePhoto(username string, photoid string, usernameLiker string, uuid string) error
 
 	// USER's PHOTO COMMENTS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).

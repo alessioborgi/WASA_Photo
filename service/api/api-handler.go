@@ -49,7 +49,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:username/photos/:photoid/likes/:usernameLiker", rt.wrap(rt.likePhoto))
 
 	// Register the unlikePhoto API.
-	// rt.router.DELETE("/users/:username/photos/:photoid/likes/:fixedUsernameLiker", rt.wrap(rt.unlikePhoto))
+	rt.router.DELETE("/users/:username/photos/:photoid/likes/:usernameLiker", rt.wrap(rt.unlikePhoto))
 
 	// Register the commentPhoto API.
 	// rt.router.POST("/users/:username/photos/:photoid/comments", rt.wrap(rt.commentPhoto))
