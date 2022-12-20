@@ -49,6 +49,7 @@ var (
 	ErrBadRequest          = errors.New("The action you requested cannot be parsed due to a Bad Request!")
 	ErrBanDoesNotExist     = errors.New("The Ban does not Exists!")
 	ErrFollowDoesNotExist  = errors.New("The Follow does not Exists!")
+	ErrLikeDoesNotExists   = errors.New("The Like does not Exists!")
 
 	Created = errors.New("Object Created Correctly.")
 	Ok      = errors.New("Object Returned Correctly.")
@@ -110,15 +111,10 @@ type AppDatabase interface {
 	// GetUserProfile() returns the User Profile requested given in input the fixedUsername.
 	GetUserProfile(username string, uuid string) (User, error)
 
-	// USER STREAM:
-	// (Security Required: Needs Uuid of the action requester).
-	// GetMyStream() returns a list of Photos pertaining to the User's following list. We provide in input a fixedUsername.
-	// GetMyStream(fixedUsername string, uuid string) ([]Photo, error)
-
 	// PARTICULAR LIKE:
 	// (Security Required: Needs Uuid of the action requester).
 	// LikePhoto() creates a new User's Photo Like in the database, given in input the Like Object. It returns a Like Object.
-	// LikePhoto(like Like, uuid string) (Like, error)
+	LikePhoto(username string, photoid string, usernameLiker string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnlikePhoto() removes a User's Photo Like given the fixedUsername, the photoId and the fixedUsername of the Liker in input.
@@ -132,6 +128,11 @@ type AppDatabase interface {
 	// (Security Required: Needs Uuid of the action requester).
 	// UncommentPhoto() removes a User's Photo Comment given the fixedUsername, the photoId and the commentId in input.
 	// UncommentPhoto(fixedUsername string, photoId int, commentId int, uuid string) error
+
+	// USER STREAM:
+	// (Security Required: Needs Uuid of the action requester).
+	// GetMyStream() returns a list of Photos pertaining to the User's following list. We provide in input a fixedUsername.
+	// GetMyStream(fixedUsername string, uuid string) ([]Photo, error)
 
 	// -----
 	// OPTIONAL

@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"log"
 )
 
@@ -77,8 +76,6 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 		log.Println("Err: Strange error during the Check of Ban Presence")
 		return errBanRetrieval
 	}
-
-	fmt.Println("I arrive here2")
 
 	// If we arrive here, it means that the Ban is not present. Thus we can continue.
 
