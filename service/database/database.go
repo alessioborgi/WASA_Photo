@@ -162,7 +162,7 @@ type AppDatabase interface {
 	// USER's PHOTO COMMENTS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
 	// GetPhotoComments() returns the list of Photos's Comments of a given User Photo, given in input a fixedUsername, and the photoId.
-	// GetPhotoComments(fixedUsername string, photoId int, uuid string) ([]Comment, error)
+	GetPhotoComments(username string, photoid string, uuid string) ([]Comment, error)
 
 	// USER's PHOTO LIKES:
 	// (Security Required: Needs Uuid of the action requester).
