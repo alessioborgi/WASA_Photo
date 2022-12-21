@@ -90,7 +90,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	//We have read correctly the body too.
 	// We can therefore proceed in the Comment by calling the DB action and wait for its response.
-	err := rt.db.CommentPhoto(username.Name, photoid, comment.ToDatabase(rt.db), authorization_token)
+	commentid, err := rt.db.CommentPhoto(username.Name, photoid, comment.ToDatabase(rt.db), authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that requested the action, is not present.
@@ -118,9 +118,14 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	} else {
 
-		// If we arrive here, it means that the Username, has correctly followed the other.
-		w.WriteHeader(http.StatusNoContent)
-		log.Println("The usernameCommenter has correclty posted a comment to username.")
-		return
+		// If we arrive here, it means that the Photo's Comment has been correctly updated.
+		log.Println("The Photo's Comment has been correctly Updated!")
+
+		// Here, we can finally send back the commentid to the User, using the JSON.
+		w.WriteHeader(http.StatusCreated)
+		w.Header().Set("Content-Type", "application/json")
+		log.Println("The Comment is returned to the WebSite")
+		log.Println("...")
+		_ = json.NewEncoder(w).Encode(commentid)
 	}
 }

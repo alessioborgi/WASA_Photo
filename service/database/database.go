@@ -123,8 +123,8 @@ type AppDatabase interface {
 
 	// USER's PHOTO COMMENTS COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
-	// CommentPhoto() creates a new User's Photo Comment in the database, given in input the Comment Object. It returns a Comment Object.
-	CommentPhoto(username string, photoid string, comment Comment, uuid string) error
+	// CommentPhoto() creates a new User's Photo Comment in the database, given in input the Comment Object. It returns a Commentid.
+	CommentPhoto(username string, photoid string, comment Comment, uuid string) (int, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UncommentPhoto() removes a User's Photo Comment given the fixedUsername, the photoId and the commentId in input.
@@ -259,7 +259,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var trigger string
 	for i := 0; i < len(triggers); i++ {
 
-		//Check whether, for every Trigger, we have it.
+		// Check whether, for every Trigger, we have it.
 		err := db.QueryRow(query_trigger_presence[i]).Scan(&trigger)
 
 		if errors.Is(err, sql.ErrNoRows) {

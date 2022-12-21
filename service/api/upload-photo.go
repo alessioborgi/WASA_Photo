@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -215,7 +216,13 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	} else {
 
 		// If we arrive here, it means that the Photo has been correctly updated.
-		w.WriteHeader(http.StatusOK)
 		log.Println("The Photo has been correctly Updated!")
+
+		// Here, we can finally send back the photoid to the User, using the JSON.
+		w.WriteHeader(http.StatusCreated)
+		w.Header().Set("Content-Type", "application/json")
+		log.Println("The PhotoId is returned to the WebSite")
+		log.Println("...")
+		_ = json.NewEncoder(w).Encode(newPhoto.Photoid)
 	}
 }

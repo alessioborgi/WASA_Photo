@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comment, uuid string) error {
+func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comment, uuid string) (int, error) {
 
 	// Adding a User Follow.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -21,13 +21,13 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	// Check whether the Username that owns the photo, does not exists.
 	if errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: The Username, does not exists.")
-		return ErrUserDoesNotExist
+		return 0, ErrUserDoesNotExist
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
 		log.Println("Err: Strange error during the Check of User Presence")
-		return errUsername
+		return 0, errUsername
 	}
 
 	// Check whether the photo is present in the DB.
@@ -36,13 +36,13 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	// Check whether the Username exists.
 	if errors.Is(errPhoto, ErrPhotoDoesNotExist) {
 		log.Println("Err: The Photo that fixedUsernameCommenter is trying to comment does not exists. Error!")
-		return ErrPhotoDoesNotExist
+		return 0, ErrPhotoDoesNotExist
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
-		return errPhoto
+		return 0, errPhoto
 	}
 
 	// Getting the FixedUsername of the Commenter
@@ -51,7 +51,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	// Check if strange errors occurs.
 	if !errors.Is(errfixedUsernameCommenter, nil) {
 		log.Println("Err: Unexpected Error in the Username Commenter Retrieval ")
-		return errfixedUsernameCommenter
+		return 0, errfixedUsernameCommenter
 	}
 
 	// 0.3) We need now to check whether fixedUsernameCommenter is Banned by fixedUsername.
@@ -59,13 +59,13 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 
 	if errors.Is(errBanRetrieval, Ok) {
 		log.Println("Err: The Ban exists. You cannot Comment the photo!")
-		return ErrUserNotAuthorized
+		return 0, ErrUserNotAuthorized
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
 		log.Println("Err: Strange error during the Check of Ban Presence")
-		return errBanRetrieval
+		return 0, errBanRetrieval
 	}
 
 	// If we arrive here, it means that the Ban is not present. Thus we can continue.
@@ -77,7 +77,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	if !errors.Is(errAuth, nil) {
 
 		// Check whether we have received some errors during the Authentication.
-		return errAuth
+		return 0, errAuth
 	}
 
 	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
@@ -91,7 +91,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 		commentid, errComment := db.GetLastCommentId()
 		if !errors.Is(errComment, nil) {
 			log.Println("Err: Error encoutered in the GetLastCommentId")
-			return errComment
+			return 0, errComment
 		}
 
 		// We can now finally insert the Comment in the DB.
@@ -99,11 +99,11 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 			commentid, photoid, fixedUsername, fixedUsernameCommenter, comment.Phrase, time.Now().Format(time.RFC3339))
 
 		if !errors.Is(err, nil) {
-			return err
+			return 0, err
 		}
 
 		log.Println("Photo Comment added correclty.")
-		return nil
+		return commentid, nil
 
 	}
 
@@ -111,14 +111,10 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	if authorization == NOTVALID {
 
 		log.Println("Err: The Uuid you are providing is not present.")
-		return ErrUserNotAuthorized
+		return 0, ErrUserNotAuthorized
 	}
 
 	// If we arrive here, we encountered other types of problem.
 	log.Println("Err: Unexpected Error.")
-	return errAuth
-}
-
-func GetLastCommentId() {
-	panic("unimplemented")
+	return 0, errAuth
 }

@@ -324,7 +324,12 @@ paths:
             schema: {$ref: "#/components/schemas/photoInput"}
 
       responses:
-        '204': {description: Photo Creation Successfully!}
+
+        '201':
+          description: Created! Photo Created Successfully!
+          content:
+            application/json:
+              schema: {$ref : "#/components/schemas/photoid"}
 
         '400': {$ref : '#/components/responses/BadRequest'}
         
@@ -479,7 +484,12 @@ paths:
             schema: {$ref: "#/components/schemas/phrase"}
 
       responses:
-        '204': {$ref : '#/components/responses/NoContent'}
+
+        '201':
+          description: Created! Photo's Comment Created Successfully!
+          content:
+            application/json:
+              schema: {$ref : "#/components/schemas/commentid"}
 
         '400': {$ref : '#/components/responses/BadRequest'}
         
@@ -1256,6 +1266,7 @@ components:
       description: Actual Photo path saved in the "./photos" folder locally. 
       minLength: 5 
       maxLength: 100
+      pattern: ^.*$
       example: "./service/api/photos/u1-photo-1.jpeg"
     
     uploadDate:
@@ -1358,38 +1369,7 @@ components:
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
     
-    ### SCHEMAS FOR ../LIKES #
-    like:
-      title: like
-      type: object
-      description: |
-        This is the entire Like object. It will have the likeid, i.e. the 
-        ID of the like that coincides with the fixedUsername of the liker, i.e. the user
-        that is currently liking the photo, and the date and time of when the like has
-        been delivered.  
-      properties: 
-        likeid: 
-          $ref: "#/components/schemas/fixedUsername"
-        photoid:
-          $ref: "#/components/schemas/photoid"
-        fixedUsername:
-          $ref: "#/components/schemas/fixedUsername"
-
-    
-    ### SCHEMAS FOR ../BANS #    
-    ban:
-      title: ban
-      type: object
-      description: |
-        This is the entire Ban object. It will have the banID, i.e. the 
-        ID of the ban that coincides with the fixedUsername of the Banned Person (since we
-        can ban each person once only).  
-      properties: 
-        fixedUsernameBanner: 
-          $ref: "#/components/schemas/fixedUsername"
-        fixedUsernameBanned:
-          $ref: "#/components/schemas/fixedUsername"
-      
+  
   ##### PARAMETERS ##
   parameters:
     ### USER PARAMETERS#
@@ -1459,12 +1439,11 @@ components:
     InternalServerError:
       description: |
         500(The server encountered an Internal Error. Further info in server logs!)
-    NotFound:
-      description: | 
-        404(Not Found!) No object requested has been Found!
+    
     NoContent:
       description: |
         No content! No requested object is present on WASAPhoto.
+
     BadRequest:
       description: |
        Bad Request! Not Valid action requested..
