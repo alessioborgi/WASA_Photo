@@ -1,5 +1,7 @@
 package database
 
+import "errors"
+
 func (db *appdbimpl) CheckBan(fixedUsername string, uuid string) (string, error) {
 
 	//Check whether the uuid that is requesting the action has been banned by the fixedUsername.
@@ -9,7 +11,7 @@ func (db *appdbimpl) CheckBan(fixedUsername string, uuid string) (string, error)
 	WHERE fixedUsernameBanner == '?'`, uuid, fixedUsername).Scan(&ban)
 
 	//Check for the error during the Query.
-	if err != nil {
+	if !errors.Is(err, nil) {
 		return "", err
 	} else {
 		//Returning "Banned" if the Uuid has been banned by fixedUsername, "Not Banned" otherwise.

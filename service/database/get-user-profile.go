@@ -17,7 +17,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
 	//Check for the error during the Query.
-	if errAuth != nil {
+	if !errors.Is(errAuth, nil) {
 
 		//Returning empty user and error if some errors occurs.
 		return User{}, errAuth
@@ -62,7 +62,6 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
-		// fmt.Println(errBanRetrieval)
 		if errors.Is(errBanRetrieval, Ok) {
 			log.Println("Err: The Ban exists. You cannot get its Profile.")
 			return User{}, ErrUserNotAuthorized

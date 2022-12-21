@@ -78,7 +78,7 @@ func (db *appdbimpl) UnbanUser(username string, usernameBanned string, uuid stri
 		// If the uuid is requesting the action is the actual User Owner.
 		// If Authorized, you can proceed to remove the Ban without any problem.
 		_, err := db.c.Exec(`DELETE FROM Bans WHERE fixedUsernameBanner=? AND fixedUsernameBanned = ?`, fixedUsernameBanner, fixedUsernameBanned)
-		if err != nil {
+		if !errors.Is(err, nil) {
 			return err
 		}
 

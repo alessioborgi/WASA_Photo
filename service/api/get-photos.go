@@ -98,7 +98,7 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 	for i := 0; i < len(photoListDB); i++ {
 		var photo Photo
 		err = photo.FromDatabase(photoListDB[i], rt.db)
-		if err != nil {
+		if !errors.Is(err, nil) {
 			ctx.Logger.WithError(err).Error("error: can't map photo from database to API")
 			w.WriteHeader(http.StatusInternalServerError)
 			return

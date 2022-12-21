@@ -89,7 +89,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 
 		// We first need to get the commentId, that corresponds to the last commentId+1.
 		commentid, errComment := db.GetLastCommentId()
-		if errComment != nil {
+		if !errors.Is(errComment, nil) {
 			log.Println("Err: Error encoutered in the GetLastCommentId")
 			return errComment
 		}
@@ -98,7 +98,7 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 		_, err := db.c.Exec(`INSERT INTO Comments (commentid, photoid, fixedUsername, commenterFixedUsername, phrase, uploadDate) VALUES (?, ?, ?, ?, ?, ?)`,
 			commentid, photoid, fixedUsername, fixedUsernameCommenter, comment.Phrase, time.Now().Format(time.RFC3339))
 
-		if err != nil {
+		if !errors.Is(err, nil) {
 			return err
 		}
 

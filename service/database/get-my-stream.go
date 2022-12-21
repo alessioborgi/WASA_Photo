@@ -48,7 +48,7 @@ func (db *appdbimpl) GetMyStream(username string, uuid string) ([]Photo, error) 
 			ORDER BY p.uploadDate DESC`, fixedUsername)
 
 		// Check for the error during the Query.
-		if err != nil {
+		if !errors.Is(err, nil) {
 			return nil, err
 		}
 
@@ -63,7 +63,7 @@ func (db *appdbimpl) GetMyStream(username string, uuid string) ([]Photo, error) 
 		for photos.Next() {
 			var p Photo
 			err = photos.Scan(&p.Photoid, &p.FixedUsername, &p.Filename, &p.UploadDate, &p.Phrase, &p.NumberLikes, &p.NumberComments)
-			if err != nil {
+			if !errors.Is(err, nil) {
 				return nil, err
 			}
 			// Append to the photoList if no error occurs.

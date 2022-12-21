@@ -13,7 +13,7 @@ func (db *appdbimpl) CheckAuthorizationOwnerUsername(username string, uuid strin
 	log.Println("The Uuid is:", exists, "in the DB.")
 
 	// Check for the error during the Query.
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")

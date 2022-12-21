@@ -58,7 +58,6 @@ func (db *appdbimpl) GetFollowings(username string, uuid string) ([]string, erro
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
-		// fmt.Println(errBanRetrieval)
 		if errors.Is(errBanRetrieval, Ok) {
 			log.Println("Err: The Ban exists. You cannot get Followings it.")
 			return nil, ErrUserNotAuthorized

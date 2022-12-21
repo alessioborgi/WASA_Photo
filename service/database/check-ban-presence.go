@@ -2,7 +2,7 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
+	"errors"
 	"log"
 )
 
@@ -13,8 +13,7 @@ func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameB
 	err := db.c.QueryRow(`SELECT COUNT(fixedUsernameBanner) FROM Bans WHERE fixedUsernameBanner = ? AND fixedUsernameBanned = ?`, fixedUsernameBanner, fixedUsernameBanned).Scan(&exists)
 
 	// Check for the error during the Query.
-	if err != nil && err != sql.ErrNoRows {
-		fmt.Println(err)
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 		log.Println("Err: Unexpected Error during the Checking of the Ban!")
 		return err
 	} else if exists == 1 {

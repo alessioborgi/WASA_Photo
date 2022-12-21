@@ -91,7 +91,7 @@ func (db *appdbimpl) GetPhoto(username string, photoid string, uuid string) (Pho
 			ORDER BY uploadDate DESC`, fixedUsername, photoid).Scan(&photo.Photoid, &photo.FixedUsername, &photo.Filename, &photo.UploadDate, &photo.Phrase, &photo.NumberLikes, &photo.NumberComments)
 
 		// Check for the error during the Query.
-		if err != nil {
+		if !errors.Is(err, nil) {
 
 			// If we have encountered some errors in the Query retrieval.
 			log.Println("Err: Unexpected Error! During the Query Retrieval!")
@@ -134,7 +134,7 @@ func (db *appdbimpl) GetPhoto(username string, photoid string, uuid string) (Pho
 // func (rt *_router) getPhotoView(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 // 	//
 // 	img, err := os.Open("./service/api/photos/u1-photo-1.jpeg")
-// 	if err != nil {
+// 	if !errors.Is(err, nil) {
 // 		log.Fatal(err) // perhaps handle this nicer
 // 	}
 // 	defer img.Close()

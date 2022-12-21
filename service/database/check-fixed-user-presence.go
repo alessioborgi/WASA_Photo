@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 )
 
@@ -12,7 +13,7 @@ func (db *appdbimpl) CheckFixedUserPresence(fixedUsername string) (string, error
 	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE fixedUsername = ?`, fixedUsername).Scan(&exists)
 
 	// Check for the error during the Query.
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 		log.Println("Err: Unexpected Error!")
 		return "", err
 	} else if exists == 1 {
@@ -21,7 +22,7 @@ func (db *appdbimpl) CheckFixedUserPresence(fixedUsername string) (string, error
 
 		var username string
 		errFixedUsername := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername = ?`, fixedUsername).Scan(&username)
-		if errFixedUsername != nil {
+		if !errors.Is(errFixedUsername, nil) {
 			log.Println("Err: Unexpected Error!")
 			return "", err
 		} else {

@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -25,7 +24,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Uuid Retrieval from the DB.
 		err := db.c.QueryRow(`SELECT uuid FROM Users WHERE username == ?`, username).Scan(&saved_uuid)
-		if err != nil {
+		if !errors.Is(err, nil) {
 
 			// Uuid failed to be retrieved from the DB.
 			log.Println("Err: Failed to Retrieve UUID from the DB")
@@ -51,7 +50,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// Getting the last fixedUsername + 1
 		fixedUsername, errfixedUsername := db.GetLastFixedUsername()
-		if errfixedUsername != nil {
+		if !errors.Is(errfixedUsername, nil) {
 
 			// Last fixedUsername failed to be retrieved.
 			log.Println("Err: Last fixedUsername failed to be retrieved")
@@ -64,7 +63,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 			fixedUsername, uuid.String(), username, "", now, 0, 0, 0, "", "", "1900-01-01", "surname.matriculation@studenti.uniroma1.it", "", "do not specify")
 
 		// Check whether we have experienced an error from the User Insertion.
-		if errCretion != nil {
+		if !errors.Is(errCretion, nil) {
 			log.Println("Err: Error During Creation")
 			return "Error", errCretion
 		}
@@ -78,7 +77,6 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 	}
 
 	// Fist, check whether there is an error strange, i.e., that is neither nil nor ErrUserDoesNotExists.
-	fmt.Println(errUserPresence)
 	log.Println("Err: Unexpected Error during the Query of the DB!")
 	return "", errUserPresence
 }

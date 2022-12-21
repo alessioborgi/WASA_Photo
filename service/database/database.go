@@ -287,7 +287,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	err := db.QueryRow(`SELECT COUNT(fixedUsername) FROM Users`).Scan(&exists)
 
 	// Check for the error during the Query.
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 		log.Fatalf("Unexpected Error during the Query of the DB!")
 		return &appdbimpl{
 			c: db,
@@ -304,7 +304,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
 
-		if errCretion != nil {
+		if !errors.Is(errCretion, nil) {
 			log.Fatalf("Error During Alessio's Account Creation")
 			return &appdbimpl{
 				c: db,

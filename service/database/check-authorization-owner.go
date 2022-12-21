@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"log"
 )
 
@@ -22,7 +21,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 	log.Println("The Uuid is:", exists, "in the DB.")
 
 	// Check for the error during the Query.
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")
@@ -34,7 +33,6 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 		var auth bool
 		err := db.c.QueryRow(`SELECT uuid == ? FROM Users WHERE fixedUsername == ?`, uuid, fixedUsername).Scan(&auth)
 
-		fmt.Println(err)
 		// Check for the error during the Query.
 		if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 
@@ -72,7 +70,7 @@ func (db *appdbimpl) CheckAuthorizationPresence(uuid string) (string, error) {
 	// First check whether there exists the Uuid in the DataBase.
 	var exists = 0
 	err := db.c.QueryRow(`SELECT COUNT(fixedUsername) FROM Users WHERE uuid == ?`, uuid).Scan(&exists)
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")
@@ -98,7 +96,7 @@ func (db *appdbimpl) GetFixedUsername(uuid string) (string, error) {
 		return "", ErrUserDoesNotExist
 	}
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")
@@ -114,7 +112,7 @@ func (db *appdbimpl) GetUsername(fixedUsername string) (string, error) {
 
 	// Get the fixedUsername from the Uuid.
 	err := db.c.QueryRow(`SELECT username FROM Users WHERE fixedUsername = ?`, fixedUsername).Scan(&username)
-	if err != nil && err != sql.ErrNoRows {
+	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 
 		// Unexpected Error encountered during the query retrieval.
 		log.Println("Err: Unexpected Error!")

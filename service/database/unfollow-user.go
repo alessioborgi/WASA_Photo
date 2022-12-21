@@ -80,7 +80,7 @@ func (db *appdbimpl) UnfollowUser(username string, usernameFollowing string, uui
 		// If the uuid is requesting the action is the actual User Owner.
 		// If Authorized, you can proceed to remove the Follow without any problem.
 		_, err := db.c.Exec(`DELETE FROM Follows WHERE fixedUsername = ? AND fixedUsernameFollowing = ?`, fixedUsername, fixedUsernameFollowing)
-		if err != nil {
+		if !errors.Is(err, nil) {
 			return err
 		}
 

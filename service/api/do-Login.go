@@ -58,7 +58,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// If I arrive here, either the User has been "Created" or it was already in the Db "Ok".
 	// Thus, set the header as "Created" or "OK" accordingly.
 	result := err
-	if result == database.Created {
+	if errors.Is(result, database.Created) {
 		w.WriteHeader(http.StatusCreated)
 	} else {
 		w.WriteHeader(http.StatusOK)

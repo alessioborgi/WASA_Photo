@@ -117,7 +117,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 		// If NotAuthorized, (thus the fixedUsernameLiker is diverse from the Liker), you can proceed to add up the Like since we have already the certainty that no ban is present.
 		_, err := db.c.Exec(`INSERT INTO Likes (likeid, photoid, fixedUsername) VALUES (?, ?, ?)`,
 			fixedUsernameLiker, photoid, fixedUsername)
-		if err != nil {
+		if !errors.Is(err, nil) {
 			return err
 		}
 		log.Println("Photo Like added correclty.")

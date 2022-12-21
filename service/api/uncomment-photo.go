@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -116,7 +115,6 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 		// the Username of the User that triggered the error.
-		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).WithField("Comment", commentid).Error("User cannot delete comment on the Username photo.")
 		return

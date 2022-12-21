@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -16,7 +17,7 @@ func (db *appdbimpl) GetLastFixedUsername() (string, error) {
 	users, err := db.c.Query(`SELECT fixedUsername FROM Users`)
 
 	// Check if we have encountered some error in the retrieval of the query.
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// We check first whether the users retrieval caused an error.
 		log.Println("Err: Error encountered during the Query in the DB.")
@@ -32,7 +33,7 @@ func (db *appdbimpl) GetLastFixedUsername() (string, error) {
 
 	for users.Next() {
 		errFixedUsername := users.Scan(&fixedUsername)
-		if errFixedUsername != nil {
+		if !errors.Is(errFixedUsername, nil) {
 
 			log.Println("Err: Error encountered during the scan.")
 			return "", errFixedUsername
@@ -40,7 +41,7 @@ func (db *appdbimpl) GetLastFixedUsername() (string, error) {
 
 		fixedUsername = strings.Replace(fixedUsername, "u", "", 1)
 		intFixedUsername, errConvert := strconv.Atoi(fixedUsername)
-		if errConvert != nil {
+		if !errors.Is(errConvert, nil) {
 
 			log.Println("Err: Error encountered during the string-to-integer convertion.")
 			return "", errConvert
@@ -48,6 +49,12 @@ func (db *appdbimpl) GetLastFixedUsername() (string, error) {
 
 		// Add up to the UsernameList the fixedUsername.
 		fixedUsernameList = append(fixedUsernameList, intFixedUsername)
+	}
+
+	// If we have encountered some error in the users variable.
+	if users.Err() != nil {
+		log.Println("Err: Error encountered on users")
+		return "", err
 	}
 
 	max := fixedUsernameList[0]

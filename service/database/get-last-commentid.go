@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"log"
 )
 
@@ -13,7 +14,7 @@ func (db *appdbimpl) GetLastCommentId() (int, error) {
 	comments, err := db.c.Query(`SELECT commentid FROM Comments`)
 
 	// Check if we have encountered some error in the retrieval of the query.
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// We check first whether the comments retrieval caused an error.
 		log.Println("Err: Error encountered during the Query in the DB.")
@@ -29,7 +30,7 @@ func (db *appdbimpl) GetLastCommentId() (int, error) {
 
 	for comments.Next() {
 		errCom := comments.Scan(&comment)
-		if errCom != nil {
+		if !errors.Is(errCom, nil) {
 
 			log.Println("Err: Error encountered during the scan.")
 			return 0, errCom
@@ -37,6 +38,12 @@ func (db *appdbimpl) GetLastCommentId() (int, error) {
 
 		// Add up to the UsernameList the fixedUsername.
 		commentsList = append(commentsList, comment)
+	}
+
+	// If we have encountered some error in the comments variable.
+	if comments.Err() != nil {
+		log.Println("Err: Error encountered on comments")
+		return 0, err
 	}
 
 	// Check whether the list is empty.

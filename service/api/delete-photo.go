@@ -120,7 +120,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Proceed in the photo Deletion also in the Photos.
 	e := os.Remove(path)
-	if e != nil {
+	if !errors.Is(e, nil) {
 
 		ctx.Logger.WithError(err).WithField("Photo", photoid).Error("Err: Can't delete photoId of Username from the Folder!")
 	}

@@ -13,7 +13,7 @@ func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 	// Note that, here, we don't need to check the authorization owner since we are simply doing a get.
 	var presence_auth string
 	presence_auth, err := db.CheckAuthorizationPresence(uuid)
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// We check first whether the users retrieval caused an error.
 		log.Println("Err: Error encountered during the Check of the Uuid Presence.")
@@ -44,7 +44,7 @@ func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 			ORDER BY dateOfCreation DESC `, uuid, fixedUsername)
 
 		// Check if we have encountered some error in the retrieval of the query.
-		if err != nil {
+		if !errors.Is(err, nil) {
 
 			// We check first whether the users retrieval caused an error.
 			log.Println("Err: Error encountered during the Query in the DB.")
@@ -59,7 +59,7 @@ func (db *appdbimpl) GetUsers(uuid string) ([]string, error) {
 		var username string
 		for users.Next() {
 			err = users.Scan(&username)
-			if err != nil {
+			if !errors.Is(err, nil) {
 				log.Println("Err: Error encountered during the scan.")
 				return nil, err
 			}

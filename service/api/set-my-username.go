@@ -92,7 +92,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// Here we proceed by getting the UserProfile.
 	usernameProfile, err := rt.db.GetUserProfile(username.Name, authorization_token)
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// If we fail to retrieve the Profile.
 		w.WriteHeader(http.StatusBadRequest)
@@ -102,7 +102,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// If no error occurs during the Profile retrieval, we proceed by Marshaling the usernameProfile.
 	usernameProfileMarshalled, err := json.Marshal(&usernameProfile)
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// If we fail to Marshal the Profile.
 		w.WriteHeader(http.StatusBadRequest)
@@ -114,7 +114,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	patch_operation := []byte(`[{"op": "replace", "path": "/username", "value": "` + newUsername.Name + `"}]`)
 	patch, err := jsonpatch.DecodePatch(patch_operation)
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// If we fail to Marshal the Patch, it's our fault. Thus store it in the Logger.
 		w.WriteHeader(http.StatusInternalServerError)
@@ -125,7 +125,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// We apply the patch with username profile previously marshalled.
 	newProfileByte, err := patch.Apply(usernameProfileMarshalled)
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// If we fail to Apply the Patch, it's our fault. Thus store it in the Logger.
 		w.WriteHeader(http.StatusInternalServerError)
@@ -137,7 +137,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	var newProfileJson User
 	err = json.Unmarshal(newProfileByte, &newProfileJson)
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 
 		// If we fail to UnMarshal the Json, it's our fault. Thus store it in the Logger.
 		w.WriteHeader(http.StatusInternalServerError)

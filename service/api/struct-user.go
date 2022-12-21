@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -80,7 +79,7 @@ func (d Date) ValidDateofBirth() bool { //yyyy/mm/dd
 	log.Println(current_year, current_month, current_day)
 
 	if !errors.Is(erry, nil) && !errors.Is(errm, nil) && !errors.Is(errd, nil) {
-		fmt.Println("I am here")
+
 		//Here assume that the user should have been born more than 10 year ago.
 		if current_year >= year && current_month >= month && current_day >= day {
 			log.Println("Correct Date of Birth Inserted", d)

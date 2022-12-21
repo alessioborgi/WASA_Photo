@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"log"
 )
 
@@ -18,7 +17,7 @@ func (db *appdbimpl) DeleteUser(username string, uuid string) error {
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
 	// Check for the error during the Query.
-	if errAuth != nil {
+	if !errors.Is(errAuth, nil) {
 		return errAuth
 	}
 
@@ -46,8 +45,7 @@ func (db *appdbimpl) DeleteUser(username string, uuid string) error {
 
 		// Perform the actual Deletion of the User profile from the DB.
 		_, errDeletion := db.c.Exec(`DELETE FROM Users WHERE username=?`, username)
-		if errDeletion != nil {
-			fmt.Println(errDeletion)
+		if !errors.Is(errDeletion, nil) {
 			log.Println("Error encountered during the User Deletion in the DB.")
 			return errDeletion
 		}
