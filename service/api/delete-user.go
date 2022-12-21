@@ -74,7 +74,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
 		return
-	} else if !errors.Is(err, nil) && !errors.Is(err, database.Ok) {
+	} else if !errors.Is(err, nil) && !errors.Is(err, database.Okay_Error_Inverse) {
 
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive

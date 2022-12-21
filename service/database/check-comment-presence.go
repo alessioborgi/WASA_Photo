@@ -20,7 +20,7 @@ func (db *appdbimpl) CheckCommentPresence(commentid string, fixedUsername string
 
 		// If no strange error during the Query occurs, and exists = 1, we already have the Comment Exists.
 		log.Println("The Comment is present in the Database.")
-		return Ok
+		return Okay_Error_Inverse
 	}
 
 	// If we arrive here it means that the Comment is not present in the DB.

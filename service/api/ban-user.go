@@ -86,7 +86,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that requested the action or the username that is going to be banned, is not a WASAPhoto User. ")
 		return
-	} else if errors.Is(err, database.Ok) {
+	} else if errors.Is(err, database.Okay_Error_Inverse) {
 
 		// In this case, we have that the Ban was already present.
 		w.WriteHeader(http.StatusOK)

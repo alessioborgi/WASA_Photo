@@ -29,7 +29,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,16 +44,16 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Ok) {
+	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of usernameLiker Presence")
 		return errusernameLiker
 	}
 
 	// 0.3) Thirdly, we should check whether there exists the same like already.
 	errLikeRetrieval := db.CheckLikePresence(fixedUsername, photoid, fixedUsernameLiker)
-	if errors.Is(errLikeRetrieval, Ok) {
+	if errors.Is(errLikeRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: The Like already exists.")
-		return Ok
+		return Okay_Error_Inverse
 	}
 
 	// Check if strange errors occurs.
@@ -66,7 +66,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	// 0.4) We need now to check whether fixedUsernameLiker is Banned by fixedUsername.
 	errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
 
-	if errors.Is(errBanRetrieval, Ok) {
+	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: The Ban exists. You cannot Like the photo!")
 		return ErrUserNotAuthorized
 	}
@@ -89,7 +89,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
+	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return errPhoto
 	}

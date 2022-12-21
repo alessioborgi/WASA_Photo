@@ -24,7 +24,7 @@ func (db *appdbimpl) DeletePhoto(username string, photoid string, uuid string) (
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return "", errUsername
 	}
@@ -39,7 +39,7 @@ func (db *appdbimpl) DeletePhoto(username string, photoid string, uuid string) (
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
+	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return "", errPhoto
 	}

@@ -49,7 +49,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	newUid, err := rt.db.DoLogin(string(username.Name))
 
 	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
-	if !errors.Is(err, nil) && !errors.Is(err, database.Created) && !errors.Is(err, database.Ok) {
+	if !errors.Is(err, nil) && !errors.Is(err, database.Creation_Error_Inverse) && !errors.Is(err, database.Okay_Error_Inverse) {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
 		return
@@ -58,7 +58,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// If I arrive here, either the User has been "Created" or it was already in the Db "Ok".
 	// Thus, set the header as "Created" or "OK" accordingly.
 	result := err
-	if errors.Is(result, database.Created) {
+	if errors.Is(result, database.Creation_Error_Inverse) {
 		w.WriteHeader(http.StatusCreated)
 	} else {
 		w.WriteHeader(http.StatusOK)

@@ -30,7 +30,7 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 	_, errUsername := db.CheckUserPresence(user.Username)
 
 	// Check whether the Username I am trying to update with the newUsername, does not exists.
-	if errors.Is(errUsername, Ok) {
+	if errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: The newUsername is already a WASAPhoto Username. Error!")
 		return ErrBadRequest
 	}

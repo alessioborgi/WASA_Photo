@@ -16,7 +16,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 	_, errUserPresence := db.CheckUserPresence(username)
 
 	// Check whether the error is "Ok". If we have it to be Ok, it means it is already present in the DB.
-	if errors.Is(errUserPresence, Ok) {
+	if errors.Is(errUserPresence, Okay_Error_Inverse) {
 
 		// USER PROFILE LOGIN:
 		log.Println("The User already exists!")
@@ -33,7 +33,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 			// Uuid retrieved correctly from the DB.
 			log.Println("Uuid Retrieval Succeeded from the DB!")
-			return saved_uuid, Ok
+			return saved_uuid, Okay_Error_Inverse
 		}
 	}
 
@@ -73,7 +73,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 		// // If we arrive here, we have successfully created the User.
 		// log.Println("fixedUsername Update Succeeded")
-		return uuid.String(), Created
+		return uuid.String(), Creation_Error_Inverse
 	}
 
 	// Fist, check whether there is an error strange, i.e., that is neither nil nor ErrUserDoesNotExists.

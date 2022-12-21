@@ -114,7 +114,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Photo Insertion cannot be done because it has received a not valid Username.")
 		return
-	} else if !errors.Is(errFixedUsername, nil) && !errors.Is(errFixedUsername, database.Ok) {
+	} else if !errors.Is(errFixedUsername, nil) && !errors.Is(errFixedUsername, database.Okay_Error_Inverse) {
 
 		// I got an error on getting the last fixedUsername.
 		w.WriteHeader(http.StatusInternalServerError)

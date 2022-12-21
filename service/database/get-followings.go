@@ -27,7 +27,7 @@ func (db *appdbimpl) GetFollowings(username string, uuid string) ([]string, erro
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Ok) {
+	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errfixedUsername
 	}
@@ -58,7 +58,7 @@ func (db *appdbimpl) GetFollowings(username string, uuid string) ([]string, erro
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
-		if errors.Is(errBanRetrieval, Ok) {
+		if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 			log.Println("Err: The Ban exists. You cannot get Followings it.")
 			return nil, ErrUserNotAuthorized
 		}

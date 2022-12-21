@@ -52,8 +52,8 @@ var (
 	ErrLikeDoesNotExists    = errors.New("The Like does not Exists!")
 	ErrCommentDoesNotExists = errors.New("The Comment does not Exists!")
 
-	Created = errors.New("Object Created Correctly.")
-	Ok      = errors.New("Object Returned Correctly.")
+	Creation_Error_Inverse = errors.New("Object Created Correctly.")
+	Okay_Error_Inverse     = errors.New("Object Returned Correctly.")
 )
 
 // User Struct has been declared in the "db-struct-user.go" file.

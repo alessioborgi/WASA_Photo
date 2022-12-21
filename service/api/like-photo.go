@@ -101,7 +101,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that requested the action or the username that is going to receive a like, is not a WASAPhoto User. ")
 		return
-	} else if errors.Is(err, database.Ok) {
+	} else if errors.Is(err, database.Okay_Error_Inverse) {
 
 		// In this case, we have that the Like was already present.
 		w.WriteHeader(http.StatusNoContent)

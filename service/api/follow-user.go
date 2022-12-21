@@ -86,7 +86,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that requested the action or the username that is going to be followed, is not a WASAPhoto User. ")
 		return
-	} else if errors.Is(err, database.Ok) {
+	} else if errors.Is(err, database.Okay_Error_Inverse) {
 
 		// In this case, we have that the Follow was already present.
 		w.WriteHeader(http.StatusNoContent)

@@ -19,7 +19,7 @@ func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameB
 	} else if exists == 1 {
 		// If no strange error during the Query occurs, and exists = 1, we already have the Ban Exists.
 		log.Println("The Ban is present in the Database.")
-		return Ok
+		return Okay_Error_Inverse
 	}
 
 	// If we arrive here it means that the Ban is not present in the DB.

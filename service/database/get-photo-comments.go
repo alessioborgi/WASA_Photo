@@ -24,7 +24,7 @@ func (db *appdbimpl) GetPhotoComments(username string, photoid string, uuid stri
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Ok) {
+	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errfixedUsername
 	}
@@ -39,7 +39,7 @@ func (db *appdbimpl) GetPhotoComments(username string, photoid string, uuid stri
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
+	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return nil, errPhoto
 	}
@@ -72,7 +72,7 @@ func (db *appdbimpl) GetPhotoComments(username string, photoid string, uuid stri
 		// Proceed to check whether it is Banned or not.
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
 
-		if errors.Is(errBanRetrieval, Ok) {
+		if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 			log.Println("Err: The Ban exists. You cannot get the Photo's Comments List.")
 			return nil, ErrUserNotAuthorized
 		}

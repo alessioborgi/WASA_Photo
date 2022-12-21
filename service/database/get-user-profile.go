@@ -41,7 +41,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		}
 
 		// Check if strange errors occurs.
-		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 			log.Println("Err: Strange error during the Check of User Presence")
 			return User{}, errUsername
 		}
@@ -62,7 +62,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
 		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
-		if errors.Is(errBanRetrieval, Ok) {
+		if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 			log.Println("Err: The Ban exists. You cannot get its Profile.")
 			return User{}, ErrUserNotAuthorized
 		}

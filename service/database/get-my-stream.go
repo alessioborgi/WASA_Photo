@@ -24,7 +24,7 @@ func (db *appdbimpl) GetMyStream(username string, uuid string) ([]Photo, error) 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errUsername
 	}

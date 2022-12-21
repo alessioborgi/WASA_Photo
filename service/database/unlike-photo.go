@@ -29,7 +29,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Ok) {
+	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of usernameLiker Presence")
 		return errusernameLiker
 	}
@@ -57,7 +57,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errLikeRetrieval, nil) && !errors.Is(errLikeRetrieval, Ok) {
+	if !errors.Is(errLikeRetrieval, nil) && !errors.Is(errLikeRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of Follow Presence")
 		return errLikeRetrieval
 	}
@@ -66,7 +66,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	// 0.4) We need now to check whether fixedUsernameLiker is Banned by fixedUsername.
 	errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
 
-	if errors.Is(errBanRetrieval, Ok) {
+	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: The Ban exists. You cannot Like the photo!")
 		return ErrUserNotAuthorized
 	}
@@ -89,7 +89,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Ok) {
+	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of Photo Presence.")
 		return errPhoto
 	}

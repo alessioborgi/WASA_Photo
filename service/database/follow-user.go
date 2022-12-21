@@ -29,7 +29,7 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Ok) {
+	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,16 +44,16 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Ok) {
+	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Okay_Error_Inverse) {
 		log.Println("Err: Strange error during the Check of UsernameFollowing Presence")
 		return errusernameBanned
 	}
 
 	// 0.3) Thirdly, we should check whether there exists the same Follow already.
 	errFollowRetrieval := db.CheckFollowPresence(fixedUsername, fixedUsernameFollowing)
-	if errors.Is(errFollowRetrieval, Ok) {
+	if errors.Is(errFollowRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: The Follow already exists.")
-		return Ok
+		return Okay_Error_Inverse
 	}
 
 	// Check if strange errors occurs.
@@ -66,7 +66,7 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 	// 0.4) We need now to check whether fixedUsername is Banned by fixedUsernameFollowing.
 	errBanRetrieval := db.CheckBanPresence(fixedUsernameFollowing, fixedUsername)
 
-	if errors.Is(errBanRetrieval, Ok) {
+	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
 		log.Println("Err: The Ban exists. You cannot Follow it.")
 		return ErrUserNotAuthorized
 	}
