@@ -64,16 +64,17 @@ paths:
         registration to the WASAPhoto Platform of the given Username. There can be 
         distinguished two cases though:
         - If the user does not exist, it will be created, and a "unique" user
-          identifier is returned (fixedUsername). 
-        - If the user exists, the fixedUsername is returned.
+          identifier is returned (uuid). 
+        - If the user exists, the uuid is returned.
         
         RETURN:
-        It will then return back in both the two cases above mentioned, the fixedUsername 
-        generated iff successful (it can be concepted as a sort of secret id).
+        It will then return back in both the two cases above mentioned, the uuid 
+        generated iff successful (it can be concepted as a sort of secret id, or token) that
+        will be used for authentication in all others APIs.
         
         RESTRICTIONS:
         Note that this action is allowed ALWAYS, without any restriction and any need
-        to pass for fixedUsername parameter, since it is the place where it is actually created
+        to pass for uuid parameter, since it is the place where it is actually created
         a new username(profile) or logged-in a present username. 
       requestBody:
         content:
@@ -142,34 +143,36 @@ paths:
         
         '500': {$ref : '#/components/responses/InternalServerError'}
 
-  /users/{fixedUsername}:
-    summary: Specific fixedUsername Profile of the User Collection.
+  /users/{username}:
+    summary: Specific Username Profile of the User Collection.
     parameters: 
-      #I need to provide for a fixedUsername of the person I am looking for.
-      - $ref : "#/components/parameters/fixedUsername"
+      #I need to provide for a Username of the person I am looking for.
+      - $ref : "#/components/parameters/username"
     
     patch:
       security:
       - bearerAuthentication: []
       operationId: setMyUserName
       tags: ["User-Handling"]
-      summary: Change you username.
+      summary: Change your Username.
       description: |
         Change the (variable) Username with the new value passed in input (newUsername, in the body). 
         Also here, we request for authentication of the user that wants to perform this action.
         
         RETURN:
-        Return nothing.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
-        Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
-        change of Username can be done by ONLY the user that is the Profile Owner. 
+        Note that this action is allowed to NOT EVERY USER. Indeed, the change of Username 
+        can be done by ONLY the user that is the Profile Owner. 
         Otherwise, it cannot. 
 
       requestBody:
         content:
           application/json:
             schema: { $ref: "#/components/schemas/username" }
+        required: true
+
       responses: 
         '204': {description: OK! Username Updated Successfully!.}
 
@@ -191,7 +194,7 @@ paths:
         Also here, we request for authentication of the user that wants to perform this action.
         
         RETURN:
-        Return nothing.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
@@ -200,10 +203,10 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/username"}
+            schema: {$ref: "#/components/schemas/userProfile"}
 
       responses:
-        '204': {description: OK! Username Updated Successfully!.}
+        '204': {description: OK! User Updated Successfully!.}
         
         '400': {$ref : '#/components/responses/BadRequest'}
           
@@ -221,9 +224,12 @@ paths:
         HOW IT WORKS:
         Remove the User profile, given in input the username. Also here, we request for 
         authentication of the user that wants to perform this action. 
-        
+        Note that the removal of a User implies the removal of also its photos with their 
+        related comments and photos, the bans where it is involved, the follow objects where 
+        it is involved.  
+
         RETURN:
-        Return the fixedUsername in response, in case of successful deletion.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
@@ -231,7 +237,9 @@ paths:
         account is the actual ORIGINAL ACCOUNT OWNER. Otherwise, it cannot. 
         
       responses:
-        "204": {description: OK! User Profile deleted successfully!}
+        '204': {description: OK! User Profile deleted successfully!}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -245,7 +253,7 @@ paths:
       summary: Return the User Profile.
       description: |
         HOW IT WORKS:
-        Return the current User Profile given in input (as Parameter) the Username. Also here, we request for 
+        Return the current User Profile given in input (as Parameter in the path) the Username. Also here, we request for 
         authentication of the user that wants to perform this action. 
         
         RETURN:
@@ -253,16 +261,8 @@ paths:
         
         RESTRICTIONS:
         Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user
-        profile iif this has not banned you.
+        profile iff this has not banned you.
       
-      parameters:
-        - name: username
-          in: query
-          description: Username passed to return that specific Username.
-          required: true
-          schema:
-            $ref: '#/components/schemas/username'
-
       responses:
         '200':
           description: Ok! User Profile Returned Successfully!.
@@ -274,8 +274,6 @@ paths:
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
 
     
@@ -290,11 +288,11 @@ paths:
   #However, I have decided to go for the more straightforward way. 
 
   ### USER's PHOTO COLLECTION #
-  /users/{fixedUsername}/photos:
+  /users/{username}/photos:
     summary: User's Photos Collection.
     parameters: 
       #I need to provide for a username.
-      - $ref : "#/components/parameters/fixedUsername"
+      - $ref : "#/components/parameters/username"
 
     #Adding a new Photo.
     post:
@@ -306,14 +304,14 @@ paths:
       description: |
         HOW IT WORKS:
         Given in input the Username of the person I want to add the photo, post a new photo on
-        this profile. Also here, we request for  authentication of the user that wants to perform
+        this profile. Also here, we request for authentication of the user that wants to perform
         this action. 
         Note that this action correspond as making a post on Instagram. However, I opted for the
         nomenclature photos, in such a way of avoiding to confuse the Post on instagram with the
         post HTTP method.
         
         RETURN:
-        It will then return back in output the photoid iff successful.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USERS that are both the Maker of the
@@ -323,10 +321,12 @@ paths:
       requestBody:
         content:
           multipart/form-data:
-            schema: {$ref: "#/components/schemas/photo"}
+            schema: {$ref: "#/components/schemas/photoInput"}
 
       responses:
-        "204": {description: Photo Creation Successful}
+        '204': {description: Photo Creation Successfully!}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -338,7 +338,7 @@ paths:
         - bearerAuthentication: []
       operationId: getPhotos
       tags: ["Photo-Uploading"]
-      summary: Get my Photos that has been publicated.
+      summary: Get the Photos that has been publicated only by a specific Username.
       description: |
         HOW IT WORKS:
         Return the list of the photos objects of the profile. The list should be sorted
@@ -366,18 +366,18 @@ paths:
                 items: { $ref: "#/components/schemas/photo" }
         
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
-        
-        '404': {$ref : '#/components/responses/NotFound'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
     
   #Particular Photo
-  /users/{fixedUsername}/photos/{photoid}:
+  /users/{username}/photos/{photoid}:
     summary: Specific User Profile's photo.
     parameters:
-    - $ref: "#/components/parameters/fixedUsername"
+    - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/photoid"
 
     #Deleting one particular photo that I got publicated.
@@ -389,11 +389,11 @@ paths:
       summary: Remove your (existing) photo.
       description: |
         HOW IT WORKS:
-        Remove a photo from the account given the username of the photo owner, and the photoID, i.e. the photo id. 
+        Remove a photo from the account given the username of the photo owner, and the photo id. 
         Note that the removal of an image will also remove likes and comments related to it.
         
         RETURN:
-        Return the photoid iff the successful deletion.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
@@ -401,11 +401,11 @@ paths:
         is the actual ORIGINAL PHOTO ADDER. Otherwise, it cannot. Thus, only the user that
         has actually posted the photo can delete it. 
       responses:
-        "204": {description: OK! Photo deleted successfully!}
+        '204': {description: OK! Photo deleted successfully!}
         
-        '403': {$ref : '#/components/responses/UnAuthorized'}
+        '400': {$ref : '#/components/responses/BadRequest'}
 
-        '404': {$ref : '#/components/responses/NotFound'}
+        '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
@@ -417,15 +417,15 @@ paths:
       summary: Return the User Photo Object.
       description: |
         HOW IT WORKS:
-        Return the current User Photo Object given in input the Username and the photo id. Also here, we request for 
-        authentication of the user that wants to perform this action. 
+        Return the current User Photo Object given in input the Username and the photo id. Also here, 
+        we request for authentication of the user that wants to perform this action. 
         
         RETURN:
         The returned value is the requested User's Photo object. 
         
         RESTRICTIONS:
         Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user's photo
-        iif this has not banned you.
+        iff this has not banned you.
       responses:
         '200':
           description: Ok! User's Photo Returned Successfully!.
@@ -434,23 +434,22 @@ paths:
               schema: {$ref: "#/components/schemas/photo"}
 
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
-
 
 
   ### USER's PHOTO COMMENTS COLLECTION #
 
   #Comments Set.
-  /users/{fixedUsername}/photos/{photoid}/comments:
+  /users/{username}/photos/{photoid}/comments:
     summary: Photo's Comments Collection.
     parameters: 
       #I need to provide for a Photo's Owner and a Photo's photoid.
-      - $ref : "#/components/parameters/fixedUsername"
+      - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/photoid"
 
     #Adding a new Comment.
@@ -467,7 +466,7 @@ paths:
         it will post a new photo's comment. 
         
         RETURN:
-        It will then return back in output the Commentid iff successful.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
@@ -477,10 +476,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/comment"}
+            schema: {$ref: "#/components/schemas/phrase"}
 
       responses:
-        "204": {description: Photo's Comment Posted Successfully!}
+        '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -520,19 +521,19 @@ paths:
                 items: { $ref: "#/components/schemas/comment" }
         
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   
   #PARTICULAR COMMENT:
-  /users/{fixedUsername}/photos/{photoid}/comments/{commentid}:
+  /users/{username}/photos/{photoid}/comments/{commentid}:
     summary: Specific Photo's Comment.
     parameters:
-    - $ref: "#/components/parameters/fixedUsername"
+    - $ref: "#/components/parameters/username"
     - $ref: "#/components/parameters/photoid"
     - $ref: "#/components/parameters/commentid"
 
@@ -546,34 +547,33 @@ paths:
       description: |
         HOW IT WORKS:
         Remove a photo's comment given a specific username that is the owner of the photo to
-        which the comment has been added, given the uphoto id that indicates the photo on which
+        which the comment has been added, given the photoid that indicates the photo on which
         the comment has been added, and given a specific commentid. 
         
         RETURN:
-        Return the comment commentid iff the comment has been deleted successfully.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the comment can be done ONLY if the user that is deleting the comment
         is the actual ORIGINAL COMMENTER. Otherwise, it cannot.
       responses:
-        '204': 
-          description: OK! Photo's Comment deleted successfully!
+        '204': {description: OK! Photo's Comment deleted successfully!}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
-
-        '404': {$ref : '#/components/responses/NotFound'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
   ### PHOTO LIKES #
 
   #Likes Set.
-  /users/{fixedUsername}/photos/{photoid}/likes:
+  /users/{username}/photos/{photoid}/likes:
     summary: Photo's Likes Collection.
     parameters: 
       #I need to provide for a Photo's owner fixedUsername, a photo's photoid.
-      - $ref : "#/components/parameters/fixedUsername"
+      - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/photoid"
 
     #Getting Photo's Likes.
@@ -585,12 +585,12 @@ paths:
       summary: Get the Photos's Likes.
       description: |-
         HOW IT WORKS:
-        Given in input the fixedUsername of the person which owns the photo and the Photo's
-        photoid, it will return the list of the Photos'Likes on reverse chronological order. 
+        Given in input the Username of the person which owns the photo and the Photo's
+        photoid, it will return the list of the Photos'Likes.  
         Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        The returned value is an array of Like Objects. 
+        The returned value is an array of Usernames of people has added the Like. 
         
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES. This 
@@ -608,25 +608,25 @@ paths:
                 minItems: 0
                 maxItems: 100000
                 description: Array of Photo's Like.
-                items: { $ref: "#/components/schemas/like" }
+                items: { $ref: "#/components/schemas/username" }
         
         '204': {$ref : '#/components/responses/NoContent'}
 
+        '400': {$ref : '#/components/responses/BadRequest'}
+
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   
   #PARTICULAR LIKE:
-  /users/{fixedUsername}/photos/{photoid}/likes/{fixedUsernameLiker}:
+  /users/{username}/photos/{photoid}/likes/{usernameLiker}:
     summary: Photo's Particular Like.
     parameters: 
-      #I need to provide for a Photo's owner username, a Liker's fixedUsername and a photo's photoid.
-      - $ref : "#/components/parameters/fixedUsername"
+      #I need to provide for a Photo's owner username, a Liker's username and a photo's photoid.
+      - $ref : "#/components/parameters/username"
       - $ref : "#/components/parameters/photoid"
-      - $ref : "#/components/parameters/fixedUsernameLiker"
+      - $ref : "#/components/parameters/usernameLiker"
 
     #Adding a new Like.
     put:
@@ -638,16 +638,15 @@ paths:
       description: |-
         HOW IT WORKS:
         Given in input the Liker's username, the Photo's photoid, it will post a new
-        photo's like to the photo of the fixedUsername passed in input. 
+        photo's like to the photo of the username passed in input. 
         Notice that, given the fact that we can add only one like per person at each photo, 
         we directly add it with the put and not with the post. The specific likeid (that
-        I decided to call usernameliker), then will simply coincide with the username of 
+        I decided to call usernameLiker), then will simply coincide with the username of 
         the username that has added the like to the photo. 
         Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        It will then return back in output the usernameliker iff successful (i.e. the  
-        fixedUsername that has added the like to the photo).
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to EVERY USER, EXCEPT for the BANNED ONES and 
@@ -657,7 +656,9 @@ paths:
         when the liker is the owner of the photo. 
         
       responses:
-        '204': {description: OK! A existing Photo's Like has been added.}
+        '204': {description: OK! Photo's Like inserted successfully.}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
 
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
@@ -676,22 +677,22 @@ paths:
         Given in input the username of the photo owner that we want to unlike, the Liker's 
         username and the Photo's photoid, it will remove a like from this photo. 
         Notice that, given the fact that we can add only one like per person at each photo, 
-        we directly recognize as the Liker by the likeID(usernameliker). 
+        we directly recognize as the Liker by the likeID(usernameLiker). 
         
         RETURN:
-        Return the usernameliker, i.e. the fixedUsername of the Liker, iff the like has been 
-        deleted successfully.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the like can be done by ONLY if the user that is deleting the like
         is the actual original liker. Otherwise, it cannot.
+
       responses:
         '204': {description: OK! Photo's Like deleted successfully!}
 
-        '403': {$ref : '#/components/responses/UnAuthorized'}
+        '400': {$ref : '#/components/responses/BadRequest'}
 
-        '404': {$ref : '#/components/responses/NotFound'}
+        '403': {$ref : '#/components/responses/UnAuthorized'}
 
         '500': {$ref : '#/components/responses/InternalServerError'}
 
@@ -699,11 +700,11 @@ paths:
   ### USER's BANS COLLECTION: #
 
   #Bans Set:
-  /users/{fixedUsername}/bans:
+  /users/{username}/bans:
     summary: Username's Banned Users Collection.
     parameters: 
       #I need to provide for a fixedUsername.
-      - $ref : "#/components/parameters/fixedUsername"
+      - $ref : "#/components/parameters/username"
 
     #Getting the set of Banned Users.
     get:
@@ -714,12 +715,12 @@ paths:
       summary: Get Bans for the given user.
       description: |
         HOW IT WORKS:
-        Return the list of the Bans given the fixedUsername of the person we want to know the
-        list of banned user. The list should be sorted w.r.t. the reverse chronological order.
+        Return the list of the Bans given the username of the person we want to know the
+        list of banned user. 
         Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        The returned value is an array of Ban objects.
+        The returned value is an array of usernames.
         
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USER OWNER of the PROFILE. This 
@@ -735,22 +736,22 @@ paths:
                 minItems: 0
                 maxItems: 100000
                 description: Array of User's Bans.
-                items: { $ref: "#/components/schemas/ban" }
+                items: { $ref: "#/components/schemas/username" }
         
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
     
   #PARTICULAR BAN: 
-  /users/{fixedUsername}/bans/{banid}:
+  /users/{username}/bans/{usernameBanned}:
     summary: Specific User's Ban.
     parameters:
-    - $ref: "#/components/parameters/fixedUsername"
-    - $ref: "#/components/parameters/banid"
+    - $ref: "#/components/parameters/username"
+    - $ref: "#/components/parameters/usernameBanned"
 
     #Adding a new Ban.
     put:
@@ -762,11 +763,11 @@ paths:
       description: |
         HOW IT WORKS:
         Given in input the Banner username, and a usernname of the person I want ot ban, ban
-        it. Also here, we request for authentication of the user that wants to perform this
-        action. 
+        it. 
+        Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        It will then return back the simple responses iff successful.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to ONLY the USERS that are both the Creators of the
@@ -793,16 +794,16 @@ paths:
       description: |
         HOW IT WORKS:
         Remove a ban from the account given the username of the account, and the username
-        (banID) of the person I want to unban.  Also here, we request for authentication of 
-        the user that wants to perform this action. 
+        (usernameBanner) of the person I want to unban.  
+        Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        Return the banID(username of unbanned user) iff the successful deletion.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         deletion of the ban can be done ONLY if the user that is deleting the ban
-        is the actual ORIGINAL BAN ADDER. Otherwise, it cannot. Thus, only the user that
+        is the actual ORIGINAL BAN ADDER(i.e., also the profile owner). Otherwise, it cannot. Thus, only the user that
         has actually banned a user, can also delete the ban, whenever it wants. 
       responses:
         '204': {$ref : '#/components/responses/NoContent'}
@@ -817,11 +818,11 @@ paths:
   ### USER's FOLLOWERS COLLECTION #
 
   #Followers set: (Set of people that are following this account)
-  /users/{fixedUsername}/followers:
+  /users/{username}/followers:
     summary: Username's Followers Collection (people who are following me).
     parameters: 
-      #I need to provide for a fixedUsername for the person I want to know the followers.
-      - $ref : "#/components/parameters/fixedUsername"
+      #I need to provide for a username for the person I want to know the followers.
+      - $ref : "#/components/parameters/username"
 
     #Getting the set of Followers.
     get:
@@ -832,12 +833,10 @@ paths:
       summary: Get the Followers.
       description: |
         HOW IT WORKS:
-        Return the list of the Followers of a given fixedUsername, given also the fixedUsername of the 
-        person that is requesting the action. The list should be sorted w.r.t. the reverse
-        chronological order.  
+        Return the list of the Followers of a given username.
         
         RETURN:
-        The returned value is an array of follow objects.
+        The returned value is an array of usernames objects.
         
         RESTRICTIONS:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
@@ -863,11 +862,11 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  /users/{fixedUsername}/followings:
+  /users/{username}/followings:
     summary: Username's Followings Collection (people I am following).
     parameters: 
-      #I need to provide for a fixedUsername of the account owner.
-      - $ref : "#/components/parameters/fixedUsername"
+      #I need to provide for a username of the account owner.
+      - $ref : "#/components/parameters/username"
 
     #Getting the set of Followed People.
     get:
@@ -879,12 +878,11 @@ paths:
       description: |
         HOW IT WORKS:
         Return the list of the Following Users, given a username of the person I want to 
-        know the Following Users. The list should be sorted w.r.t. the reverse chronological
-        order. Also here, we request for authentication of the user that wants to perform this
-        action. 
+        know the Following Users. 
+        Also here, we request for authentication of the user that wants to perform this action. 
         
         RETURN:
-        The returned value is an array of Follow objects.
+        The returned value is an array of usernames.
         
         RESTRICTIONS:
         Note that this action is allowed not to EVERY USER. Indeed, we can all see the 
@@ -911,12 +909,12 @@ paths:
     
 
     
-  /users/{fixedUsername}/followings/{followingid}:
+  /users/{username}/followings/{usernameFollowing}:
     summary: Specific User's Ban.
-    #I need to provide for the fixedUsername, and followID(username).
+    #I need to provide for the username, and followID(username).
     parameters:
-    - $ref: "#/components/parameters/fixedUsername"
-    - $ref: "#/components/parameters/followingid"
+    - $ref: "#/components/parameters/username"
+    - $ref: "#/components/parameters/usernameFollowing"
     
     #Adding a new Follow.
     put:
@@ -931,15 +929,14 @@ paths:
         in the request body, add this last one on the collection of following users.
         Also here, we request for authentication of the user that wants to perform this action. 
         
+        
         RETURN:
-        It will then return back in output the followid(username of the account started to be
-        followed) iff successful.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
-        Note that this action is allowed to ONLY users that are of course authenticated, meaning 
-        that the actual fixedUsername must be the fixedUsername of the username passed in input. Moreover, in the 
-        Request Body, obviously, we cannot pass a username that is equal to the username in the 
-        path, since I cannot follow my own profile (or better, it does not make any sense).
+        Note that this action is allowed to ONLY users that are of course authenticated.
+        Note that username and usernameFollowing should be diverse. 
+       
 
       responses:
 
@@ -960,11 +957,11 @@ paths:
       summary: Remove a User Follow.
       description: |
         HOW IT WORKS:
-        Remove a follow from the account fixedUsername given the followid(i.e. the username of
+        Remove a follow from the account username given the usernameFollowing(i.e. the username of
         the person that I was following). 
         
         RETURN:
-        Return the followid(username of the person I was following) iff successful deletion.
+        Return nothing, or better, only HTTP Codes.
         
         RESTRICTIONS:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
@@ -972,22 +969,22 @@ paths:
         is the actual ORIGINAL FOLLOW ADDER. Otherwise, it cannot. Thus, only the user that
         has actually followed a user, can also delete it, whenever it wants. This means that 
         the user that performs this action should be on its own profile.
+
       responses:
-        "204": {description: OK! User Follow deleted successfully!}
+        '204': {$ref : '#/components/responses/NoContent'}
 
         '400': {$ref : '#/components/responses/BadRequest'}
           
         '403': {$ref : '#/components/responses/UnAuthorized'}
 
-
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  /users/{fixedUsername}/myStream:
+  /users/{username}/myStream:
     summary: Username's Stream (initial home of Instagram where there are last posts).
     parameters: 
       #I need to provide for a username of the person for which I want to know the stream.
-      - $ref : '#/components/parameters/fixedUsername'
+      - $ref : '#/components/parameters/username'
 
     #Getting the stream of an account.
     get:
@@ -1008,7 +1005,8 @@ paths:
         
         RESTRICTIONS:
         Note that this action is allowed NOT to EVERY USER. Indeed, this is only allowed to
-        the owner of the profile, meaning that, only if fixedUsername and the fixedUsername of the person who is requesting this action coincide.
+        the owner of the profile, meaning that, only if username who is requesting this action 
+        is the profile owner.
       responses:
         '200':
           description: List of Photo Object of people I am following.
@@ -1022,11 +1020,11 @@ paths:
                 items: { $ref: "#/components/schemas/photo" }
         
         '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
         
         '403': {$ref : '#/components/responses/UnAuthorized'}
         
-        '404': {$ref : '#/components/responses/NotFound'}
-
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
@@ -1252,6 +1250,14 @@ components:
       maxLength: 2147483647
       example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
     
+    fileNamePath:
+      title: filename
+      type: string
+      description: Actual Photo path saved in the "./photos" folder locally. 
+      minLength: 5 
+      maxLength: 100
+      example: "./service/api/photos/u1-photo-1.jpeg"
+    
     uploadDate:
       title: uploadDate
       type: string
@@ -1298,8 +1304,8 @@ components:
       properties:
         photoid:
           $ref: "#/components/schemas/photoid"
-        fileName:
-          $ref: "#/components/schemas/fileName"
+        fileNamePath:
+          $ref: "#/components/schemas/fileNamePath"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
         phrase: 
@@ -1309,6 +1315,19 @@ components:
         numberComments:
           $ref: "#/components/schemas/numberComments"
     
+    photoInput:
+      title: photoInput
+      type: object
+      description: |-
+        This object represents the input that the User insert when it has to upload 
+        a photo (photo, phrase).
+      properties:
+        fileName:
+          $ref: "#/components/schemas/fileName"
+        phrase:
+          $ref: "#/components/schemas/phrase"
+        
+
     ### SCHEMAS FOR ../COMMENTS #
     commentid:
       title: commentID
@@ -1374,13 +1393,13 @@ components:
   ##### PARAMETERS ##
   parameters:
     ### USER PARAMETERS#
-    fixedUsername:
-      name: fixedUsername
+    username:
+      name: username
       in: path
       required: true
       description: |
-        (Immutable Username)Action requested on the following fixedUsername.
-      schema: {$ref: "#/components/schemas/fixedUsername"}
+        (Username)Action requested on the following username.
+      schema: {$ref: "#/components/schemas/username"}
     
     ### PHOTO PARAMETERS #
     photoid:
@@ -1391,20 +1410,20 @@ components:
       schema: {$ref: '#/components/schemas/photoid'}
         
     ### LIKE PARAMETERS #
-    fixedUsernameLiker:
-          name: fixedUsernameLiker
-          in: path
-          required: true
-          description: Like Action requested by the following fixedUsername.
-          schema: {$ref: "#/components/schemas/fixedUsername"}
-      
-    ### BAN PARAMETERS #
-    banid:
-      name: banid
+    usernameLiker:
+      name: usernameLiker
       in: path
       required: true
-      description: BanID coinciding with the banned fixedUsername.
-      schema: {$ref: '#/components/schemas/fixedUsername'}
+      description: Like Action requested by the following username.
+      schema: {$ref: "#/components/schemas/username"}
+      
+    ### BAN PARAMETERS #
+    usernameBanned:
+      name: usernameBanned
+      in: path
+      required: true
+      description: usernameBanned coinciding with the banned username.
+      schema: {$ref: '#/components/schemas/username'}
       
 
     ### PHOTO-FEAUTURES PARAMETERS #
@@ -1416,12 +1435,12 @@ components:
       schema: {$ref: '#/components/schemas/commentid'}
         
     ### FOLLOWER-RELATED PARAMETERS #
-    followingid:
-      name: followingid
+    usernameFollowing:
+      name: usernameFollowing
       in: path
       required: true
-      description: Followingid coinciding with the following Username.
-      schema: {$ref: '#/components/schemas/fixedUsername'}
+      description: usernameFollowing coinciding with the following Username.
+      schema: {$ref: '#/components/schemas/username'}
     
 
   ##### SECURITY SCHEMES ##
