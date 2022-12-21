@@ -68,7 +68,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Retrieve the photo from the Multipart-Form-Data.
 	photo_body, header, errForm := r.FormFile("filename")
-	if errForm != nil {
+	if !errors.Is(errForm, nil) {
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: Error encountered during the photo retrieval.")
 		return
@@ -99,7 +99,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Starting to point the photo.
 	_, errSeek := photo_body.Seek(0, io.SeekStart)
-	if errSeek != nil {
+	if !errors.Is(errSeek, nil) {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(errSeek).Error("Err: Error encountered during the photo seeking!")
 		return
@@ -142,7 +142,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
 
 	// Creation of a Photo and values assignment.
-	// fmt.Println(photoid, fixedUsername, photo_url, phrase)
 	var newPhoto Photo
 	newPhoto.Photoid = photoid
 	newPhoto.FixedUsername = fixedUsername
