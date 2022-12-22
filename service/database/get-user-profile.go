@@ -76,7 +76,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		// If we arrive here, the user is not Banned and we can retrieve all the Profile Data from the DB.
 		err := db.c.QueryRow(`SELECT *
 							FROM Users
-							WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
+							WHERE username == ?`, username).Scan(&user.FixedUsername, &user.Uuid, &user.Username, &user.PhotoProfile, &user.Biography, &user.DateOfCreation, &user.NumberOfPhotos, &user.NumberFollowers, &user.NumberFollowing, &user.Name, &user.Surname, &user.DateOfBirth, &user.Email, &user.Nationality, &user.Gender)
 
 		// Check for the error during the Query.
 		if err != nil {

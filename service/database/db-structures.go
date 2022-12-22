@@ -10,6 +10,7 @@ type User struct {
 	FixedUsername   string // Primary Key (PK).
 	Uuid            string
 	Username        string
+	PhotoProfile    string
 	Biography       string // Optional
 	DateOfCreation  string
 	NumberOfPhotos  int64

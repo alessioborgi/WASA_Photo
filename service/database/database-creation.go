@@ -11,6 +11,7 @@ const user_table = `CREATE TABLE IF NOT EXISTS Users (
 	fixedUsername TEXT PRIMARY KEY, 
 	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
+	photoProfile TEXT,
 	biography TEXT,
 	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,

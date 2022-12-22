@@ -1,10 +1,13 @@
 package api
 
 import (
-	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
@@ -59,21 +62,100 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	// If we arrive here, a non-empty Username has been requested to be updated.
-	// Let's therefore take the json from the body in order to see what is the newUsername.
+	// Retrieve the photo from the Multipart-Form-Data.
+	photo_body, header, errForm := r.FormFile("photoProfile")
+	if !errors.Is(errForm, nil) {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: Error encountered during the photo retrieval.")
+		return
+	}
+
+	// If I arrive here, I have correctly retrieved the photo and I can proceed on saving it.
+	defer photo_body.Close()
+
+	// Make a new Photo buffer.
+	photo_buffer := make([]byte, 512)
+
+	// Read the Photo.
+	_, errBody := photo_body.Read(photo_buffer)
+
+	if !errors.Is(errBody, nil) {
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errBody).Error("Err: Error encountered during the photo reading!")
+		return
+	}
+
+	// Check if the provided type of photo is valid.
+	file_type := http.DetectContentType(photo_buffer)
+	if file_type != "image/jpeg" && file_type != "image/png" && file_type != "image/jpg" {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The image type is not one that is accepted!")
+		return
+	}
+
+	// Starting to point the photo.
+	_, errSeek := photo_body.Seek(0, io.SeekStart)
+	if !errors.Is(errSeek, nil) {
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errSeek).Error("Err: Error encountered during the photo seeking!")
+		return
+	}
+
+	// Getting the fixedUsername of the Username.
+	fixedUsername, errFixedUsername := rt.db.CheckUserPresence(username.Name)
+	if errors.Is(errFixedUsername, database.ErrUserDoesNotExist) {
+
+		// The Username I am trying to get is not present in the DB.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Photo Insertion cannot be done because it has received a not valid Username.")
+		return
+	} else if !errors.Is(errFixedUsername, nil) && !errors.Is(errFixedUsername, database.Okay_Error_Inverse) {
+
+		// I got an error on getting the last fixedUsername.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errFixedUsername).Error("Err: Err: The Photo Insertion cannot be done because it has encountered a strange problem")
+		return
+	}
+
+	// Getting the last photo id.
+	photoid, errPhotoId := rt.db.GetLastPhotoId(username.Name)
+	if !errors.Is(errPhotoId, nil) {
+
+		// I got an error on getting the last photoid.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errPhotoId).Error("Err: I got an error on getting back the last photoId!")
+		return
+	}
+
+	// Getting the Rest of Values from the MultipartFormData.
+	newUsername := r.FormValue("username")
+	biography := r.FormValue("biography")
+	name := r.FormValue("name")
+	surname := r.FormValue("surname")
+	dateOfBirth := r.FormValue("dateOfBirth")
+	email := r.FormValue("email")
+	nationality := r.FormValue("nationality")
+	gender := r.FormValue("gender")
+
+	// If I arrive here is all Ok. I can proceed to build up the path.
+	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
+	log.Println("The photo name is: ", photo_path)
+
+	// Creatio of the Path URL.
+	// photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
+	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 
 	// Read the new content for the User from the request body.
 	var newUser User
-
-	// Getting the Username from the JSON.
-	errBody := json.NewDecoder(r.Body).Decode(&newUser)
-
-	if !errors.Is(errBody, nil) {
-
-		// The body was not a parseable JSON, reject it.
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Body was not a Parseable JSON!")
-		return
-	}
+	newUser.Username = newUsername
+	newUser.PhotoProfile = path
+	newUser.Biography = biography
+	newUser.Name = name
+	newUser.Surname = surname
+	newUser.DateOfBirth = Date(dateOfBirth)
+	newUser.Email = Email(email)
+	newUser.Nationality = nationality
+	newUser.Gender = Gender(gender)
 
 	// Check whether we have that the newUsername inserted respect its Regex.
 	if !newUser.ValidUser() {
@@ -119,6 +201,35 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	} else {
 
 		// If we arrive here, it means that the Username, has been correctly updated.
+
+		// I can therefore also save the PhotoProfile in local.
+		// Saving the photo in the Folder.
+		f, errPathCreation := os.Create(path)
+
+		if !errors.Is(errPathCreation, nil) {
+
+			// I got an error on creating the path.
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(errPathCreation).Error("Err: I got an error on Creating the path to the Image!")
+			return
+		}
+
+		// If I arrive here, i have created the Path correctly.
+		log.Println("Path created correctly!")
+
+		// I can copy the photo.
+		defer f.Close()
+		_, errSaving := io.Copy(f, photo_body)
+
+		if !errors.Is(errSaving, nil) {
+
+			// I got an error on saving the Image.
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(errSaving).Error("Err: I got an error on Saving the Image!")
+			return
+		}
+
+		// Set the result to NoContent if no error occurs.
 		w.WriteHeader(http.StatusNoContent)
 		log.Println("The User has been correctly Updated!")
 	}

@@ -59,8 +59,8 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 		log.Println("The User is Authorized to change its own Profile Information.")
 
 		// Perform the Update of the User.
-		_, errUpdate := db.c.Exec(`UPDATE Users SET username=?, biography=?, name=?, surname=?, dateOfBirth=?, email=?, nationality=?, gender=? WHERE fixedUsername=?`,
-			user.Username, user.Biography, user.Name, user.Surname, user.DateOfBirth, user.Email, user.Nationality, user.Gender, fixedUsername)
+		_, errUpdate := db.c.Exec(`UPDATE Users SET username=?, photoProfile=?, biography=?, name=?, surname=?, dateOfBirth=?, email=?, nationality=?, gender=? WHERE fixedUsername=?`,
+			user.Username, user.PhotoProfile, user.Biography, user.Name, user.Surname, user.DateOfBirth, user.Email, user.Nationality, user.Gender, fixedUsername)
 
 		// Check if some strage error occurred during the update.
 		if !errors.Is(errUpdate, nil) {

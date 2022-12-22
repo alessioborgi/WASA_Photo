@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
@@ -60,6 +61,51 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// If we arrive here, a non-empty and respecting-regex Username has been requested to be deleted.
 
+	// First of proceedeing with deleting the User, we get the list of its photos, in such a way to delete all its photos saved in local.
+	// Getting the list of photos.
+	photoListDB, errGetPhotos := rt.db.GetPhotos(username, authorization_token)
+	if errors.Is(errGetPhotos, database.ErrUserDoesNotExist) {
+
+		// In this case, we have that the Username that was requested to get the list of photos, is not in the WASAPhoto Platform.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The Username that was requested to get the list of photos, is not a WASAPhoto User.")
+		return
+	} else if errors.Is(errGetPhotos, database.ErrUserNotAuthorized) {
+
+		// In this case, we have that the Uuid is not the same as the Profile Owner and that is has been banned, thus it cannot proceed.
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Uuid that requested to get the Followings List has been banned by the Username.")
+		return
+	} else if errors.Is(errGetPhotos, database.ErrNoContent) {
+
+		// In this case we have no Username in the list of Followings Usernames.
+		w.WriteHeader(http.StatusNoContent)
+		log.Println("There is no Photos for this Username.")
+		return
+	} else if !errors.Is(errGetPhotos, nil) {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+		// the Username of the User that triggered the error.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errGetPhotos).WithField("username", username).Error("User not present in WASAPhoto. Can't get the list of Followings.")
+		return
+	}
+
+	// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
+	var photoList []Photo
+	for i := 0; i < len(photoListDB); i++ {
+		var photo Photo
+		errPhoto := photo.FromDatabase(photoListDB[i], rt.db)
+		if !errors.Is(errPhoto, nil) {
+			ctx.Logger.WithError(errPhoto).Error("error: can't map photo from database to API")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		photoList = append(photoList, photo)
+	}
+
+	// If we arrive here, we can proceed deleting the User.
+
 	// Call the DB action and wait for its response.
 	err := rt.db.DeleteUser(username, authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
@@ -84,7 +130,23 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	// If we arrive here, it means that the User Profile, has been correctly eliminated.
+	// If we arrive here, we correclty deleted the User, and all its dependencies from the DB. We just left with deleting the photos saved in local.
+	// Getting the photoName from the filename gived back from the DB.
+	for i := 0; i < len(photoList); i++ {
+
+		// Proceed in the photo Deletion also in the Photos.
+		e := os.Remove(photoList[i].Filename)
+		if !errors.Is(e, nil) {
+
+			// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+			// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+			// the Username of the User that triggered the error.
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(err).WithField("Photo", i).Error("Err: Can't delete photoId of Username from the Folder!")
+		}
+	}
+
+	// If we arrive here, it means that the User Profile, has been correctly eliminated, included its Photos saved in Local.
 	w.WriteHeader(http.StatusNoContent)
 	log.Println("The username has been correctly Deleted!")
 }
