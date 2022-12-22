@@ -50,7 +50,7 @@ tags:
 
 paths:
 
-  /session: 
+  /session/: 
     summary: This is the Initial Login part.
     
     #Login Part
@@ -100,7 +100,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
   
   ### PARTICULAR USER: #
-  /users:
+  /users/:
     summary: Users Collection
 
     get:
@@ -288,7 +288,7 @@ paths:
   #However, I have decided to go for the more straightforward way. 
 
   ### USER's PHOTO COLLECTION #
-  /users/{username}/photos:
+  /users/{username}/photos/:
     summary: User's Photos Collection.
     parameters: 
       #I need to provide for a username.
@@ -450,7 +450,7 @@ paths:
   ### USER's PHOTO COMMENTS COLLECTION #
 
   #Comments Set.
-  /users/{username}/photos/{photoid}/comments:
+  /users/{username}/photos/{photoid}/comments/:
     summary: Photo's Comments Collection.
     parameters: 
       #I need to provide for a Photo's Owner and a Photo's photoid.
@@ -579,7 +579,7 @@ paths:
   ### PHOTO LIKES #
 
   #Likes Set.
-  /users/{username}/photos/{photoid}/likes:
+  /users/{username}/photos/{photoid}/likes/:
     summary: Photo's Likes Collection.
     parameters: 
       #I need to provide for a Photo's owner fixedUsername, a photo's photoid.
@@ -710,7 +710,7 @@ paths:
   ### USER's BANS COLLECTION: #
 
   #Bans Set:
-  /users/{username}/bans:
+  /users/{username}/bans/:
     summary: Username's Banned Users Collection.
     parameters: 
       #I need to provide for a fixedUsername.
@@ -828,7 +828,7 @@ paths:
   ### USER's FOLLOWERS COLLECTION #
 
   #Followers set: (Set of people that are following this account)
-  /users/{username}/followers:
+  /users/{username}/followers/:
     summary: Username's Followers Collection (people who are following me).
     parameters: 
       #I need to provide for a username for the person I want to know the followers.
@@ -872,7 +872,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  /users/{username}/followings:
+  /users/{username}/followings/:
     summary: Username's Followings Collection (people I am following).
     parameters: 
       #I need to provide for a username of the account owner.
@@ -990,7 +990,7 @@ paths:
         '500': {$ref : '#/components/responses/InternalServerError'}
 
 
-  /users/{username}/myStream:
+  /users/{username}/myStream/:
     summary: Username's Stream (initial home of Instagram where there are last posts).
     parameters: 
       #I need to provide for a username of the person for which I want to know the stream.
@@ -1258,6 +1258,7 @@ components:
       format: binary
       minLength: 73 
       maxLength: 2147483647
+      pattern: ^.*$
       example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
     
     fileNamePath:
