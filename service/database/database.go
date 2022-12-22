@@ -296,7 +296,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 		// If no user is in the Users Table, go beyond and add the Admin User Profile(alessioborgi01) and others.
 		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u18", "18181818-1818-1818-1818-181818181818", "TipoTimido", "I am Rosalinda Bros", now, 0, 0, 0, "Rosalinda", "Bros", "2000-01-01", "rosalinda.1952442@studenti.uniroma1.it", "Italian", "female")
+			"u18", "18181818-1818-1818-1818-181818181818", "Rosalinda", "I am Rosalinda Bros", now, 0, 0, 0, "Rosalinda", "Bros", "2000-01-01", "rosalinda.1952442@studenti.uniroma1.it", "Italian", "female")
 		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			"u17", "17171717-1717-1717-1717-171717171717", "Peach", "I am Peach Bros", now, 0, 0, 0, "Peach", "Bros", "2000-01-01", "peach.1952442@studenti.uniroma1.it", "Italian", "female")
 		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
