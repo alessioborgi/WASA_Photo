@@ -77,7 +77,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhoto))
 
 	// Register the getPhotoView API.
-	// // rt.router.GET("/users/:username/photos/:photoid", rt.wrap(rt.getPhotoView))
+	rt.router.GET("/users/:username/photos/:photoid/view", rt.wrap(rt.getPhotoView))
 
 	// Register the getPhotoComments API.
 	rt.router.GET("/users/:username/photos/:photoid/comments/", rt.wrap(rt.getPhotoComments))

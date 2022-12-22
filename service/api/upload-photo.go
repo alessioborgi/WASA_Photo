@@ -140,13 +140,14 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	log.Println("The photo name is: ", photo_path)
 
 	// Creatio of the Path URL.
-	photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
+	// photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
+	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 
 	// Creation of a Photo and values assignment.
 	var newPhoto Photo
 	newPhoto.Photoid = photoid
 	newPhoto.FixedUsername = fixedUsername
-	newPhoto.Filename = photo_url
+	newPhoto.Filename = path
 	newPhoto.Phrase = phrase
 
 	// Check whether we have that the newPhoto inserted respect its Regex.
@@ -163,7 +164,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	log.Println("The NewUser received has passed the Validation Process.")
 
 	// Saving the photo in the Folder.
-	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 	f, errPathCreation := os.Create(path)
 
 	if !errors.Is(errPathCreation, nil) {

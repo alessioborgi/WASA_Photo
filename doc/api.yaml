@@ -446,6 +446,45 @@ paths:
         
         '500': {$ref : '#/components/responses/InternalServerError'}
 
+  #Particular Photo
+  /users/{username}/photos/{photoid}/view:
+    summary: Specific User Profile's photo.
+    parameters:
+    - $ref: "#/components/parameters/username"
+    - $ref: "#/components/parameters/photoid"
+
+    get:
+      security:
+        - bearerAuthentication: []
+      operationId: getPhotoView
+      tags: ["Photo-Uploading"]
+      summary: Return only the User Photo.
+      description: |
+        HOW IT WORKS:
+        Return only the current User Photo given in input the Username and the photo id. Also here, 
+        we request for authentication of the user that wants to perform this action. 
+        
+        RETURN:
+        The returned value is the requested User's Photo object. 
+        
+        RESTRICTIONS:
+        Note that this action is allowed NOT to EVERY USER. Indeed, you can retrieve the user's photo
+        iff this has not banned you.
+      responses:
+        '200':
+          description: Ok! User's Photo Returned Successfully!.
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/file"}
+
+        '204': {$ref : '#/components/responses/NoContent'}
+
+        '400': {$ref : '#/components/responses/BadRequest'}
+        
+        '403': {$ref : '#/components/responses/UnAuthorized'}
+        
+        '500': {$ref : '#/components/responses/InternalServerError'}
+
 
   ### USER's PHOTO COMMENTS COLLECTION #
 
@@ -1250,8 +1289,8 @@ components:
       readOnly: true
       example: 1
     
-    fileName:
-      title: filename
+    file:
+      title: file
       type: string
       description: |-
         Actual Photo to be uploaded. 
@@ -1261,8 +1300,8 @@ components:
       pattern: ^.*$
       example: "000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111000111100111111110000000000011111111111"
     
-    fileNamePath:
-      title: filename
+    filenamePath:
+      title: filenamePath
       type: string
       description: Actual Photo path saved in the "./photos" folder locally. 
       minLength: 5 
@@ -1316,8 +1355,8 @@ components:
       properties:
         photoid:
           $ref: "#/components/schemas/photoid"
-        fileNamePath:
-          $ref: "#/components/schemas/fileNamePath"
+        filenamePath:
+          $ref: "#/components/schemas/filenamePath"
         uploadDate:
           $ref: "#/components/schemas/uploadDate"
         phrase: 
@@ -1334,8 +1373,8 @@ components:
         This object represents the input that the User insert when it has to upload 
         a photo (photo, phrase).
       properties:
-        fileName:
-          $ref: "#/components/schemas/fileName"
+        file:
+          $ref: "#/components/schemas/file"
         phrase:
           $ref: "#/components/schemas/phrase"
         
