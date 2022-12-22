@@ -216,22 +216,22 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	// Used to Turn On the foreign Key Mechanism.
-	_, err1 := db.Exec(turn_on_fk)
-	if !errors.Is(err1, nil) {
-		log.Println("Error Encountered during the FK Turning on")
-	} else {
-		log.Println("FK correctly Turned On.")
-	}
+	// _, err1 := db.Exec(turn_on_fk)
+	// if !errors.Is(err1, nil) {
+	// 	log.Println("Error Encountered during the FK Turning on")
+	// } else {
+	// 	log.Println("FK correctly Turned On.")
+	// }
 
 	// This code is only used during development if we do some change on the database schema.
-	// for i := 0; i < len(delete_tables); i++ {
-	// 	_, err := db.Exec(delete_tables[i])
-	// 	if !errors.Is(err, nil) {
-	// 		log.Println("Error Encountered during the Table Deletion", i)
-	// 	} else {
-	// 		log.Println("Table", i, "deleted correctly.")
-	// 	}
-	// }
+	for i := 0; i < len(delete_tables); i++ {
+		_, err := db.Exec(delete_tables[i])
+		if !errors.Is(err, nil) {
+			log.Println("Error Encountered during the Table Deletion", i)
+		} else {
+			log.Println("Table", i, "deleted correctly.")
+		}
+	}
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
@@ -295,43 +295,43 @@ func New(db *sql.DB) (AppDatabase, error) {
 	} else if exists == 0 {
 
 		// If no user is in the Users Table, go beyond and add the Admin User Profile(alessioborgi01) and others.
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u18", "18181818-1818-1818-1818-181818181818", "Rosalinda", "I am Rosalinda Bros", now, 0, 0, 0, "Rosalinda", "Bros", "2000-01-01", "rosalinda.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u17", "17171717-1717-1717-1717-171717171717", "Peach", "I am Peach Bros", now, 0, 0, 0, "Peach", "Bros", "2000-01-01", "peach.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u16", "16161616-1616-1616-1616-161616161616", "Yoshi", "I am Yoshi Bros", now, 0, 0, 0, "Yoshi", "Bros", "2000-01-01", "yoshi.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u15", "15151515-1515-1515-1515-151515151515", "Toad", "I am Toad Kong", now, 0, 0, 0, "Toad", "Bros", "2000-01-01", "toad.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u14", "14141414-1414-1414-1414-141414141414", "TipoTimido", "I am Tipo Timido", now, 0, 0, 0, "Tipo", "Timido", "2000-01-01", "tipo.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u13", "13131313-1313-1313-1313-131313131313", "Lakitu", "I am Lakitu Bros", now, 0, 0, 0, "Lakitu", "Bros", "2000-01-01", "lakitu.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u12", "12121212-1212-1212-1212-121212121212", "Koopa", "I am Koopa Bros", now, 0, 0, 0, "Koopa", "Bros", "2000-01-01", "koopa.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u11", "10101010-1010-1010-1010-101010101010", "DonkeyKong", "I am Donkey Kong", now, 0, 0, 0, "Donkey", "Kong", "2000-01-01", "donkey.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u10", "99999999-9999-9999-9999-9999999999999999", "Bowser", "I am Bowser Bros", now, 0, 0, 0, "Bowser", "Bros", "2000-01-01", "bowser.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u9", "88888888-8888-8888-8888-888888888888", "Wario", "I am Wario Bros", now, 0, 0, 0, "Wario", "Bros", "2000-01-01", "wario.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u8", "77777777-7777-7777-7777-777777777777", "Luigi", "I am Luigi Bros", now, 0, 0, 0, "Luigi", "Bros", "2000-01-01", "luigi.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u7", "66666666-6666-6666-6666-666666666666", "Mario", "I am Mario Bros", now, 0, 0, 0, "Mario", "Bros", "2000-01-01", "mario.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u18", "18181818-1818-1818-1818-181818181818", "Rosalinda", "./service/api/photos/Profile-Already-Created/u18-photo-0.jpg", "I am Rosalinda Bros", now, 0, 0, 0, "Rosalinda", "Bros", "2000-01-01", "rosalinda.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u17", "17171717-1717-1717-1717-171717171717", "Peach", "./service/api/photos/Profile-Already-Created/u17-photo-0.png", "I am Peach Bros", now, 0, 0, 0, "Peach", "Bros", "2000-01-01", "peach.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u16", "16161616-1616-1616-1616-161616161616", "Yoshi", "./service/api/photos/Profile-Already-Created/u16-photo-0.png", "I am Yoshi Bros", now, 0, 0, 0, "Yoshi", "Bros", "2000-01-01", "yoshi.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u15", "15151515-1515-1515-1515-151515151515", "Toad", "./service/api/photos/Profile-Already-Created/u15-photo-0.jpg", "I am Toad Kong", now, 0, 0, 0, "Toad", "Bros", "2000-01-01", "toad.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u14", "14141414-1414-1414-1414-141414141414", "TipoTimido", "./service/api/photos/Profile-Already-Created/u14-photo-0.png", "I am Tipo Timido", now, 0, 0, 0, "Tipo", "Timido", "2000-01-01", "tipo.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u13", "13131313-1313-1313-1313-131313131313", "Lakitu", "./service/api/photos/Profile-Already-Created/u13-photo-0.jpeg", "I am Lakitu Bros", now, 0, 0, 0, "Lakitu", "Bros", "2000-01-01", "lakitu.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u12", "12121212-1212-1212-1212-121212121212", "Koopa", "./service/api/photos/Profile-Already-Created/u12-photo-0.jpeg", "I am Koopa Bros", now, 0, 0, 0, "Koopa", "Bros", "2000-01-01", "koopa.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u11", "10101010-1010-1010-1010-101010101010", "DonkeyKong", "./service/api/photos/Profile-Already-Created/u11-photo-0.jpeg", "I am Donkey Kong", now, 0, 0, 0, "Donkey", "Kong", "2000-01-01", "donkey.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u10", "99999999-9999-9999-9999-9999999999999999", "Bowser", "./service/api/photos/Profile-Already-Created/u10-photo-0.jpg", "I am Bowser Bros", now, 0, 0, 0, "Bowser", "Bros", "2000-01-01", "bowser.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u9", "88888888-8888-8888-8888-888888888888", "Wario", "./service/api/photos/Profile-Already-Created/u9-photo-0.jpeg", "I am Wario Bros", now, 0, 0, 0, "Wario", "Bros", "2000-01-01", "wario.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u8", "77777777-7777-7777-7777-777777777777", "Luigi", "./service/api/photos/Profile-Already-Created/u8-photo-0.png", "I am Luigi Bros", now, 0, 0, 0, "Luigi", "Bros", "2000-01-01", "luigi.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u7", "66666666-6666-6666-6666-666666666666", "Mario", "./service/api/photos/Profile-Already-Created/u7-photo-0.jpg", "I am Mario Bros", now, 0, 0, 0, "Mario", "Bros", "2000-01-01", "mario.1952442@studenti.uniroma1.it", "Italian", "male")
 
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u6", "55555555-5555-5555-5555-555555555555", "samantha01", "I am the WASAPhoto Owner's Girlfriend", now, 0, 0, 0, "Samantha", "Sorrentino", "2001-10-26", "samantha.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u5", "44444444-4444-4444-4444-444444444444", "aurora46", "I am the WASAPhoto Owner's Grandma", now, 0, 0, 0, "Aurora", "Melis", "1946-08-27", "aurora.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u4", "33333333-3333-3333-3333-333333333333", "alice05", "I am the WASAPhoto Owner's Sister", now, 0, 0, 0, "Alice", "Borgi", "2005-12-16", "alice.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u3", "22222222-2222-2222-2222-222222222222", "andrea71", "I am the WASAPhoto Owner's Dad", now, 0, 0, 0, "Andrea", "Borgi", "1971-09-06", "andrea.1952442@studenti.uniroma1.it", "Italian", "male")
-		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u2", "11111111-1111-1111-1111-111111111111", "anna69", "I am the WASAPhoto Owner's Mum", now, 0, 0, 0, "Anna", "Mauti", "1969-07-29", "anna.1952442@studenti.uniroma1.it", "Italian", "female")
-		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "I am the WASAPhoto Owner", now, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u6", "55555555-5555-5555-5555-555555555555", "samantha01", "./service/api/photos/Profile-Already-Created/No-Picture-Available.png", "I am the WASAPhoto Owner's Girlfriend", now, 0, 0, 0, "Samantha", "Sorrentino", "2001-10-26", "samantha.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u5", "44444444-4444-4444-4444-444444444444", "aurora46", "./service/api/photos/Profile-Already-Created/No-Picture-Available.png", "I am the WASAPhoto Owner's Grandma", now, 0, 0, 0, "Aurora", "Melis", "1946-08-27", "aurora.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u4", "33333333-3333-3333-3333-333333333333", "alice05", "./service/api/photos/Profile-Already-Created/No-Picture-Available.png", "I am the WASAPhoto Owner's Sister", now, 0, 0, 0, "Alice", "Borgi", "2005-12-16", "alice.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u3", "22222222-2222-2222-2222-222222222222", "andrea71", "./service/api/photos/Profile-Already-Created/No-Picture-Available.png", "I am the WASAPhoto Owner's Dad", now, 0, 0, 0, "Andrea", "Borgi", "1971-09-06", "andrea.1952442@studenti.uniroma1.it", "Italian", "male")
+		_, _ = db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u2", "11111111-1111-1111-1111-111111111111", "anna69", "./service/api/photos/Profile-Already-Created/No-Picture-Available.png", "I am the WASAPhoto Owner's Mum", now, 0, 0, 0, "Anna", "Mauti", "1969-07-29", "anna.1952442@studenti.uniroma1.it", "Italian", "female")
+		_, errCretion := db.Exec(`INSERT INTO Users (fixedUsername, uuid, username, photoProfile, biography, dateOfCreation, numberOfPhotos, numberFollowers, numberFollowing, name, surname, dateOfBirth, email, nationality, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			"u1", "00000000-0000-0000-0000-000000000000", "alessioborgi01", "./service/api/photos/Profile-Already-Created/u1-photo-0.jpg", "I am the WASAPhoto Owner", now, 0, 0, 0, "Alessio", "Borgi", "2001-04-17", "borgi.1952442@studenti.uniroma1.it", "Italian", "male")
 
 		if !errors.Is(errCretion, nil) {
 			log.Fatalf("Error During Alessio's Account Creation")

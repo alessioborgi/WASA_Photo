@@ -200,9 +200,10 @@ paths:
         Note that this action is allowed to NOT EVERY USER. Indeed, this means that the 
         change of Username can be done by ONLY the user that is the Profile Owner. 
         Otherwise, it cannot. 
+      
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema: {$ref: "#/components/schemas/userProfile"}
 
       responses:
@@ -1255,6 +1256,8 @@ components:
           $ref: "#/components/schemas/fixedUsername"
         username: 
           $ref: "#/components/schemas/username"
+        photoProfile:
+          $ref: "#/components/schemas/filenamePath"
         biography:
           $ref: "#/components/schemas/biography"
         dateOfCreation:

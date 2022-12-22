@@ -11,6 +11,7 @@ const user_table = `CREATE TABLE IF NOT EXISTS Users (
 	fixedUsername TEXT PRIMARY KEY, 
 	uuid TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
+	photoProfile TEXT,
 	biography TEXT,
 	dateOfCreation TEXT NOT NULL DEFAULT "0000-01-01T00:00:00Z",									
 	numberOfPhotos INTEGER NOT NULL DEFAULT 0,
@@ -212,14 +213,14 @@ var (
 )
 
 // Things to Remove DB
-// const (
-// 	delete_users    = `DROP TABLE Users;`
-// 	delete_bans     = `DROP TABLE Bans;`
-// 	delete_follows  = `DROP TABLE Follows;`
-// 	delete_photos   = `DROP TABLE Photos;`
-// 	delete_comments = `DROP TABLE Comments;`
-// 	delete_likes    = `DROP TABLE Likes;`
-// 	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
-// )
+const (
+	delete_users    = `DROP TABLE Users;`
+	delete_bans     = `DROP TABLE Bans;`
+	delete_follows  = `DROP TABLE Follows;`
+	delete_photos   = `DROP TABLE Photos;`
+	delete_comments = `DROP TABLE Comments;`
+	delete_likes    = `DROP TABLE Likes;`
+	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
+)
 
-// var delete_tables = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+var delete_tables = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}

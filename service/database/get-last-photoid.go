@@ -32,7 +32,7 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 
 		// If we have no rows, we return that the photoid must be 1
 		log.Println("No photos yet. Inserting First Photo!")
-		return 1, nil
+		return 0, nil
 	} else if !errors.Is(errPhotoId, nil) {
 
 		// If we encounter any other type of error, return error.
@@ -42,7 +42,7 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 
 		// If we arrive here we have that the photoid has been correclty retrieved. We can therefore return the photoid+1.
 		log.Println("photoid correctly retrieved from the Database.")
-		return int64(photoid_existence) + 1, nil
+		return int64(photoid_existence), nil
 	}
 
 }
