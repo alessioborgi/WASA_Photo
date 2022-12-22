@@ -88,7 +88,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	//We have read correctly the body too.
+	// We have read correctly the body too.
 	// We can therefore proceed in the Comment by calling the DB action and wait for its response.
 	commentid, err := rt.db.CommentPhoto(username.Name, photoid, comment.ToDatabase(rt.db), authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {

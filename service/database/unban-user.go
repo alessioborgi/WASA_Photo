@@ -89,7 +89,7 @@ func (db *appdbimpl) UnbanUser(username string, usernameBanned string, uuid stri
 	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
 	if authorization == NOTAUTHORIZED {
 
-		//If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		// If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
 		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
 		return ErrUserNotAuthorized
 	}

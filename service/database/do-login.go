@@ -37,7 +37,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		}
 	}
 
-	//Check then whether it is an error "ErrUserDoesNotExist".
+	// Check then whether it is an error "ErrUserDoesNotExist".
 	if errors.Is(errUserPresence, ErrUserDoesNotExist) {
 
 		// USER PROFILE CREATION:
@@ -71,8 +71,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		// The User has been Created successfully.
 		log.Println("User Creation Succeeded!")
 
-		// // If we arrive here, we have successfully created the User.
-		// log.Println("fixedUsername Update Succeeded")
+		// If we arrive here, we have successfully created the User.
 		return uuid.String(), Creation_Error_Inverse
 	}
 

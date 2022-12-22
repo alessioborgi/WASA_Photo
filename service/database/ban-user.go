@@ -8,8 +8,6 @@ import (
 func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string) error {
 
 	// Adding a User Ban.
-	//1) We have that the User can add the ban since the ban action has been requested by the profile owner's coinciding with the action requester.
-	//2) We have that the User cannot add the ban since the ban action has NOT been requested by the profile owner's coinciding with the action requester.
 	// Here, you have 4 options, stored in the "authorization" variable:
 	// 1) AUTHORIZED: The action requester is the Profile Owner. It can proceed to add the Ban only whether username and usernameBanned is not the same (we cannot self ban).
 	// 2) UNAUTHORIZED: The action requester is NOT the Profile Owner. It cannot Ban.
@@ -92,7 +90,7 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
 	if authorization == NOTAUTHORIZED {
 
-		//If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		// If the Use was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
 		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
 		return ErrUserNotAuthorized
 	}

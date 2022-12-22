@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/alessioborgi/WASA_Photo/service/database"
 )
@@ -31,10 +30,7 @@ var (
 	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
 	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
 	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
-	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) //Without February Check.
-
-	current_year, c_month, current_day = time.Now().Date()
-	current_month                      = int(c_month)
+	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) // Without February Check.
 )
 
 // Create a User structure.
@@ -70,24 +66,18 @@ func (uuid Uuid) ValidUuid(regex regexp.Regexp) bool {
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
-func (d Date) ValidDateofBirth() bool { //yyyy/mm/dd
-	date := strings.Split(string(d), "-") //here find the way to also include "/"
+func (d Date) ValidDateofBirth() bool { // yyyy/mm/dd
+	date := strings.Split(string(d), "-") // here find the way to also include "/"
 	year, erry := strconv.Atoi(date[0])
 	month, errm := strconv.Atoi(date[1])
 	day, errd := strconv.Atoi(date[2])
 	log.Println("The date of Birth is: ", year, month, day)
-	log.Println(current_year, current_month, current_day)
 
-	if !errors.Is(erry, nil) && !errors.Is(errm, nil) && !errors.Is(errd, nil) {
-
-		//Here assume that the user should have been born more than 10 year ago.
-		if current_year >= year && current_month >= month && current_day >= day {
-			log.Println("Correct Date of Birth Inserted", d)
-			return true
-		}
-		return false
+	if !errors.Is(erry, nil) || !errors.Is(errm, nil) || !errors.Is(errd, nil) {
+		log.Println("Error encountered in the Date of Birth!")
 	}
-	log.Println("Error encountered in the Date of Birth!")
+	log.Println("Correct Date of Birth Inserted", d)
+
 	return false
 }
 
@@ -115,10 +105,10 @@ func (g Gender) ValidGender() bool {
 
 // Function Method used to check for the User Validity.
 func (user *User) ValidUser() bool {
-	return regex_username.MatchString(user.Username) && //Checking for the Username Regex.
-		len(user.Biography) <= 1000 && //Checking for the Biography.
-		len(user.Name) >= 2 && len(user.Name) <= 31 && //Checking for the Name.
-		len(user.Surname) >= 2 && len(user.Surname) <= 31 && //Checking for the Surname.
+	return regex_username.MatchString(user.Username) && // Checking for the Username Regex.
+		len(user.Biography) <= 1000 && // Checking for the Biography.
+		len(user.Name) >= 2 && len(user.Name) <= 31 && // Checking for the Name.
+		len(user.Surname) >= 2 && len(user.Surname) <= 31 && // Checking for the Surname.
 		// user.DateOfBirth.ValidDateofBirth() &&
 		user.Email.ValidEmail() &&
 		len(user.Nationality) >= 3 && len(user.Nationality) <= 100 &&
@@ -140,7 +130,7 @@ func (u *User) FromDatabase(user database.User, db database.AppDatabase) {
 	u.NumberFollowers = user.NumberFollowers
 	u.NumberFollowing = user.NumberFollowing
 
-	//Also personalInfo Struct
+	// Also personalInfo Struct
 	u.Name = user.Name
 	u.Surname = user.Surname
 	u.DateOfBirth = Date(user.DateOfBirth)

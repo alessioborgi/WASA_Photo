@@ -5,8 +5,6 @@ import (
 	"log"
 )
 
-// DOUBT: Do I have to pass it the entire User Object? Do I have to pass to it the new Username?
-
 func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 
 	// Selection of the User profile.

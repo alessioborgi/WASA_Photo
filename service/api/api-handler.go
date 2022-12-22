@@ -36,7 +36,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/users/:username/bans/:usernameBanned", rt.wrap(rt.unbanUser))
 
 	// PHOTO-RELATED
-	//Register the uploadPhoto API.
+	// Register the uploadPhoto API.
 	rt.router.POST("/users/:username/photos/", rt.wrap(rt.uploadPhoto))
 
 	// Register the deletePhoto API.

@@ -16,10 +16,10 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 	// First of all, check the Authorization of the person who is asking the action .
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
 
-	//Check for the error during the Query.
+	// Check for the error during the Query.
 	if !errors.Is(errAuth, nil) {
 
-		//Returning empty user and error if some errors occurs.
+		// Returning empty user and error if some errors occurs.
 		return User{}, errAuth
 	}
 

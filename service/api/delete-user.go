@@ -49,7 +49,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	//Check then if we have inserted a Valid username w.r.t. its regex.
+	// Check then if we have inserted a Valid username w.r.t. its regex.
 	if !regex_username.MatchString(username) {
 
 		// If the username does not respect its Regex, there is a bad request.
