@@ -131,5 +131,15 @@ func (rt *_router) getPhotoView(w http.ResponseWriter, r *http.Request, ps httpr
 	// Send the image from the
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "image/jpeg")
-	io.Copy(w, img)
+	// io.Copy(w, img)
+
+	_, errCopy := io.Copy(w, img)
+	if !errors.Is(errCopy, nil) {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+		// Moreover, we add the error and an additional field (`Photo`) to the log entry, so that we will receive
+		// the Username of the User that triggered the error.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(err).WithField("Photo", photoid).Error("Photo Error. Can't retrieve photo from folder.")
+		return
+	}
 }

@@ -476,7 +476,7 @@ paths:
           description: Ok! User's Photo Returned Successfully!.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/file"}
+              schema: {$ref: "#/components/schemas/filenamePath"}
 
         '204': {$ref : '#/components/responses/NoContent'}
 
@@ -1172,6 +1172,7 @@ components:
       format: date
       minLength: 10
       maxLength: 10
+      pattern: ^.*$
       default: 0000-01-01
       example: 2001-04-17
 
@@ -1182,6 +1183,7 @@ components:
       format: email
       minLength: 3
       maxLength: 100
+      pattern: ^.*$
       default: "surname.matriculationNumber@studenti.uniroma1.it"
       example: borgi.1952442@studenti.uniroma1.it
     
