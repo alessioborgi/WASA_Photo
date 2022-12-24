@@ -33,7 +33,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 			// Uuid retrieved correctly from the DB.
 			log.Println("Uuid Retrieval Succeeded from the DB!")
-			return saved_uuid, Okay_Error_Inverse
+			return saved_uuid, nil
 		}
 	}
 
@@ -72,7 +72,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		log.Println("User Creation Succeeded!")
 
 		// If we arrive here, we have successfully created the User.
-		return uuid.String(), Creation_Error_Inverse
+		return uuid.String(), nil
 	}
 
 	// Fist, check whether there is an error strange, i.e., that is neither nil nor ErrUserDoesNotExists.
