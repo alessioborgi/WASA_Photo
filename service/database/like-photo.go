@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker string, uuid string) error {
+func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker string, uuid string) (string, error) {
 
 	// Adding a User Follow.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -16,7 +16,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 
 	// 0.0) As a premature check, check whether the username that is requesting the action is going to self-follow.
 	if username == usernameLiker {
-		return ErrBadRequest
+		return "", ErrBadRequest
 	}
 
 	// 0.1) First of all, I need to check whether the username that has the photo exists.
@@ -25,13 +25,13 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	// Check whether the Username that owns the photo, does not exists.
 	if errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: The Username, does not exists.")
-		return ErrUserDoesNotExist
+		return "", ErrUserDoesNotExist
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
-		return errUsername
+		return "", errUsername
 	}
 
 	// 0.2) Secondly, I need to check only whether the usernameLiker I passed exists in the DB.
@@ -40,26 +40,26 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	// Check whether the usernameFollowing I am trying to insert, already exists.
 	if errors.Is(errusernameLiker, ErrUserDoesNotExist) {
 		log.Println("Err: The fixedUsernameLiker that is trying to put the Like, does not exists.")
-		return ErrUserDoesNotExist
+		return "", ErrUserDoesNotExist
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errusernameLiker, nil) {
 		log.Println("Err: Strange error during the Check of usernameLiker Presence")
-		return errusernameLiker
+		return "", errusernameLiker
 	}
 
 	// 0.3) Thirdly, we should check whether there exists the same like already.
 	errLikeRetrieval := db.CheckLikePresence(fixedUsername, photoid, fixedUsernameLiker)
-	if errors.Is(errLikeRetrieval, Okay_Error_Inverse) {
+	if errors.Is(errLikeRetrieval, nil) {
 		log.Println("Err: The Like already exists.")
-		return Okay_Error_Inverse
+		return PRESENT, nil
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errLikeRetrieval, nil) && !errors.Is(errLikeRetrieval, ErrLikeDoesNotExists) {
 		log.Println("Err: Strange error during the Check of Follow Presence")
-		return errLikeRetrieval
+		return "", errLikeRetrieval
 	}
 
 	// If we arrive here, it means that the Like is not present. Thus we can continue.
@@ -68,13 +68,13 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 
 	if ban_presence == PRESENT {
 		log.Println("Err: The Ban exists. You cannot Like the photo!")
-		return ErrUserNotAuthorized
+		return "", ErrUserNotAuthorized
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
 		log.Println("Err: Strange error during the Check of Ban Presence")
-		return errBanRetrieval
+		return "", errBanRetrieval
 	}
 
 	// If we arrive here, it means that the Ban is not present. Thus we can continue.
@@ -85,14 +85,16 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	// Check whether the Username exists.
 	if errors.Is(errPhoto, ErrPhotoDoesNotExist) {
 		log.Println("Err: The Photo that fixedUsernameLiker is trying to like does not exists. Error!")
-		return ErrPhotoDoesNotExist
+		return "", ErrPhotoDoesNotExist
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
-		return errPhoto
+		return "", errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// Now, we can finally check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(username, uuid)
@@ -101,7 +103,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	if !errors.Is(errAuth, nil) {
 
 		// Check whether we have received some errors during the Authentication.
-		return errAuth
+		return "", errAuth
 	}
 
 	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
@@ -109,7 +111,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 
 		// If the uuid is requesting the action(username) is the actual User Owner.
 		log.Println("Err: You should not be able to like your photo. This does not make any sense.")
-		return ErrUserNotAuthorized
+		return "", ErrUserNotAuthorized
 	}
 
 	if authorization == NOTAUTHORIZED {
@@ -118,10 +120,10 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 		_, err := db.c.Exec(`INSERT INTO Likes (likeid, photoid, fixedUsername) VALUES (?, ?, ?)`,
 			fixedUsernameLiker, photoid, fixedUsername)
 		if !errors.Is(err, nil) {
-			return err
+			return "", err
 		}
 		log.Println("Photo Like added correclty.")
-		return nil
+		return NOTPRESENT, nil
 
 	}
 
@@ -129,10 +131,10 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	if authorization == NOTVALID {
 
 		log.Println("Err: The Uuid you are providing is not present.")
-		return ErrUserNotAuthorized
+		return "", ErrUserNotAuthorized
 	}
 
 	// If we arrive here, we encountered other types of problem.
 	log.Println("Err: Unexpected Error.")
-	return errAuth
+	return "", errAuth
 }

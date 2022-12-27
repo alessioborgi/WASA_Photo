@@ -94,14 +94,14 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	// If we arrive here, there is no error and the usernameLiker can put a like to the username's Photoid since are all respecting their regex.
 	// We can therefore proceed in the Like by calling the DB action and wait for its response.
-	err := rt.db.LikePhoto(username.Name, photoid, usernameLiker.Name, authorization_token)
+	like_presence, err := rt.db.LikePhoto(username.Name, photoid, usernameLiker.Name, authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that requested the action, is not present.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that requested the action or the username that is going to receive a like, is not a WASAPhoto User. ")
 		return
-	} else if errors.Is(err, database.Okay_Error_Inverse) {
+	} else if like_presence == database.PRESENT {
 
 		// In this case, we have that the Like was already present.
 		w.WriteHeader(http.StatusNoContent)

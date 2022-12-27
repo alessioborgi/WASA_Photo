@@ -39,10 +39,12 @@ func (db *appdbimpl) GetPhoto(username string, photoid string, uuid string) (Pho
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return Photo{}, errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// If I arrive here, both the Username and the Photo exists.
 	// Check the Authorization of the person who is asking the action.

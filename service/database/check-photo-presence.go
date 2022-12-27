@@ -19,7 +19,7 @@ func (db *appdbimpl) CheckPhotoPresence(photoid string, fixedUsername string) (s
 	} else if exists == 1 {
 		// If no strange error during the Query occurs, and exists = 1, we already have the photo saved.
 		// The Photo already Exists.
-		return photoid, Okay_Error_Inverse
+		return photoid, nil
 	}
 
 	// The Photo does not Exists.

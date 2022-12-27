@@ -40,10 +40,12 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return 0, errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// Getting the FixedUsername of the Commenter
 	fixedUsernameCommenter, errfixedUsernameCommenter := db.GetFixedUsername(uuid)

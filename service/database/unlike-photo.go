@@ -57,7 +57,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errLikeRetrieval, nil) && !errors.Is(errLikeRetrieval, Okay_Error_Inverse) {
+	if !errors.Is(errLikeRetrieval, nil) {
 		log.Println("Err: Strange error during the Check of Follow Presence")
 		return errLikeRetrieval
 	}
@@ -89,10 +89,12 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence.")
 		return errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// Now, we can finally check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(usernameLiker, uuid)

@@ -20,7 +20,7 @@ func (db *appdbimpl) CheckLikePresence(fixedUsername string, photoid string, lik
 
 		// If no strange error during the Query occurs, and exists = 1, we already have the Follow Exists.
 		log.Println("The Like is present in the Database.")
-		return Okay_Error_Inverse
+		return nil
 	}
 
 	// If we arrive here it means that the Ban is not present in the DB.

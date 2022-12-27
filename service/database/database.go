@@ -92,7 +92,7 @@ type AppDatabase interface {
 	// PARTICULAR FOLLOW:
 	// (Security Required: Needs Uuid of the action requester).
 	// FollowUser() creates a new User's Follow in the database, given in input the Follow Object. It returns a Follow Object.
-	FollowUser(username string, usernameFollowing, uuid string) error
+	FollowUser(username string, usernameFollowing, uuid string) (string, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnfollowUser() removes a User's Follow given the fixedUsername, and the FollowindId(i.e., the fixedUsername of the Person that the fixedUsername wants to delete from the following list).
@@ -115,7 +115,7 @@ type AppDatabase interface {
 	// PARTICULAR LIKE:
 	// (Security Required: Needs Uuid of the action requester).
 	// LikePhoto() creates a new User's Photo Like in the database, given in input the Like Object. It returns a Like Object.
-	LikePhoto(username string, photoid string, usernameLiker string, uuid string) error
+	LikePhoto(username string, photoid string, usernameLiker string, uuid string) (string, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnlikePhoto() removes a User's Photo Like given the fixedUsername, the photoId and the fixedUsername of the Liker in input.

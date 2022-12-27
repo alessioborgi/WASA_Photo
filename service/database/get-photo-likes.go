@@ -42,10 +42,13 @@ func (db *appdbimpl) GetPhotoLikes(username string, photoid string, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return nil, errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
+
 	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
 

@@ -39,10 +39,12 @@ func (db *appdbimpl) UncommentPhoto(username string, photoid string, commentid s
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence.")
 		return errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// 0.3) Getting the FixedUsername of the Commenter.
 	fixedUsernameCommenter, errfixedUsernameCommenter := db.GetFixedUsername(uuid)
@@ -67,12 +69,12 @@ func (db *appdbimpl) UncommentPhoto(username string, photoid string, commentid s
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errCommentRetrieval, nil) && !errors.Is(errCommentRetrieval, Okay_Error_Inverse) {
+	if !errors.Is(errCommentRetrieval, nil) {
 		log.Println("Err: Strange error during the Check of Comment Presence")
 		return errCommentRetrieval
 	}
 
-	// If we arrive here, it means that the Comment is present. Thus we can continue.
+	// If we arrive here, it means that the Comment is present (since errCommentRetrieval = nil). Thus we can continue.
 	// 0.5) We need now to check whether fixedUsernameLiker is Banned by fixedUsername.
 	ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameCommenter)
 

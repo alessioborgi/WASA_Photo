@@ -79,14 +79,14 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// If we arrive here, there is no error and the username can ban the usernameFollowing since both are respecting their regex.
 	// We can therefore proceed in the Follow by calling the DB action and wait for its response.
-	err := rt.db.FollowUser(username.Name, usernameFollowing.Name, authorization_token)
+	follow_presence, err := rt.db.FollowUser(username.Name, usernameFollowing.Name, authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that requested the action, is not present..
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that requested the action or the username that is going to be followed, is not a WASAPhoto User. ")
 		return
-	} else if errors.Is(err, database.Okay_Error_Inverse) {
+	} else if follow_presence == database.PRESENT {
 
 		// In this case, we have that the Follow was already present.
 		w.WriteHeader(http.StatusNoContent)
