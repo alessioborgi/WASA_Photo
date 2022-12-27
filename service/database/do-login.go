@@ -10,7 +10,7 @@ import (
 
 var now = time.Now().Format(time.RFC3339)
 
-func (db *appdbimpl) DoLogin(username string) (string, error) {
+func (db *appdbimpl) DoLogin(username string) (string, error, string) {
 
 	// First check whether there exists a User with the inserted Username.
 	fixedUsername, errUserPresence := db.CheckUserPresence(username)
@@ -28,12 +28,12 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 			// Uuid failed to be retrieved from the DB.
 			log.Println("Err: Failed to Retrieve UUID from the DB")
-			return "", err
+			return "", err, ""
 		} else {
 
 			// Uuid retrieved correctly from the DB.
 			log.Println("Uuid Retrieval Succeeded from the DB!")
-			return saved_uuid, nil
+			return saved_uuid, nil, PRESENT
 		}
 	}
 
@@ -54,7 +54,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 
 			// Last fixedUsername failed to be retrieved.
 			log.Println("Err: Last fixedUsername failed to be retrieved")
-			return "", errfixedUsername
+			return "", errfixedUsername, ""
 		}
 
 		// Actual User insertion in the DB. Insertion of the actual uuid, username and (after), update the fixedUsername.
@@ -65,17 +65,17 @@ func (db *appdbimpl) DoLogin(username string) (string, error) {
 		// Check whether we have experienced an error from the User Insertion.
 		if !errors.Is(errCreation, nil) {
 			log.Println("Err: Error During Creation")
-			return "Error", errCreation
+			return "Error", errCreation, ""
 		}
 
 		// The User has been Created successfully.
 		log.Println("User Creation Succeeded!")
 
 		// If we arrive here, we have successfully created the User.
-		return uuid.String(), Creation_Error_Inverse
+		return uuid.String(), nil, NOTPRESENT
 	}
 
 	// Fist, check whether there is an error strange, i.e., that is neither nil nor ErrUserDoesNotExists.
 	log.Println("Err: Unexpected Error during the Query of the DB!")
-	return "", errUserPresence
+	return "", errUserPresence, ""
 }

@@ -51,18 +51,9 @@ var (
 	ErrFollowDoesNotExist   = errors.New("The Follow does not Exists!")
 	ErrLikeDoesNotExists    = errors.New("The Like does not Exists!")
 	ErrCommentDoesNotExists = errors.New("The Comment does not Exists!")
-
-	Creation_Error_Inverse = errors.New("Object Created Correctly.")
-	Okay_Error_Inverse     = errors.New("Object Returned Correctly.")
 )
 
 // User Struct has been declared in the "db-struct-user.go" file.
-
-// -----
-// IDEAS: I think i should add the uuid of the User which is doing all the things in all the functions except for the GetUsers().
-// DOUBTS: Doubts on Session: Shouuld it return uuid or fixedUsername?. I think uuid!
-// TO DO: ADD Uuid at every input Function except DoLogin.
-// -----
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
@@ -73,7 +64,7 @@ type AppDatabase interface {
 
 	// SESSION:
 	// DoLogin() creates a new Username given in input a Username. If does not already exists and returns a uuid, or,  if it already exists, simply returns a uuid.
-	DoLogin(username string) (string, error)
+	DoLogin(username string) (string, error, string)
 
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
@@ -147,7 +138,6 @@ type AppDatabase interface {
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
-	// DeleteUsername(fixedUsername string, uuid string) error
 	DeleteUser(username string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
