@@ -129,16 +129,6 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	// Getting the Rest of Values from the MultipartFormData.
-	newUsername := r.FormValue("username")
-	biography := r.FormValue("biography")
-	name := r.FormValue("name")
-	surname := r.FormValue("surname")
-	dateOfBirth := r.FormValue("dateOfBirth")
-	email := r.FormValue("email")
-	nationality := r.FormValue("nationality")
-	gender := r.FormValue("gender")
-
 	// If I arrive here is all Ok. I can proceed to build up the path.
 	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
 	log.Println("The photo name is: ", photo_path)
@@ -148,15 +138,15 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Read the new content for the User from the request body.
 	var newUser User
-	newUser.Username = newUsername
+	newUser.Username = r.FormValue("username")
 	newUser.PhotoProfile = path
-	newUser.Biography = biography
-	newUser.Name = name
-	newUser.Surname = surname
-	newUser.DateOfBirth = Date(dateOfBirth)
-	newUser.Email = Email(email)
-	newUser.Nationality = nationality
-	newUser.Gender = Gender(gender)
+	newUser.Biography = r.FormValue("biography")
+	newUser.Name = r.FormValue("name")
+	newUser.Surname = r.FormValue("surname")
+	newUser.DateOfBirth = Date(r.FormValue("dateOfBirth"))
+	newUser.Email = Email(r.FormValue("email"))
+	newUser.Nationality = r.FormValue("nationality")
+	newUser.Gender = Gender(r.FormValue("gender"))
 
 	// Check whether we have that the newUsername inserted respect its Regex.
 	if !newUser.ValidUser() {

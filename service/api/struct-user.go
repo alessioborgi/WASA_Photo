@@ -30,7 +30,6 @@ var (
 	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
 	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
 	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
-	// regex_date     = regexp.MustCompile(`^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$`) // Without February Check.
 )
 
 // Create a User structure.
@@ -67,8 +66,9 @@ func (uuid Uuid) ValidUuid(regex regexp.Regexp) bool {
 }
 
 // Declaring a Method for checking the DateOfBirth validity w.r.t. its validity.
-func (d Date) ValidDateofBirth() bool { // yyyy/mm/dd
-	date := strings.Split(string(d), "-") // here find the way to also include "/"
+// yyyy/mm/dd
+func (d Date) ValidDateofBirth() bool {
+	date := strings.Split(string(d), "-")
 	year, erry := strconv.Atoi(date[0])
 	month, errm := strconv.Atoi(date[1])
 	day, errd := strconv.Atoi(date[2])
@@ -143,7 +143,6 @@ func (u *User) FromDatabase(user database.User, db database.AppDatabase) {
 
 // ToDatabase returns the User in a Database-Compatible Representation.
 
-// DOUBT: What to do with the UUID?
 func (u *User) ToDatabase() database.User {
 	return database.User{
 		FixedUsername:   u.FixedUsername,

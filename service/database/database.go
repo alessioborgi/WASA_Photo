@@ -227,7 +227,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 	for i := 0; i < len(database); i++ {
 
-		//Check whether, for every table, we have the Table.
+		// Check whether, for every table, we have the Table.
 		err := db.QueryRow(query_table_presence[i]).Scan(&tableName)
 		if errors.Is(err, sql.ErrNoRows) {
 
