@@ -57,7 +57,7 @@ type Username struct {
 
 // Declaring a Method for checking the Username validity w.r.t. its regex.
 func (username Username) ValidUsername(regex regexp.Regexp) bool {
-	return regex.MatchString(string(username.Name))
+	return regex.MatchString(username.Name)
 }
 
 // Declaring a Method for checking the uuid validity w.r.t. its regex.
