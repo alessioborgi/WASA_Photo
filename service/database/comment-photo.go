@@ -55,9 +55,9 @@ func (db *appdbimpl) CommentPhoto(username string, photoid string, comment Comme
 	}
 
 	// 0.3) We need now to check whether fixedUsernameCommenter is Banned by fixedUsername.
-	errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameCommenter)
+	ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameCommenter)
 
-	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+	if ban_presence == PRESENT {
 		log.Println("Err: The Ban exists. You cannot Comment the photo!")
 		return 0, ErrUserNotAuthorized
 	}

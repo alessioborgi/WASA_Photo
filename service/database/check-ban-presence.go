@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameBanned string) error {
+func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameBanned string) (string, error) {
 
 	// Check whether there exists a Ban between fixedUsernameBanner and fixedUsernameBanned.
 	var exists = 0
@@ -15,13 +15,13 @@ func (db *appdbimpl) CheckBanPresence(fixedUsernameBanner string, fixedUsernameB
 	// Check for the error during the Query.
 	if !errors.Is(err, nil) && !errors.Is(err, sql.ErrNoRows) {
 		log.Println("Err: Unexpected Error during the Checking of the Ban!")
-		return err
+		return "", err
 	} else if exists == 1 {
 		// If no strange error during the Query occurs, and exists = 1, we already have the Ban Exists.
 		log.Println("The Ban is present in the Database.")
-		return Okay_Error_Inverse
+		return PRESENT, nil
 	}
 
 	// If we arrive here it means that the Ban is not present in the DB.
-	return ErrBanDoesNotExist
+	return "", ErrBanDoesNotExist
 }

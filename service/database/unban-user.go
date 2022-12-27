@@ -49,14 +49,14 @@ func (db *appdbimpl) UnbanUser(username string, usernameBanned string, uuid stri
 	}
 
 	// 0.3) Thirdly, we should check whether there exists an actual Ban to delete between fixedusernameBanner and fixedusernameBanned.
-	errBanRetrieval := db.CheckBanPresence(fixedUsernameBanner, fixedUsernameBanned)
+	_, errBanRetrieval := db.CheckBanPresence(fixedUsernameBanner, fixedUsernameBanned)
 	if errors.Is(errBanRetrieval, ErrBanDoesNotExist) {
 		log.Println("Err: The Ban, does not exists.")
 		return ErrBanDoesNotExist
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errBanRetrieval, nil) && !errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+	if !errors.Is(errBanRetrieval, nil) {
 		log.Println("Err: Strange error during the Check of Ban Presence")
 		return errBanRetrieval
 	}

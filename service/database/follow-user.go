@@ -64,9 +64,9 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 
 	// If we arrive here, it means that the Follow is not present. Thus we can continue.
 	// 0.4) We need now to check whether fixedUsername is Banned by fixedUsernameFollowing.
-	errBanRetrieval := db.CheckBanPresence(fixedUsernameFollowing, fixedUsername)
+	ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsernameFollowing, fixedUsername)
 
-	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+	if ban_presence == PRESENT {
 		log.Println("Err: The Ban exists. You cannot Follow it.")
 		return ErrUserNotAuthorized
 	}

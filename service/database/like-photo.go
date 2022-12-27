@@ -64,9 +64,9 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 
 	// If we arrive here, it means that the Like is not present. Thus we can continue.
 	// 0.4) We need now to check whether fixedUsernameLiker is Banned by fixedUsername.
-	errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
+	ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
 
-	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+	if ban_presence == PRESENT {
 		log.Println("Err: The Ban exists. You cannot Like the photo!")
 		return ErrUserNotAuthorized
 	}
