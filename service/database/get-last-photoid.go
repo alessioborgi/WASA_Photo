@@ -18,7 +18,7 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return 0, errUsername
 	}

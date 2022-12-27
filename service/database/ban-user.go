@@ -22,14 +22,14 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 	// 0.1) First of all, I need to check whether the username that wants to add the Ban exists (that must be also the uuid itself, check later).
 	fixedUsernameBanner, errUsername := db.CheckUserPresence(username)
 
-	// Check whether theUsername I am trying to update, does not exists.
+	// Check whether the Username I am trying to update, does not exists.
 	if errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: The fixedUsernameBanner, does not exists.")
 		return ErrUserDoesNotExist
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) && fixedUsernameBanner != "Not Exists" {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Okay_Error_Inverse) {
+	if !errors.Is(errusernameBanned, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errusernameBanned
 	}

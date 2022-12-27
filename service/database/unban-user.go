@@ -28,7 +28,7 @@ func (db *appdbimpl) UnbanUser(username string, usernameBanned string, uuid stri
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -43,7 +43,7 @@ func (db *appdbimpl) UnbanUser(username string, usernameBanned string, uuid stri
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Okay_Error_Inverse) {
+	if !errors.Is(errusernameBanned, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errusernameBanned
 	}

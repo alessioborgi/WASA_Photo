@@ -25,10 +25,10 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 	}
 
 	// Let's now check whether the Username we want to insert is already present in the WASAPhoto Platform.
-	_, errUsername := db.CheckUserPresence(user.Username)
+	fixedUsername, errUsername := db.CheckUserPresence(user.Username)
 
 	// Check whether the Username I am trying to update with the newUsername, does not exists.
-	if errors.Is(errUsername, Okay_Error_Inverse) {
+	if fixedUsername != "" && fixedUsername != "Not Exists" {
 		log.Println("Err: The newUsername is already a WASAPhoto Username. Error!")
 		return ErrBadRequest
 	}

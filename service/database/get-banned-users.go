@@ -27,7 +27,7 @@ func (db *appdbimpl) GetBannedUsers(username string, uuid string) ([]string, err
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Okay_Error_Inverse) {
+	if !errors.Is(errfixedUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errfixedUsername
 	}

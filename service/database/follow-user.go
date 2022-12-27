@@ -29,7 +29,7 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) FollowUser(username string, usernameFollowing, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameBanned, nil) && !errors.Is(errusernameBanned, Okay_Error_Inverse) {
+	if !errors.Is(errusernameBanned, nil) {
 		log.Println("Err: Strange error during the Check of UsernameFollowing Presence")
 		return errusernameBanned
 	}

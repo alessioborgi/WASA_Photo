@@ -29,7 +29,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) LikePhoto(username string, photoid string, usernameLiker st
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Okay_Error_Inverse) {
+	if !errors.Is(errusernameLiker, nil) {
 		log.Println("Err: Strange error during the Check of usernameLiker Presence")
 		return errusernameLiker
 	}

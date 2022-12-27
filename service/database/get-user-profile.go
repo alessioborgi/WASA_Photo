@@ -41,7 +41,7 @@ func (db *appdbimpl) GetUserProfile(username string, uuid string) (User, error) 
 		}
 
 		// Check if strange errors occurs.
-		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+		if !errors.Is(errUsername, nil) {
 			log.Println("Err: Strange error during the Check of User Presence")
 			return User{}, errUsername
 		}
