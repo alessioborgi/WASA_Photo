@@ -46,7 +46,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here, the Regex is Validated, and threfore we can proceed to give back User or create it.
 	// Note that here we only send the Username to the doLogin DB function, because I am going to create a standard User.
-	newUid, err, login_presence := rt.db.DoLogin(string(username.Name))
+	newUid, err, login_presence := rt.db.DoLogin(username.Name)
 
 	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
 	if !errors.Is(err, nil) {
