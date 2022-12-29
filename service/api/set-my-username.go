@@ -92,14 +92,22 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// Here we proceed by getting the UserProfile.
 	usernameProfile, err := rt.db.GetUserProfile(username.Name, authorization_token)
-	if !errors.Is(err, nil) {
+	if errors.Is(err, database.ErrUserNotAuthorized) {
 
-		// If we fail to retrieve the Profile.
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Profile Retrieval is failed.")
+		// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
+		return
+	} else if !errors.Is(err, nil) {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+		// the Username of the User that triggered the error.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 		return
 	}
 
+	// If we arrive here, we have that the Profile Retrieval has got no trouble.
 	// If no error occurs during the Profile retrieval, we proceed by Marshaling the usernameProfile.
 	usernameProfileMarshalled, err := json.Marshal(&usernameProfile)
 	if !errors.Is(err, nil) {
@@ -172,10 +180,9 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 		return
-	} else {
-
-		// If we arrive here, it means that the Username, has been correctly updated.
-		w.WriteHeader(http.StatusNoContent)
-		log.Println("The Username has been correctly Updated!")
 	}
+
+	// If we arrive here, it means that the Username, has been correctly updated.
+	w.WriteHeader(http.StatusNoContent)
+	log.Println("The Username has been correctly Updated!")
 }

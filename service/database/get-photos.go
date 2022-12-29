@@ -24,7 +24,7 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errUsername
 	}
@@ -54,9 +54,9 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
-		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
+		ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
 
-		if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+		if ban_presence == PRESENT {
 			log.Println("Err: The Ban exists. You cannot get Photos it.")
 			return nil, ErrUserNotAuthorized
 		}

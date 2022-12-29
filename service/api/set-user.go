@@ -109,13 +109,15 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Photo Insertion cannot be done because it has received a not valid Username.")
 		return
-	} else if !errors.Is(errFixedUsername, nil) && !errors.Is(errFixedUsername, database.Okay_Error_Inverse) {
+	} else if !errors.Is(errFixedUsername, nil) {
 
 		// I got an error on getting the last fixedUsername.
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(errFixedUsername).Error("Err: Err: The Photo Insertion cannot be done because it has encountered a strange problem")
 		return
 	}
+
+	// If we arrive here it means it has errFixedUsername=nil.
 
 	// Getting the last photo id.
 	photoid, errPhotoId := rt.db.GetLastPhotoId(username.Name)
@@ -127,35 +129,24 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	// Getting the Rest of Values from the MultipartFormData.
-	newUsername := r.FormValue("username")
-	biography := r.FormValue("biography")
-	name := r.FormValue("name")
-	surname := r.FormValue("surname")
-	dateOfBirth := r.FormValue("dateOfBirth")
-	email := r.FormValue("email")
-	nationality := r.FormValue("nationality")
-	gender := r.FormValue("gender")
-
 	// If I arrive here is all Ok. I can proceed to build up the path.
 	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
 	log.Println("The photo name is: ", photo_path)
 
-	// Creatio of the Path URL.
-	// photo_url := fmt.Sprintf("http://localhost:3000/users/:"+username.Name+"/photos/%s%s", photo_path, filepath.Ext(header.Filename))
+	// Creation of the Path URL.
 	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 
 	// Read the new content for the User from the request body.
 	var newUser User
-	newUser.Username = newUsername
+	newUser.Username = r.FormValue("username")
 	newUser.PhotoProfile = path
-	newUser.Biography = biography
-	newUser.Name = name
-	newUser.Surname = surname
-	newUser.DateOfBirth = Date(dateOfBirth)
-	newUser.Email = Email(email)
-	newUser.Nationality = nationality
-	newUser.Gender = Gender(gender)
+	newUser.Biography = r.FormValue("biography")
+	newUser.Name = r.FormValue("name")
+	newUser.Surname = r.FormValue("surname")
+	newUser.DateOfBirth = Date(r.FormValue("dateOfBirth"))
+	newUser.Email = Email(r.FormValue("email"))
+	newUser.Nationality = r.FormValue("nationality")
+	newUser.Gender = Gender(r.FormValue("gender"))
 
 	// Check whether we have that the newUsername inserted respect its Regex.
 	if !newUser.ValidUser() {
@@ -198,39 +189,38 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
 		return
-	} else {
-
-		// If we arrive here, it means that the Username, has been correctly updated.
-
-		// I can therefore also save the PhotoProfile in local.
-		// Saving the photo in the Folder.
-		f, errPathCreation := os.Create(path)
-
-		if !errors.Is(errPathCreation, nil) {
-
-			// I got an error on creating the path.
-			w.WriteHeader(http.StatusInternalServerError)
-			ctx.Logger.WithError(errPathCreation).Error("Err: I got an error on Creating the path to the Image!")
-			return
-		}
-
-		// If I arrive here, i have created the Path correctly.
-		log.Println("Path created correctly!")
-
-		// I can copy the photo.
-		defer f.Close()
-		_, errSaving := io.Copy(f, photo_body)
-
-		if !errors.Is(errSaving, nil) {
-
-			// I got an error on saving the Image.
-			w.WriteHeader(http.StatusInternalServerError)
-			ctx.Logger.WithError(errSaving).Error("Err: I got an error on Saving the Image!")
-			return
-		}
-
-		// Set the result to NoContent if no error occurs.
-		w.WriteHeader(http.StatusNoContent)
-		log.Println("The User has been correctly Updated!")
 	}
+
+	// If we arrive here, it means that the Username, has been correctly updated.
+
+	// I can therefore also save the PhotoProfile in local.
+	// Saving the photo in the Folder.
+	f, errPathCreation := os.Create(path)
+
+	if !errors.Is(errPathCreation, nil) {
+
+		// I got an error on creating the path.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errPathCreation).Error("Err: I got an error on Creating the path to the Image!")
+		return
+	}
+
+	// If I arrive here, i have created the Path correctly.
+	log.Println("Path created correctly!")
+
+	// I can copy the photo.
+	defer f.Close()
+	_, errSaving := io.Copy(f, photo_body)
+
+	if !errors.Is(errSaving, nil) {
+
+		// I got an error on saving the Image.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errSaving).Error("Err: I got an error on Saving the Image!")
+		return
+	}
+
+	// Set the result to NoContent if no error occurs.
+	w.WriteHeader(http.StatusNoContent)
+	log.Println("The User has been correctly Updated!")
 }

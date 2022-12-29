@@ -51,18 +51,9 @@ var (
 	ErrFollowDoesNotExist   = errors.New("The Follow does not Exists!")
 	ErrLikeDoesNotExists    = errors.New("The Like does not Exists!")
 	ErrCommentDoesNotExists = errors.New("The Comment does not Exists!")
-
-	Creation_Error_Inverse = errors.New("Object Created Correctly.")
-	Okay_Error_Inverse     = errors.New("Object Returned Correctly.")
 )
 
 // User Struct has been declared in the "db-struct-user.go" file.
-
-// -----
-// IDEAS: I think i should add the uuid of the User which is doing all the things in all the functions except for the GetUsers().
-// DOUBTS: Doubts on Session: Shouuld it return uuid or fixedUsername?. I think uuid!
-// TO DO: ADD Uuid at every input Function except DoLogin.
-// -----
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
@@ -73,7 +64,7 @@ type AppDatabase interface {
 
 	// SESSION:
 	// DoLogin() creates a new Username given in input a Username. If does not already exists and returns a uuid, or,  if it already exists, simply returns a uuid.
-	DoLogin(username string) (string, error)
+	DoLogin(username string) (string, error, string)
 
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
@@ -92,7 +83,7 @@ type AppDatabase interface {
 	// PARTICULAR FOLLOW:
 	// (Security Required: Needs Uuid of the action requester).
 	// FollowUser() creates a new User's Follow in the database, given in input the Follow Object. It returns a Follow Object.
-	FollowUser(username string, usernameFollowing, uuid string) error
+	FollowUser(username string, usernameFollowing, uuid string) (string, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnfollowUser() removes a User's Follow given the fixedUsername, and the FollowindId(i.e., the fixedUsername of the Person that the fixedUsername wants to delete from the following list).
@@ -101,7 +92,7 @@ type AppDatabase interface {
 	// PARTICULAR BAN:
 	// (Security Required: Needs Uuid of the action requester).
 	// BanUser() creates a new User's Ban in the database, given in input the username of the profile owner and the username of the person I want to ban. It returns nothing.
-	BanUser(username string, usernameBanned string, uuid string) error
+	BanUser(username string, usernameBanned string, uuid string) (string, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnbanUser() removes a User's Ban given the fixedUsername, and the BanId(i.e., the fixedUsername of the Banned Person).
@@ -115,7 +106,7 @@ type AppDatabase interface {
 	// PARTICULAR LIKE:
 	// (Security Required: Needs Uuid of the action requester).
 	// LikePhoto() creates a new User's Photo Like in the database, given in input the Like Object. It returns a Like Object.
-	LikePhoto(username string, photoid string, usernameLiker string, uuid string) error
+	LikePhoto(username string, photoid string, usernameLiker string, uuid string) (string, error)
 
 	// (Security Required: Needs Uuid of the action requester).
 	// UnlikePhoto() removes a User's Photo Like given the fixedUsername, the photoId and the fixedUsername of the Liker in input.
@@ -147,7 +138,6 @@ type AppDatabase interface {
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
 	// DeleteUsername() removes the User given the fixedUsername in input.
-	// DeleteUsername(fixedUsername string, uuid string) error
 	DeleteUser(username string, uuid string) error
 
 	// (Security Required: Needs Uuid of the action requester).
@@ -237,7 +227,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 	for i := 0; i < len(database); i++ {
 
-		//Check whether, for every table, we have the Table.
+		// Check whether, for every table, we have the Table.
 		err := db.QueryRow(query_table_presence[i]).Scan(&tableName)
 		if errors.Is(err, sql.ErrNoRows) {
 

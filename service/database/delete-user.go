@@ -36,7 +36,7 @@ func (db *appdbimpl) DeleteUser(username string, uuid string) error {
 		}
 
 		// Check if strange errors occurs.
-		if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+		if !errors.Is(errUsername, nil) {
 			log.Println("Err: Strange error during the Check of User Presence")
 			return errUsername
 		}
@@ -50,13 +50,13 @@ func (db *appdbimpl) DeleteUser(username string, uuid string) error {
 			return errDeletion
 		}
 
-		return Okay_Error_Inverse
+		return nil
 	}
 
 	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
 	if authorization == NOTAUTHORIZED {
 
-		//If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
+		// If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
 		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
 		return ErrUserNotAuthorized
 	}

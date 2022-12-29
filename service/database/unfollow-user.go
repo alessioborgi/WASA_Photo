@@ -29,7 +29,7 @@ func (db *appdbimpl) UnfollowUser(username string, usernameFollowing string, uui
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) UnfollowUser(username string, usernameFollowing string, uui
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameFollowing, nil) && !errors.Is(errusernameFollowing, Okay_Error_Inverse) {
+	if !errors.Is(errusernameFollowing, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errusernameFollowing
 	}
@@ -57,7 +57,7 @@ func (db *appdbimpl) UnfollowUser(username string, usernameFollowing string, uui
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errFollowRetrieval, nil) && !errors.Is(errFollowRetrieval, Okay_Error_Inverse) {
+	if !errors.Is(errFollowRetrieval, nil) {
 		log.Println("Err: Strange error during the Check of Follow Presence")
 		return errFollowRetrieval
 	}

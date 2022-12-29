@@ -46,10 +46,10 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here, the Regex is Validated, and threfore we can proceed to give back User or create it.
 	// Note that here we only send the Username to the doLogin DB function, because I am going to create a standard User.
-	newUid, err := rt.db.DoLogin(string(username.Name))
+	newUid, err, login_presence := rt.db.DoLogin(username.Name)
 
 	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
-	if !errors.Is(err, nil) && !errors.Is(err, database.Creation_Error_Inverse) && !errors.Is(err, database.Okay_Error_Inverse) {
+	if !errors.Is(err, nil) {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
 		return
@@ -57,8 +57,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If I arrive here, either the User has been "Created" or it was already in the Db "Ok".
 	// Thus, set the header as "Created" or "OK" accordingly.
-	result := err
-	if errors.Is(result, database.Creation_Error_Inverse) {
+	if login_presence == database.NOTPRESENT {
 		w.WriteHeader(http.StatusCreated)
 	} else {
 		w.WriteHeader(http.StatusOK)

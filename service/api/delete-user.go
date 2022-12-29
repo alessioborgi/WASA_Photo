@@ -61,7 +61,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// If we arrive here, a non-empty and respecting-regex Username has been requested to be deleted.
 
-	// First of proceedeing with deleting the User, we get the list of its photos, in such a way to delete all its photos saved in local.
+	// First of procedeing with deleting the User, we get the list of its photos, in such a way to delete all its photos saved in local.
 	// Getting the list of photos.
 	photoListDB, errGetPhotos := rt.db.GetPhotos(username, authorization_token)
 	if errors.Is(errGetPhotos, database.ErrUserDoesNotExist) {
@@ -81,7 +81,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		// In this case we have no Username in the list of Followings Usernames.
 		w.WriteHeader(http.StatusNoContent)
 		log.Println("There is no Photos for this Username.")
-		return
+
 	} else if !errors.Is(errGetPhotos, nil) {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
@@ -91,7 +91,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
+	// If we arrive here, it means that we have no errors, and we can proceed to correctly delete the list of photos.
 	var photoList []Photo
 	for i := 0; i < len(photoListDB); i++ {
 		var photo Photo
@@ -120,7 +120,7 @@ func (rt *_router) deleteUser(w http.ResponseWriter, r *http.Request, ps httprou
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
 		return
-	} else if !errors.Is(err, nil) && !errors.Is(err, database.Okay_Error_Inverse) {
+	} else if !errors.Is(err, nil) {
 
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive

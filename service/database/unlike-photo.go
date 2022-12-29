@@ -29,7 +29,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, Okay_Error_Inverse) {
+	if !errors.Is(errUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return errUsername
 	}
@@ -44,7 +44,7 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errusernameLiker, nil) && !errors.Is(errusernameLiker, Okay_Error_Inverse) {
+	if !errors.Is(errusernameLiker, nil) {
 		log.Println("Err: Strange error during the Check of usernameLiker Presence")
 		return errusernameLiker
 	}
@@ -57,16 +57,16 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errLikeRetrieval, nil) && !errors.Is(errLikeRetrieval, Okay_Error_Inverse) {
+	if !errors.Is(errLikeRetrieval, nil) {
 		log.Println("Err: Strange error during the Check of Follow Presence")
 		return errLikeRetrieval
 	}
 
 	// If we arrive here, it means that the Like is present. Thus we can continue.
 	// 0.4) We need now to check whether fixedUsernameLiker is Banned by fixedUsername.
-	errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
+	ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameLiker)
 
-	if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+	if ban_presence == PRESENT {
 		log.Println("Err: The Ban exists. You cannot Like the photo!")
 		return ErrUserNotAuthorized
 	}
@@ -89,10 +89,12 @@ func (db *appdbimpl) UnlikePhoto(username string, photoid string, usernameLiker 
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence.")
 		return errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
 
 	// Now, we can finally check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwnerUsername(usernameLiker, uuid)

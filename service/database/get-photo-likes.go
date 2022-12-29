@@ -27,7 +27,7 @@ func (db *appdbimpl) GetPhotoLikes(username string, photoid string, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errfixedUsername, nil) && !errors.Is(errfixedUsername, Okay_Error_Inverse) {
+	if !errors.Is(errfixedUsername, nil) {
 		log.Println("Err: Strange error during the Check of User Presence")
 		return nil, errfixedUsername
 	}
@@ -42,10 +42,13 @@ func (db *appdbimpl) GetPhotoLikes(username string, photoid string, uuid string)
 	}
 
 	// Check if strange errors occurs.
-	if !errors.Is(errPhoto, nil) && !errors.Is(errPhoto, Okay_Error_Inverse) {
+	if !errors.Is(errPhoto, nil) {
 		log.Println("Err: Strange error during the Check of Photo Presence")
 		return nil, errPhoto
 	}
+
+	// If we arrive here, we have that, errPhoto= nil, and therefore it all ok.
+
 	// If both the Usernames are ok, check the Authorization of the person who is asking the action.
 	authorization, errAuth := db.CheckAuthorizationOwner(fixedUsername, uuid)
 
@@ -73,9 +76,9 @@ func (db *appdbimpl) GetPhotoLikes(username string, photoid string, uuid string)
 
 		// If we arrive here, we have correclty retrieved the Requester Username.
 		// Proceed to check whether it is Banned or not.
-		errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
+		ban_presence, errBanRetrieval := db.CheckBanPresence(fixedUsername, fixedUsernameRequester)
 
-		if errors.Is(errBanRetrieval, Okay_Error_Inverse) {
+		if ban_presence == PRESENT {
 			log.Println("Err: The Ban exists. You cannot get the Photo's Likes List.")
 			return nil, ErrUserNotAuthorized
 		}
