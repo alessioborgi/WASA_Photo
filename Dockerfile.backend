@@ -1,0 +1,28 @@
+##### DOCKER FILE FOR THE BACKEND PART (GO) #####
+
+# Importing Go.
+FROM golang:1.19.1 AS builder
+
+# Copying the Go code from the source code. 
+WORKDIR /src/
+COPY . .
+
+# Creating the Executables (by compiling go). 
+RUN go build -o /app/webapi ./cmd/webapi
+
+
+
+
+
+# Creation of the Final Container. 
+FROM debian:bullseye
+
+# Communicate to Docker what Ports are exposed. (3000 and 4000).
+EXPOSE 3000 4000
+
+# Copying the executable from the builder image. 
+WORKDIR /app/
+COPY --from=builder /app/webapi ./
+
+# Save the executable command.
+CMD ["/app/webapi"]

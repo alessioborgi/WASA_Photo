@@ -1,0 +1,23 @@
+##### DOCKER FILE FOR THE FRONTEND PART (GO) #####
+
+# Importing Vue.js.
+FROM node:lts as builder
+
+# Copying the Vue.js code from the source code. 
+WORKDIR /app
+COPY webui webui
+
+# Creating the Executables for HTML/CSS/JS (by compiling them and trasforming them into plain). 
+WORKDIR /app/webui
+RUN npm run build-prod
+
+
+
+
+# Creation of the Final Container. 
+FROM nginx:stable
+
+# Copying the built app from the builder image.
+COPY --from=builder /app/webui/dist /usr/share/nginx/html
+
+# Notice that CMD and EXPOSE are already present in the nginx:stable container, therefore there is no need to repeat.
