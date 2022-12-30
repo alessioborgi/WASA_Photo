@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/julienschmidt/httprouter"
@@ -17,7 +18,7 @@ import (
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var username Username
+	var username api.Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -64,7 +65,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// Let's therefore take the json from the body in order to see what is the newUsername.
 
 	// Read the new content for the fountain from the request body.
-	var newUsername Username
+	var newUsername api.Username
 
 	// Getting the Username from the JSON.
 	err := json.NewDecoder(r.Body).Decode(&newUsername)
@@ -142,7 +143,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// We can now convert the new profile from array of byte to json and put it into a new profile struct.
-	var newProfileJson User
+	var newProfileJson api.User
 	err = json.Unmarshal(newProfileByte, &newProfileJson)
 
 	if !errors.Is(err, nil) {

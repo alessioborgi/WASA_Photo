@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -16,7 +17,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 
 	// Variable Declaration
 	var (
-		username Username
+		username api.Username
 		photoid  string
 	)
 

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -19,7 +20,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var (
 		err     error
 		profile database.User
-		user    User
+		user    api.User
 	)
 
 	// Getting the Authorization Token.

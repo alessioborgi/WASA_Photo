@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -19,7 +20,7 @@ import (
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var username Username
+	var username api.Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")

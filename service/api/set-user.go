@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -18,7 +19,7 @@ import (
 func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var username Username
+	var username api.Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -137,16 +138,16 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 
 	// Read the new content for the User from the request body.
-	var newUser User
+	var newUser api.User
 	newUser.Username = r.FormValue("username")
 	newUser.PhotoProfile = path
 	newUser.Biography = r.FormValue("biography")
 	newUser.Name = r.FormValue("name")
 	newUser.Surname = r.FormValue("surname")
-	newUser.DateOfBirth = Date(r.FormValue("dateOfBirth"))
-	newUser.Email = Email(r.FormValue("email"))
+	newUser.DateOfBirth = api.Date(r.FormValue("dateOfBirth"))
+	newUser.Email = api.Email(r.FormValue("email"))
 	newUser.Nationality = r.FormValue("nationality")
-	newUser.Gender = Gender(r.FormValue("gender"))
+	newUser.Gender = api.Gender(r.FormValue("gender"))
 
 	// Check whether we have that the newUsername inserted respect its Regex.
 	if !newUser.ValidUser() {
