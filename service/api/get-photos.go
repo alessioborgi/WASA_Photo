@@ -95,9 +95,9 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
-	var photoList []Photo
+	var photoList []api.Photo
 	for i := 0; i < len(photoListDB); i++ {
-		var photo Photo
+		var photo api.Photo
 		err = photo.FromDatabase(photoListDB[i], rt.db)
 		if !errors.Is(err, nil) {
 			ctx.Logger.WithError(err).Error("error: can't map photo from database to API")
