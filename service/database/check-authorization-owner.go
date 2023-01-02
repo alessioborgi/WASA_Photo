@@ -45,7 +45,7 @@ func (db *appdbimpl) CheckAuthorizationOwner(fixedUsername string, uuid string) 
 		} else {
 
 			// Returning "Authorized" if it is the owner, "Not Authorized" otherwise.
-			if auth == true {
+			if auth {
 
 				// Here we have that the person is requesting the action is the account owner, thus it is authorized.
 				log.Println("User recognized as the Account Owner.")
