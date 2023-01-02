@@ -25,7 +25,7 @@ body {
 	left: 0;
 	z-index: 100; /* Behind the navbar */
 	padding: 48px 0 0; /* Height of navbar */
-	box-shadow: inset -1px 0 0 rgba(0 0 0 / 10%);
+	box-shadow: inset -1px 0 0 rgba(86, 151, 226, 0.1);
 }
 
 @media (max-width: 767.98px) {
@@ -70,8 +70,8 @@ body {
 .navbar-brand {
 	padding-top: 0.75rem;
 	padding-bottom: 0.75rem;
-	background-color: rgba(0 0 0 / 25%);
-	box-shadow: inset -1px 0 0 rgba(0 0 0 / 25%);
+	background-color: rgba(96, 195, 237, 0.25);
+	box-shadow: inset -1px 0 0 rgba(89, 175, 237, 0.25);
 }
 
 .navbar .navbar-toggler {
@@ -85,7 +85,7 @@ body {
 
 .form-control-dark {
 	color: #fff;
-	background-color: rgba(255 255 255 / 10%);
+	background-color: rgba(107, 148, 234, 0.1);
 	border-color: rgba(255 255 255 / 10%);
 }
 

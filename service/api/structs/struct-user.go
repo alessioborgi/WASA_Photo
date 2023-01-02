@@ -17,8 +17,6 @@ import (
 
 // Declaration of Customized type used after for checking their validity.(User)
 
-// type Uuid string
-
 // Declaration of Customized type used after for checking validity (User Profile Personal Info).
 type Date string
 type Email string

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -16,7 +17,7 @@ import (
 func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var username Username
+	var username api.Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -94,9 +95,9 @@ func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// If we arrive here, it means that we have no errors, and we can proceed to correctly return the list to the user.
-	var photoList []Photo
+	var photoList []api.Photo
 	for i := 0; i < len(photoListDB); i++ {
-		var photo Photo
+		var photo api.Photo
 		err = photo.FromDatabase(photoListDB[i], rt.db)
 		if !errors.Is(err, nil) {
 			ctx.Logger.WithError(err).Error("error: can't map photo from database to API")

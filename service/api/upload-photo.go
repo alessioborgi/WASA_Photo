@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -19,7 +20,7 @@ import (
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Variable Declaration
-	var username Username
+	var username api.Username
 
 	// Getting the Authorization Token.
 	authorization_header := strings.Split(r.Header.Get("Authorization"), " ")
@@ -143,14 +144,14 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
 
 	// Creation of a Photo and values assignment.
-	var newPhoto Photo
+	var newPhoto api.Photo
 	newPhoto.Photoid = photoid
 	newPhoto.FixedUsername = fixedUsername
 	newPhoto.Filename = path
 	newPhoto.Phrase = phrase
 
 	// Check whether we have that the newPhoto inserted respect its Regex.
-	if !ValidPhoto(newPhoto) {
+	if !api.ValidPhoto(newPhoto) {
 
 		// If no error occurs, check whether the newPhoto is a Valid Photo.
 		// In this case it is not. Thus reject it.

@@ -5,18 +5,28 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"regexp"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
 
+// Constant Declaration.
 const BEARER = "Bearer"
+
+// Variables Declaration.
+var (
+	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
+	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
+	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
+)
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Username variable declaration.
-	var username Username
+	var username api.Username
 
 	// Getting the Username from the Body JSON.
 	err := json.NewDecoder(r.Body).Decode(&username)

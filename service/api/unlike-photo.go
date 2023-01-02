@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -16,8 +17,8 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Variable Declaration
 	var (
-		username      Username
-		usernameLiker Username
+		username      api.Username
+		usernameLiker api.Username
 		photoid       string
 	)
 

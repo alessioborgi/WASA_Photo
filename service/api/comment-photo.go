@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/alessioborgi/WASA_Photo/service/api/reqcontext"
+	api "github.com/alessioborgi/WASA_Photo/service/api/structs"
 	"github.com/alessioborgi/WASA_Photo/service/database"
 	"github.com/julienschmidt/httprouter"
 )
@@ -17,7 +18,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// Variable Declaration
 	var (
-		username Username
+		username api.Username
 		photoid  string
 	)
 
@@ -75,7 +76,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// Read the Phrase Content from the request body.
-	var comment Comment
+	var comment api.Comment
 
 	// Getting the Username from the JSON.
 	errBody := json.NewDecoder(r.Body).Decode(&comment)
