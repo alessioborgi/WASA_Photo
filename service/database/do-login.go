@@ -16,7 +16,7 @@ func (db *appdbimpl) DoLogin(username string) (string, error, string) {
 	fixedUsername, errUserPresence := db.CheckUserPresence(username)
 
 	// Check whether the fixedUsername  is already in the DB. If the fixedUsername is != ("" AND "Not Exists") means that it is returned a fixedUsername.
-	if fixedUsername != "" && fixedUsername != "Not Exists" {
+	if fixedUsername != "" && fixedUsername != NOTEXISTS {
 
 		// USER PROFILE LOGIN:
 		log.Println("The User already exists!")

@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+const NOTEXISTS = "Not Exists"
+
 func (db *appdbimpl) CheckPhotoPresence(photoid string, fixedUsername string) (string, error) {
 
 	// Check whether the uuid that is requesting the action is the owner of the profile.
@@ -23,5 +25,5 @@ func (db *appdbimpl) CheckPhotoPresence(photoid string, fixedUsername string) (s
 	}
 
 	// The Photo does not Exists.
-	return "Not Exists", ErrPhotoDoesNotExist
+	return NOTEXISTS, ErrPhotoDoesNotExist
 }

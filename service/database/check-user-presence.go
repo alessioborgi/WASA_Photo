@@ -34,6 +34,6 @@ func (db *appdbimpl) CheckUserPresence(username string) (string, error) {
 	} else {
 
 		// The User does not Exists.
-		return "Not Exists", ErrUserDoesNotExist
+		return NOTEXISTS, ErrUserDoesNotExist
 	}
 }
