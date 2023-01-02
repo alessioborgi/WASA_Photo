@@ -19,23 +19,17 @@ export default {}
 			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 				<div class="position-sticky pt-3 sidebar-sticky">
 					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-						<span>General</span>
+						<span>Menu</span>
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink to="/doLogin" class="nav-link">
+							<RouterLink to="/session/" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
 								Login
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link1" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
-								Home
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink to="/link2" class="nav-link">
+							<RouterLink to="/users/:username" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
 								My Profile
 							</RouterLink>
@@ -44,6 +38,18 @@ export default {}
 							<RouterLink to="/link2" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
 								New Photo
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink to="/users/:username" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
+								Home
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink to="/users/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+								Search
 							</RouterLink>
 						</li>
 					</ul>
