@@ -27,7 +27,6 @@ type Uuid string
 var (
 	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
 	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
-	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
 )
 
 // Create a User structure.

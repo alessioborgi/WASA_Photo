@@ -18,9 +18,8 @@ const BEARER = "Bearer"
 
 // Variables Declaration.
 var (
-	regex_username      = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
-	regex_fixedUsername = regexp.MustCompile(`^[u0-9]{2,31}$`)
-	regex_uuid          = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
+	regex_username = regexp.MustCompile(`^[a-zA-Z0-9._]{5,20}$`)
+	regex_uuid     = regexp.MustCompile(`^[0-9a-fA-F-]{36}`)
 )
 
 func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
