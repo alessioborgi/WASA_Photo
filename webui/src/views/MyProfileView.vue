@@ -69,20 +69,18 @@ export default {
 
 			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name">janedoe_</h1>
+				<h1 class="profile-user-name">alessioborgi01</h1>
 
 				<button class="btn profile-edit-btn">Edit Profile</button>
-
-				<button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
 
 			</div>
 
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">164</span> posts</li>
-					<li><span class="profile-stat-count">188</span> followers</li>
-					<li><span class="profile-stat-count">206</span> following</li>
+					<li><span class="profile-stat-count">164</span> Posts </li>
+					<li><span class="profile-stat-count">188</span> Followers</li>
+					<li><span class="profile-stat-count">206</span> Following</li>
 				</ul>
 
 			</div>

@@ -13,6 +13,12 @@
 
 html { width: 100%; height:100%; overflow:hidden; }
 
+.login-form {
+  object-fit: contain;
+  text-align: center;
+  margin: 0px 0 0 150px;
+}
+
 /* This CSS is dedicated to the Background ang more generally */
 body { 
   width: 100%;
@@ -34,7 +40,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin: -50px 0 0 -100px;
+  margin: -500px 0 0 -100px;
   width:500px;
   height:300px;
 }
