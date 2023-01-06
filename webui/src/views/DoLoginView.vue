@@ -51,6 +51,11 @@ export default {
 
         <form method="post" class="login-form">
 
+            <!-- <div class="input-container"> -->
+            <!-- <i class="fa fa-user icon" href="/feather-sprite-v4.29.0.svg#log-in"></i> -->
+            <!-- <input class="input-field" type="text" placeholder="Username" name="usrnm"> -->
+            <!-- </div> -->
+
             <input type="string" id="username" name="u" v-model="username" placeholder="Username..." required="required" />
             <button type="submit" class="btn btn-primary btn-block btn-large" @click="LoginUser">Login</button>
             <LoadingSpinner v-if="loading"></LoadingSpinner>
@@ -60,7 +65,7 @@ export default {
         <footer class="text-center card-footer fixed-bottom">
             <p>&copy Alessio Borgi</p>
         </footer>
-        
+
     </div>
 
 </template>

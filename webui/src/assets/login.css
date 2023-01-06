@@ -79,6 +79,7 @@ input {
   transition: box-shadow .5s ease;
 }
 
+/* This CSS is dedicated to the Copyright Footer */
 footer {
   object-fit: contain;
   text-align: center;
@@ -86,6 +87,15 @@ footer {
   font-size: 20px;
   font-family: sans-serif;
   color: rgb(199, 246, 255);
+}
+
+/* This CSS is dedicated to the input string for the Username icon */
+.icon {
+  padding: 10px;
+  background: dodgerblue;
+  color: white;
+  min-width: 50px;
+  text-align: center;
 }
 
 
