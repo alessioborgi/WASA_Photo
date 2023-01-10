@@ -1,10 +1,12 @@
+/* Font size of the Menu. */
 body {
-	font-size: 0.875rem;
+	font-size: 1.075rem;
 }
 
+/* Icons Dimension */
 .feather {
-	width: 16px;
-	height: 16px;
+	width: 31px;
+	height: 31px;
 }
 
 /*
@@ -14,14 +16,8 @@ body {
 .sidebar {
 	position: fixed;
 	top: 0;
-
-	/* rtl:raw:
 	right: 0;
-	*/
 	bottom: 0;
-
-	/* rtl:remove */
-
 	left: 0;
 	z-index: 100; /* Behind the navbar */
 	padding: 48px 0 0; /* Height of navbar */
@@ -34,24 +30,28 @@ body {
 	}
 }
 
+
 .sidebar-sticky {
 	height: calc(100vh - 48px);
 	overflow-x: hidden;
 	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
+/* Color of the Menu Options when they are not selected. */
 .sidebar .nav-link {
 	font-weight: 500;
 	color: #333;
 }
 
+/* Color of the Menu Icons */
 .sidebar .nav-link .feather {
 	margin-right: 4px;
-	color: #727272;
+	color: #4a77d4;
 }
 
+/* Color for the Menu when we select the Icon. */
 .sidebar .nav-link.active, .sidebar .router-link-active {
-	color: #2470dc;
+	color: #4a77d4;
 }
 
 .sidebar .nav-link:hover .feather,
@@ -59,23 +59,23 @@ body {
 	color: inherit;
 }
 
+/* Sidebar Heading Font-Size */
 .sidebar-heading {
-	font-size: 0.75rem;
+	font-size: 1.375rem;
 }
 
 /*
- * Navbar
+ * Navbar (The Small Navbar above the site).
  */
-
 .navbar-brand {
-	padding-top: 0.75rem;
+	padding-top: .75rem;
 	padding-bottom: 0.75rem;
-	background-color: rgba(96, 195, 237, 0.25);
-	box-shadow: inset -1px 0 0 rgba(89, 175, 237, 0.25);
+	background-color: #4a77d4;
+	box-shadow: inset -1px 0 0 rgba(6, 70, 116, 0.25);
 }
 
 .navbar .navbar-toggler {
-	top: 0.25rem;
+	top: 1.25rem;
 	right: 1rem;
 }
 
