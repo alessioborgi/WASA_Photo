@@ -1,46 +1,70 @@
 <script>
 export default {
-    data: function() {
+	data: function() {
         return {
-            errormsg: null,
-            detailedmsg: null,
-            loading: false,
-            id : 10,
-            User: {
-                uuid: null,
-                username: null,
-            }
+            loading : false,
+            errmsg : true,
+            profile: {},
+			media:[],
+			logged: localStorage.getItem('Authorization'),
+			comment: "",
+			creatingMedia: false,
+			changingProfile: false,
+			changingusername: false,
+			photo: "",
+         	caption:"",
+         	preview: "",
+			newppic:null,
         }
     },
     methods: {
-        async refresh() {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios.get("/session/");
-				this.fountains = response.data;
-			} catch (e) {
-				this.errormsg = e.toString();
-			}
-			this.loading = false;
-		},
-        LoginUser: async function () {
+        async GetProfile() {
             this.loading = true;
             this.errormsg = null;
+			this.$axios.interceptors.request.use(config => {config.headers['Authorization'] = localStorage.getItem('Authorization');return config;},
+            error => {return Promise.reject(error);});
             try {
-                let response = await this.$axios.post("/session/", {
-                    username: this.username,
-                });
-				this.uuid  = response.data,
-                localStorage.setItem('Authorization', this.uuid),
-                this.$router.push({ path: '/users/'+this.username })
-                await this.refresh();
+				// window.alert("/users/"+this.$route.params.username);
+                let response = await this.$axios.get("/users/"+this.$route.params.username)
+				this.profile = response.data;
+				// window.alert(this.profile);
             } catch (e) {
                 this.errormsg = e.toString();
+				
             }
             this.loading = false;
-            this.$forceUpdate();
-        }
+        },
+
+
+    // methods: {
+    //     async refresh() {
+	// 		this.loading = true;
+	// 		this.errormsg = null;
+	// 		try {
+	// 			let response = await this.$axios.get("/session/");
+	// 			this.fountains = response.data;
+	// 		} catch (e) {
+	// 			this.errormsg = e.toString();
+	// 		}
+	// 		this.loading = false;
+	// 	},
+    //     LoginUser: async function () {
+    //         this.loading = true;
+    //         this.errormsg = null;
+    //         try {
+    //             let response = await this.$axios.post("/session/", {
+    //                 username: this.username,
+    //             });
+	// 			this.uuid  = response.data,
+    //             localStorage.setItem('Authorization', this.uuid),
+    //             this.$router.push({ path: '/users/'+this.username })
+    //             await this.refresh();
+    //         } catch (e) {
+    //             this.errormsg = e.toString();
+    //         }
+    //         this.loading = false;
+    //         this.$forceUpdate();
+    //     }
     },
     mounted() {
 		this.refresh()
@@ -62,14 +86,14 @@ export default {
 		<div class="profile">
 
 			<div class="profile-image">
-
-				<img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+				<!-- <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt=""> -->
+				<img src="../../../service/api/photos/Profile-Already-Created" alt="">
 
 			</div>
 
 			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name">alessioborgi01</h1>
+				<h1 class="profile-user-name"> {{ profile.username }}</h1>
 
 				<button class="btn profile-edit-btn">Edit Profile</button>
 
@@ -78,16 +102,16 @@ export default {
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">164</span> Posts </li>
-					<li><span class="profile-stat-count">188</span> Followers</li>
-					<li><span class="profile-stat-count">206</span> Following</li>
+					<li><span class="profile-stat-count"> {{ profile.numberOfPhotos }}</span> <b>Posts</b> </li>
+					<li><span class="profile-stat-count"> {{ profile.numberFollowers }}</span> Followers</li>
+					<li><span class="profile-stat-count"> {{ profile.numberFollowing }}</span> Following</li>
 				</ul>
 
 			</div>
 
 			<div class="profile-bio">
 
-				<p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+				<p> {{ profile.biography }}</p>
 
 			</div>
 
@@ -98,7 +122,9 @@ export default {
 	<!-- End of container -->
 
 </header>
+</template> 
 
+<!-- 
 <main>
 
 	<div class="container">
@@ -321,17 +347,17 @@ export default {
 
 			</div>
 
-		</div>
+		</div> -->
 		<!-- End of gallery -->
 
 		<!-- <div class="loader"></div> -->
 
-	</div>
+	<!-- </div> -->
 	<!-- End of container -->
 
-</main>
+<!-- </main>
     
-</template>
+</template> -->
 
 
 <!-- For doing the heart!!! -->
