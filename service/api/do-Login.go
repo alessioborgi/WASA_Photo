@@ -29,17 +29,12 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// Getting the Username from the Body JSON.
 	err := json.NewDecoder(r.Body).Decode(&username)
-	if err != nil {
-
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("Err: The Body was not a Parseable JSON!")
-		return
-	}
 	log.Println("The Username that will be added is: ", username)
 
 	// First check whether we have encountered some error in the Body Retrieval.
 	if !errors.Is(err, nil) {
 
+		ctx.Logger.WithError(err).WithField("Username", username).Error("Err: The Body was not a Parseable JSON!")
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Body was not a Parseable JSON!")
 		return
@@ -48,6 +43,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 	// We can then check whether the Username we are providing is currently a Valid Username respecting the Regex.
 	if !username.ValidUsername(*regex_username) {
 
+		ctx.Logger.WithError(err).WithField("Username", username).Error("Err: The Username inserted is not Valid (Does not respect its Regex)!")
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username inserted is not Valid (Does not respect its Regex)!")
 		return
@@ -59,8 +55,10 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// First of all, check whether there is an error (on our side. If yes, notify the user). Note that I pass through the error also whether we have a created or already present user (not so clean).
 	if !errors.Is(err, nil) {
+
+		ctx.Logger.WithError(err).WithField("Username", username).Error("Err: Error During User Logging. Can't log in!")
 		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).Error("Error During User Logging. Can't log in!")
+		ctx.Logger.WithError(err).Error("Err: Error During User Logging. Can't log in!")
 		return
 	}
 

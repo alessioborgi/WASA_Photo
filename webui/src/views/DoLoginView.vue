@@ -93,15 +93,13 @@ export default {
         </form>
 
         <!-- Insertion of the Copyright footer -->
-        <footer class="text-center card-footer fixed-bottom">
+        <!-- <footer class="text-center card-footer fixed-bottom">
             <p>&copy Alessio Borgi</p>
-        </footer>
+        </footer> -->
 
     </div>
 
 </template>
-
-
 
 
 <!-- For doing the heart!!! -->
