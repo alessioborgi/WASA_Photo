@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import axios from './services/axios.js';
 
-import ErrorMsg from './components/ErrorMessage.vue'
+import ErrorMessage from './components/ErrorMessage.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 
 import './assets/dashboard.css'
@@ -14,7 +14,11 @@ import './assets/myProfile.css'
 
 const app = createApp(App)
 app.config.globalProperties.$axios = axios;
-app.component("ErrorMessage", ErrorMsg);
+app.component("ErrorMessage", ErrorMessage);
 app.component("LoadingSpinner", LoadingSpinner);
 app.use(router)
 app.mount('#app')
+
+
+
+

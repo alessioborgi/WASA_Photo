@@ -15,6 +15,7 @@ export default {
     // Including some components that will be used in the page.
     components: {
         LoadingSpinner,
+        
     },
 
     // Describing what are the Return variables.
@@ -52,7 +53,7 @@ export default {
                 localStorage.setItem('Authorization', this.uuid),
 
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: '/users/'+ this.username })
+                this.$router.push({ path: '/users/'+ this.loginUsername.username })
 
             } catch (e) {
 
@@ -76,9 +77,11 @@ export default {
 <template>
     
     <div class="login">
+
+        <ErrorMessage v-if="errormessage" :msg="errormessage"></ErrorMessage>
+
         <h1>WASA Photo</h1>
         <img src="./img/wasa-logo.png" alt="">
-        <!-- <ErrorMessage v-if="errormessage" :msg="errormessage"></ErrorMessage> -->
 
         <!-- Creation of the form for the Login. -->
         <form method="post" class="login-form">
@@ -87,15 +90,9 @@ export default {
             <input type="text" id="username" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
 
             <!-- Creation of the Login Button linked to the doLogin action. -->
-            <button type="submit" class="btn btn-primary btn-block btn-large" @click="doLogin">Login</button>
-            <!-- <LoadingSpinner v-if="loading"></LoadingSpinner> -->
-
+            <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="doLogin">Login</button>
+            <LoadingSpinner v-if="loading"></LoadingSpinner>
         </form>
-
-        <!-- Insertion of the Copyright footer -->
-        <!-- <footer class="text-center card-footer fixed-bottom">
-            <p>&copy Alessio Borgi</p>
-        </footer> -->
 
     </div>
 

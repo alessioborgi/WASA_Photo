@@ -11,8 +11,8 @@ import (
 // policy. This function sends the policy of this API server.
 func applyCORSHandler(h http.Handler) http.Handler {
 	return handlers.CORS(
-		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT", "PATCH"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "X-Requested-With", "Authorization"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"}),
 		handlers.AllowedOrigins([]string{"*"}),
 	)(h)
 }
