@@ -166,13 +166,14 @@ export default {
 				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-				<!-- If the Username has gone  -->
+				<!-- If the Username to search was not found, report the error. -->
 				<div class="card" v-if="usernameToSearchBool === false">
 					<div class="card-body">
 						<p>No User present in the Database with the {{ this.usernameToSearch }} username.</p>
 					</div>
 				</div>
 
+				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 				<div class="card" v-if="!loading" v-for="u in usersProfiles">
 
 					<div class="card-header">
@@ -191,6 +192,7 @@ export default {
 	</div>
 </template>
 
+<!-- Declaration of the style(scoped) to use. -->
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
