@@ -2,14 +2,12 @@
 <script>
 
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-import ErrorMsg from '../components/ErrorMsg.vue'
 // Declaration of the export set.
 export default {
 
     // Including some components that will be used in the page.
     components: {
         LoadingSpinner,
-        ErrorMsg,
     },
 
     // Describing what are the Return variables.
@@ -40,7 +38,9 @@ export default {
             try {
                 
                 // In the case the result is positive, we post the username received to the GO page.
-                let response = await this.$axios.post("/session/", { username: this.username });
+                let response = await this.$axios.post("/session/", { 
+                    username: this.username 
+                });
                 
                 // Setting the uuid (Bearer Token) received as response by the Post action.
                 this.uuid  = response.data,
