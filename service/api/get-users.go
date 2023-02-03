@@ -26,6 +26,7 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	// We first need to check whether the authorization we have been providing is the Bearer Authentication.
 	if authorization_type != BEARER {
 
+		ctx.Logger.Error("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		return
@@ -34,6 +35,7 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	// We then need to check whether the Bearer Token we are passing mastched its regex.
 	if !regex_uuid.MatchString(authorization_token) {
 
+		ctx.Logger.Error("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 		return
@@ -48,12 +50,14 @@ func (rt *_router) GetUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	// If we receive an error diverse from nil and ErrNoContent, we have an error in the DB Retrieval, in our side. Log the error.
 	if !errors.Is(err, nil) && !errors.Is(err, database.ErrNoContent) && !errors.Is(err, sql.ErrNoRows) {
 
+		ctx.Logger.WithError(err).Error("Err: It can't list users due to an Internal Server Error.")
 		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).Error("It can't list users")
+		ctx.Logger.WithError(err).Error("Err: It can't list users due to an Internal Server Error.")
 		return
 	} else if errors.Is(err, database.ErrNoContent) || errors.Is(err, sql.ErrNoRows) {
 
 		// If, instead, we have that the error is No Content, we return it, meaning that we haven't found any other User in the platform.
+		ctx.Logger.WithError(err).Error("Err: We have no User in the Platform.")
 		w.WriteHeader(http.StatusNoContent)
 		log.Println("Err: We have no User in the Platform.")
 		return

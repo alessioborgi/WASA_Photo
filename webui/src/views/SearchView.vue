@@ -1,108 +1,156 @@
+<!-- Starting of the actual Search Page Handling. -->
 <script>
+
+// Declaration of the export set.
 export default {
 
+	// Describing what are the Return variables.
 	data: function() {
 		return {
+
+			// Initializing the two errormessage and loading variables.
 			errormsg: null,
 			loading: false,
+
+			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
+
+			// Initializing two arrays that will handle the list of users and their profiles.
 			users: [],
-			usersProfiles: [],
-            // userProfile: {
-            //     fixedUsername: "",
-            //     username: "",
-            //     photoProfile: "",
-            //     biography: "",
-            //     dateOfCreation: "",
-            //     numberOfPhotos: 0,
-            //     numberFollowers: 0,
-            //     numberFollowing: 0,
-            //     name: "",
-            //     surname: "",
-            //     dateOfBirth: "",
-            //     email: "",
-            //     nationality: "", 
-            //     gender: "",
-            // }
+			usersProfiles: [],									// userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""}
+			
+			// Initializing two variables that will be used to Handle the Specific Search for a User.
+			usernameToSearch: "",
+			usernameToSearchBool: true,
 		}
 	},
-	methods: {
-		load() {
-			return load
-		},
 
-        // GetUsers Function
+	// Declaration of the methods that will be used.
+	methods: {
+		
+        // GetUsers Function: It fills the "users" array with the usernames present in the DB.
 		async getUsers() {
-			this.loading = true;
+
+			// Re-initializing variables to their default value.
 			this.errormsg = null;
+			this.loading = true;
+
+			this.users = [];
+			this.usersProfiles = [];
+			
 			try {
 
+				// Getting the list of Users from the Back-End.
                 let response = await this.$axios.get("/users/", {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("BearerToken")
 					}
 				})
 
+				// Saving the response in the "users" array.
 				this.users = response.data;
 
+				// Retrieving for every username, its Profile.
 				for (let i = 0; i < this.users.length; i++) {
+
 					this.getUserProfile(i)
 				}
+
 			} catch (e) {
+
+				// If an error is encountered, display it!
 				this.errormsg = e.toString();
 			}
 
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
 		},
 
-        // GetUserProfile Function
+        // GetUserProfile Function: It retrieves the whole profile of a username.
         async getUserProfile(i) {
 
 			try{
 
+				// Retrieving the Profile from the Back-end.
 				let responseProfile = await this.$axios.get("/users/"+this.users[i], {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("BearerToken")
 					}
 				})
 
+				// Add the profile retrieved to the "usersProfiles" array.
 				this.usersProfiles.push(responseProfile.data);
 
 			} catch (e) {
+
+				// If an error is encountered, display it!
 				this.errormsg = e.toString();
 			}
-
-			this.loading = false;
 		},
 
-		// Re-address to the Login Page.
-		async register(){
-			this.$router.push("/session/");
-		}
+		// SerchUsername: It will search for whether the Username inserted in the input is present.
+		async searchUsername() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = null;
+			this.loading = true;
+
+			this.users = [];
+			this.usersProfiles = [];
+
+			this.usernameToSearchBool = true;
+			
+			try{
+
+				// Let's retrieve the Profile of the Username we are searching for.
+				let responseProfile = await this.$axios.get("/users/"+this.usernameToSearch, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+				this.usersProfiles.push(responseProfile.data);
+
+			} catch (e) {
+
+				// If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
+				this.usernameToSearchBool = false;
+				this.errormsg = e.toString();
+			}
+	
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+			// this.usernameToSearchBool = true;
+		},
 	},
-	mounted() {
-		this.getUsers()
-	}
 }
 </script>
 
+<!-- Actual Page for handling the page setting. -->
 <template>
+
 	<div>
+			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1">WASA Photo SEARCH</h1>
+
 			<div class="topMenu">
+
+				<!-- "Users List" Button -->
 				<div class="topMenuButtons">
 					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getUsers"> Users List </button>
 				</div>
 
+				<!-- WASA Photo Icon -->
 				<div class="topMenuColumn">
 					<img src="./img/wasa-logo.png" alt="" class="img">
 				</div>
 
+				<!-- "Search Username Field" -->
 				<div class="topMenuButtons">
-					<input type="text" id="username" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
-					<button type="login-button" class="searchButton" v-if="!loading" @click="getUsers"> 
-						
+					<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
+					<button type="login-button" class="searchButton" v-if="!loading" @click="searchUsername"> 
 						<!-- <img src="/feather-sprite-v4.29.0.svg#search"> -->
 						<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 					</button>
@@ -110,24 +158,25 @@ export default {
 
 			</div>
 
-			<!-- If no User is present, Login(Register) one. -->
 
+			<!-- Let's now handle the dynamic part. -->
 			<div class="result">
 
+				<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
 				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-				<div class="card" v-if="users.length === 0">
+				<!-- If the Username has gone  -->
+				<div class="card" v-if="usernameToSearchBool === false">
 					<div class="card-body">
-						<p>No User in the database.</p>
-						<a href="javascript:" class="btn btn-primary" @click="register">Register!</a>
+						<p>No User present in the Database with the {{ this.usernameToSearch }} username.</p>
 					</div>
 				</div>
 
 				<div class="card" v-if="!loading" v-for="u in usersProfiles">
 
 					<div class="card-header">
-						User
+						<b> USER {{ u.fixedUsername }} </b>
 					</div>
 					<div class="card-body">
 						<p class="card-text">
@@ -147,6 +196,8 @@ export default {
 
 .card {
 	margin-bottom: 20px;
+	font-size: 20px;
+  	font-family: sans-serif;
 }
 
 .img {
@@ -172,7 +223,7 @@ export default {
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
-	margin-top: 31px;
+	margin-top: 60px;
 }
 
 .topMenuColumn {

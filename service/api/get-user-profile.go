@@ -31,6 +31,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	// We first need to check whether the authorization we have been providing is the Bearer Authentication.
 	if authorization_type != BEARER {
 
+		ctx.Logger.Error("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		return
@@ -52,12 +53,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	if username_search == "" {
 
 		// If the username is empty, there is a bad request.
+		ctx.Logger.WithError(err).WithField("Username", username_search).Error("Err: The User Profile Retrieval cannot be done because it has received an Empty username.")
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The User Profile Retrieval cannot be done because it has received an Empty username.")
 		return
 	} else if !regex_username.MatchString(username_search) {
 
 		// If the username does not respect its Regex, there is a bad request.
+		ctx.Logger.WithError(err).WithField("Username", username_search).Error("Err: The User Profile Retrieval cannot be done because it has received a not valid username.")
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The User Profile Retrieval cannot be done because it has received a not valid username.")
 		return

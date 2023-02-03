@@ -74,7 +74,7 @@ export default {
 
         <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
 
-        <h1>WASA Photo</h1>
+        <h1>WASA Photo LOGIN</h1>
         <img src="./img/wasa-logo.png" alt="">
 
         <!-- Creation of the form for the Login. -->

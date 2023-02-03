@@ -28,6 +28,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// We first need to check whether the authorization we have been providing is the Bearer Authentication.
 	if authorization_type != BEARER {
 
+		ctx.Logger.Error("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Authentication inserted is not the Bearer Authenticaton.")
 		return
