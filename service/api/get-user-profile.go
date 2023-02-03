@@ -74,12 +74,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	if errors.Is(err, database.ErrUserDoesNotExist) || errors.Is(err, sql.ErrNoRows) || errors.Is(err, database.ErrNoContent) {
 
 		// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
+		ctx.Logger.WithError(err).WithField("Username", username_search).Error("Err: The Username that was requested, is not a WASAPhoto User.")
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The Username that was requested, is not a WASAPhoto User.")
 		return
 	} else if errors.Is(err, database.ErrUserNotAuthorized) {
 
 		// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
+		ctx.Logger.WithError(err).WithField("Username", username_search).Error("Err: The Uuid that requested the Username, has not a valid Uuid.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Uuid that requested the Username, has not a valid Uuid.")
 		return
@@ -87,8 +89,9 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
 		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
 		// the Username of the User that triggered the error.
+		ctx.Logger.WithError(err).WithField("Username", username_search).Error("Err: User not present in WASAPhoto. Can't get the Profile.")
 		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(err).WithField("username", username_search).Error("User not present in WASAPhoto. Can't update the Username.")
+		ctx.Logger.WithError(err).WithField("username", username_search).Error("Err: User not present in WASAPhoto. Can't get the Profile.")
 		return
 	} else {
 
