@@ -7,6 +7,7 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 			users: [],
+			usersProfiles: [],
             userProfile: {
                 fixedUsername: "",
                 username: "",
@@ -37,16 +38,36 @@ export default {
 			try {
 
                 let response = await this.$axios.get("/users/", {
-						headers: {
-							Authorization: "Bearer " + localStorage.getItem("BearerToken")
-						}
-					})
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
 
 				this.users = response.data;
-                
+
+				for (let i = 0; i < this.users.length; i++) {
+
+					try{
+
+						let responseProfile = await this.$axios.get("/users/"+this.users[i], {
+							headers: {
+								Authorization: "Bearer " + localStorage.getItem("BearerToken")
+							}
+						})
+
+						this.usersProfiles.push(responseProfile.data);
+
+					} catch (e) {
+						this.errormsg = e.toString();
+					}
+
+					this.loading = false;
+				} 
+				
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
+
 			this.loading = false;
 		},
 
@@ -124,15 +145,15 @@ export default {
 			</div>
 		</div>
 
-		<div class="card" v-if="!loading" v-for="u in users">
+		<div class="card" v-if="!loading" v-for="u in usersProfiles">
             <!-- {{ this.userProfile = getUserProfile(u) }} -->
 			<div class="card-header">
 				User
 			</div>
 			<div class="card-body">
 				<p class="card-text">
-					Username: {{ u }}<br />
-                    <!-- Name: {{ u.name }} -->
+					Username: {{ u.username }}<br />
+                    Name: {{ u.name }}
 				</p>
 			</div>
 		</div>
