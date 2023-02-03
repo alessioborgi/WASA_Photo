@@ -47,7 +47,7 @@ export default {}
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/users/" class="nav-link">
+							<RouterLink to="/search/" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 								Search
 							</RouterLink>
