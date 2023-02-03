@@ -39,6 +39,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// We then need to check whether the Bearer Token we are passing mastched its regex.
 	if !regex_uuid.MatchString(authorization_token) {
 
+		ctx.Logger.Error("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 		w.WriteHeader(http.StatusUnauthorized)
 		log.Println("Err: The Bearer Authentication Token you have inserted does not respect the Uuid Regex.")
 		return
