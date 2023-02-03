@@ -8,22 +8,22 @@ export default {
             BearerToken: localStorage.getItem('BearerToken'),
 			users: [],
 			usersProfiles: [],
-            userProfile: {
-                fixedUsername: "",
-                username: "",
-                photoProfile: "",
-                biography: "",
-                dateOfCreation: "",
-                numberOfPhotos: 0,
-                numberFollowers: 0,
-                numberFollowing: 0,
-                name: "",
-                surname: "",
-                dateOfBirth: "",
-                email: "",
-                nationality: "", 
-                gender: "",
-            }
+            // userProfile: {
+            //     fixedUsername: "",
+            //     username: "",
+            //     photoProfile: "",
+            //     biography: "",
+            //     dateOfCreation: "",
+            //     numberOfPhotos: 0,
+            //     numberFollowers: 0,
+            //     numberFollowing: 0,
+            //     name: "",
+            //     surname: "",
+            //     dateOfBirth: "",
+            //     email: "",
+            //     nationality: "", 
+            //     gender: "",
+            // }
 		}
 	},
 	methods: {
@@ -46,24 +46,8 @@ export default {
 				this.users = response.data;
 
 				for (let i = 0; i < this.users.length; i++) {
-
-					try{
-
-						let responseProfile = await this.$axios.get("/users/"+this.users[i], {
-							headers: {
-								Authorization: "Bearer " + localStorage.getItem("BearerToken")
-							}
-						})
-
-						this.usersProfiles.push(responseProfile.data);
-
-					} catch (e) {
-						this.errormsg = e.toString();
-					}
-
-					this.loading = false;
-				} 
-				
+					this.getUserProfile(i)
+				}
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
@@ -72,22 +56,22 @@ export default {
 		},
 
         // GetUserProfile Function
-        async getUserProfile(usernameToSearch) {
-			this.loading = true;
-			this.errormsg = null;
-            // this.usernameToSearch = usernameToSearch;
-			try {
+        async getUserProfile(i) {
 
-                let response = await this.$axios.get("/users/"+usernameToSearch, {
-						headers: {
-							Authorization: "Bearer " + localStorage.getItem("BearerToken")
-						}
-					})
+			try{
 
-				this.userProfile = response.data;
+				let responseProfile = await this.$axios.get("/users/"+this.users[i], {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				this.usersProfiles.push(responseProfile.data);
+
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
+
 			this.loading = false;
 		},
 
@@ -118,6 +102,8 @@ export default {
 	<div>
 		<div
 			class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			<h1>WASA Photo</h1>
+			<img src="./img/wasa-logo.png" alt="">
 			<h1 class="h2">Users list</h1>
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<div class="btn-group me-2">
@@ -146,14 +132,16 @@ export default {
 		</div>
 
 		<div class="card" v-if="!loading" v-for="u in usersProfiles">
-            <!-- {{ this.userProfile = getUserProfile(u) }} -->
+
 			<div class="card-header">
 				User
 			</div>
 			<div class="card-body">
 				<p class="card-text">
-					Username: {{ u.username }}<br />
-                    Name: {{ u.name }}
+					Photo: {{ u.photoProfile}} <br/>
+					Username: {{ u.username }}<br/>
+                    Name: {{ u.name }} <br/>
+					Biography: {{ u.biography }}
 				</p>
 			</div>
 		</div>
@@ -164,4 +152,14 @@ export default {
 .card {
 	margin-bottom: 20px;
 }
+
+.icon {
+	/* This CSS is dedicated to the input string for the Username icon */
+  padding: 0px;
+  background: dodgerblue;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
 </style>

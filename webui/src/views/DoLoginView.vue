@@ -1,21 +1,15 @@
-<!-- Declaration of the style(scoped) to use. -->
-<style scoped>
-        @import '../assets/login.css';
-</style>
-
 <!-- Starting of the actual Login Page Handling. -->
 <script>
 
-
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-
+import ErrorMsg from '../components/ErrorMsg.vue'
 // Declaration of the export set.
 export default {
 
     // Including some components that will be used in the page.
     components: {
         LoadingSpinner,
-        
+        ErrorMsg,
     },
 
     // Describing what are the Return variables.
@@ -78,7 +72,7 @@ export default {
     
     <div class="login">
 
-        <ErrorMessage v-if="errormessage" :msg="errormessage"></ErrorMessage>
+        <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
 
         <h1>WASA Photo</h1>
         <img src="./img/wasa-logo.png" alt="">
@@ -97,6 +91,11 @@ export default {
     </div>
 
 </template>
+
+<!-- Declaration of the style(scoped) to use. -->
+<style scoped>
+    @import '../assets/login.css';
+</style>
 
 
 <!-- For doing the heart!!! -->

@@ -76,7 +76,7 @@ export default {
 
 
 <style scoped>
-        @import '../assets/myProfile.css';
+        /* @import '../assets/myProfile.css'; */
 </style>
 
 <template>
