@@ -1,15 +1,20 @@
 <!-- Starting of the actual Search Page Handling. -->
 <script>
 
+import ErrorMsg from '../components/ErrorMsg.vue'
 // Declaration of the export set.
 export default {
+
+	components: {
+		ErrorMsg
+	},
 
 	// Describing what are the Return variables.
 	data: function() {
 		return {
 
 			// Initializing the two errormessage and loading variables.
-			errormsg: null,
+			errormsg: "",
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
@@ -33,7 +38,7 @@ export default {
 		async getUsers() {
 
 			// Re-initializing variables to their default value.
-			this.errormsg = null;
+			this.errormsg = "";
 			this.loading = true;
 
 			this.users = [];
@@ -100,7 +105,7 @@ export default {
 		async searchUsername() {
 
 			// Re-initializing variables to their default value.
-			this.errormsg = null;
+			this.errormsg = "";
 			this.loading = true;
 
 			this.users = [];
@@ -123,13 +128,14 @@ export default {
 			} catch (e) {
 
 				// If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
-				this.usernameToSearchBool = false;
 				this.errormsg = e.toString();
+
+				// this.errormsg = e.response.statusText;
+				this.usernameToSearchBool = false;
 			}
 	
 			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
-			// this.usernameToSearchBool = true;
 		},
 	},
 }
@@ -156,11 +162,12 @@ export default {
 
 				<!-- "Search Username Field" -->
 				<div class="topMenuButtons">
-					<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
-					<button type="login-button" class="searchButton" v-if="!loading" @click="searchUsername"> 
-						<!-- <img src="/feather-sprite-v4.29.0.svg#search"> -->
-						<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-					</button>
+					<div class="searchLabel">
+						<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
+					</div>
+					<div class= "searchButton">
+						<svg class="feather" v-if="!loading" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+					</div>
 				</div>
 
 			</div>
@@ -184,16 +191,38 @@ export default {
 				<div class="card" v-if="!loading" v-for="u in usersProfiles">
 
 					<div class="card-header">
-						<b> USER {{ u.fixedUsername }} </b>
+						<div class="usernameLabel">
+							<b> USERNAME: {{ u.username }} </b>
+						</div>
+						
+
+						<div class="buttons-menu">
+							<div class = "buttonsFollowBan">
+								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
+
+							</div>
+							<div class = "buttonsFollowBan">	
+								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
+								<!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
+
+							</div>
+
+						</div>
+
 					</div>
 					<div class="card-body">
 						<p class="card-text">
 
-							Photo: {{ u.photoProfile}} <br/>
-							Username: {{ u.username }}<br/>
-							Name: {{ u.name }} <br/>
-							Biography: {{ u.biography }} <br/>
-							DateOfCreation: {{ u.dateOfCreation}}
+							<p><b>Photo:</b> {{ u.photoProfile}} <br/> </p>
+							<p>
+								<b>Name:</b> {{ u.name }}
+								<b>Surname:</b> {{ u.surname }}  
+								<b>FixedUsername:</b>{{ u.fixedUsername }}<br/>
+							</p>
+							<p><b>Biography:</b> {{ u.biography }} <br/></p>
+							
+							<!-- DateOfCreation: {{ u.dateOfCreation}} -->
 
 						</p>
 					</div>
@@ -251,6 +280,34 @@ export default {
   	width: 30%;
 }
 
+.usernameLabel{
+	float: left;
+  	width: 90%;
+}
+.buttons-menu{
+	float: left;
+  	width: 10%;
+}
+
+.buttonsFollowBan{
+	float: left;
+  	width: 50%;
+}
+
+.feather {
+	color: #4a77d4;
+}
+
+.searchLabel {
+	float: left;
+  	width: 95%;
+}
+
+.searchButton{
+	float: left;
+	margin-left: 0;
+  	width: 5%;
+}
 
 .result{
 	display: block;
