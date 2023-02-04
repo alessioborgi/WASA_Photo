@@ -2,6 +2,7 @@
 <script>
 
 import ErrorMsg from '../components/ErrorMsg.vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
 // Declaration of the export set.
 export default {
 
@@ -28,6 +29,11 @@ export default {
 			// Initializing two variables that will be used to Handle the Specific Search for a User.
 			usernameToSearch: "",
 			usernameToSearchBool: true,
+
+			// Initializing two arrays for handling the list of respectively Followers and Followings. 
+			followersList: [],
+			followingsList: [],
+
 		}
 	},
 
@@ -115,15 +121,23 @@ export default {
 			
 			try{
 
-				// Let's retrieve the Profile of the Username we are searching for.
-				let responseProfile = await this.$axios.get("/users/"+this.usernameToSearch, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
+				// Let's search for the username, only if it is > 0 (of course).
+				if (this.usernameToSearch.length > 0) {
 
-				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
-				this.usersProfiles.push(responseProfile.data);
+					// Let's retrieve the Profile of the Username we are searching for.
+					let responseProfile = await this.$axios.get("/users/"+this.usernameToSearch, {
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("BearerToken")
+						}
+					})
+
+					// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+					this.usersProfiles.push(responseProfile.data);
+				} else {
+					// If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
+					this.errormsg = "Err: The Username to Search for cannot be empty!";
+				}
+				
 
 			} catch (e) {
 
@@ -137,6 +151,74 @@ export default {
 			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
 		},
+
+		// followUser: Given in input the username of the person to follow, it will let the Username Logged to follow the user passed.
+		async followUser(followingUsername){
+			
+		},
+
+		// getFollowings: It returns the list of usernames of the people I am following.
+		async getFollowings() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followingsList = [];
+			
+			try {
+
+				// Getting the list of Users from the Back-End.
+                let response = await this.$axios.get("/users/" + this.username +"/followings/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "users" array.
+				this.followingsList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		// getFollowers: It returns the list of usernames of the people that are following me.
+		async getFollowers(){
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followersList = [];
+			
+			try {
+
+				// Getting the list of Users from the Back-End.
+                let response = await this.$axios.get("/users/" + this.username +"/followers/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "users" array.
+				this.followersList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
 	},
 }
 </script>
@@ -162,7 +244,7 @@ export default {
 
 				<!-- "Search Username Field" -->
 				<div class="topMenuButtons">
-					<div class="searchLabel">
+					<div class="formControl">
 						<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
 					</div>
 					<div class= "searchButton">
@@ -198,7 +280,7 @@ export default {
 
 						<div class="buttons-menu">
 							<div class = "buttonsFollowBan">
-								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
 								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
 
 							</div>
@@ -214,13 +296,13 @@ export default {
 					<div class="card-body">
 						<p class="card-text">
 
-							<p><b>Photo:</b> {{ u.photoProfile}} <br/> </p>
+							<p><b>PHOTO:</b> {{ u.photoProfile}} <br/> </p>
 							<p>
-								<b>Name:</b> {{ u.name }}
-								<b>Surname:</b> {{ u.surname }}  
-								<b>FixedUsername:</b>{{ u.fixedUsername }}<br/>
+								<b>NAME:</b> {{ u.name }}
+								<b>SURNAME:</b> {{ u.surname }}  
+								<b>FIXEDUSERNAME:</b> {{ u.fixedUsername }}<br/>
 							</p>
-							<p><b>Biography:</b> {{ u.biography }} <br/></p>
+							<p><b>BIOGRAPHY:</b> {{ u.biography }} <br/></p>
 							
 							<!-- DateOfCreation: {{ u.dateOfCreation}} -->
 
@@ -233,132 +315,5 @@ export default {
 
 <!-- Declaration of the style(scoped) to use. -->
 <style scoped>
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-
-.card {
-	margin-bottom: 20px;
-	font-size: 20px;
-  	font-family: sans-serif;
-}
-
-.img {
-	display: block;
-  	margin-left: auto;
-  	margin-right: auto;
-  	width: 50%;
-    width: 200px;
-    height: auto;
-}
-
-.topMenu{
-	display: block;
-  	margin-left: auto;
-  	margin-right: auto;
-	margin-top: 10px;
-	margin-bottom: 10px;
-  	width: 50%;
-	width: 720px;
-}
-
-.h1 {
-	display: block;
-  	margin-left: auto;
-  	margin-right: auto;
-	margin-top: 60px;
-}
-
-.topMenuColumn {
-  float: left;
-  width: 33.33%;
-}
-
-.topMenuButtons{
-	margin-top: 78px;
-	margin-left: 10px;
-	margin-right: 10px;
-	float: left;
-  	width: 30%;
-}
-
-.usernameLabel{
-	float: left;
-  	width: 90%;
-}
-.buttons-menu{
-	float: left;
-  	width: 10%;
-}
-
-.buttonsFollowBan{
-	float: left;
-  	width: 50%;
-}
-
-.feather {
-	color: #4a77d4;
-}
-
-.searchLabel {
-	float: left;
-  	width: 95%;
-}
-
-.searchButton{
-	float: left;
-	margin-left: 0;
-  	width: 5%;
-}
-
-.result{
-	display: block;
-  	margin-left: auto;
-  	margin-right: auto;
-	margin-top: 300px;
-}
-
-.btn { display: inline-block; *display: inline; *zoom: 1;   font-family: sans-serif; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center;text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0); border-color: #e6e6e6 #e6e6e6 #e6e6e6; border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); border: 1px solid #e6e6e6; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); cursor: pointer; *margin-left: .3em; }
-.btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] { background-color: #e6e6e6; }
-.btn-large { padding: 9px 14px; font-size: 20px; line-height: normal; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
-.btn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; -webkit-transition: background-position 0.1s linear; -moz-transition: background-position 0.1s linear; -ms-transition: background-position 0.1s linear; -o-transition: background-position 0.1s linear; transition: background-position 0.1s linear; }
-.btn-primary, .btn-primary:hover { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); color: #ffffff; }
-.btn-primary.active { color: rgba(255, 255, 255, 0.75); }
-.btn-primary { background-color: #4a77d4; background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4); background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4)); background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4); background-image: -o-linear-gradient(top, #6eb6de, #4a77d4); background-image: linear-gradient(top, #6eb6de, #4a77d4); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);  border: 1px solid #3762bc; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5); }
-.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] { filter: none; background-color: #4a77d4; }
-.btn-block { width: 100%; display:block; }
-
-/* This CSS is dedicated to the input string for the "Username" */
-input { 
-  width: 100%; 
-  margin-bottom: 10px; 
-  background: rgb(199, 246, 255); 
-  border: none;
-  outline: none;
-  padding: 10px;
-  font-size: 15px;
-  font-family: sans-serif;
-  border: 1px solid rgba(31, 86, 135, 0.3);
-  border-radius: 4px;
-  box-shadow: inset 0 -5px 45px rgba(12, 125, 123, 0.2), 0 1px 1px rgba(10, 131, 161, 0.2);
-  -webkit-transition: box-shadow .5s ease;
-  -moz-transition: box-shadow .5s ease;
-  -o-transition: box-shadow .5s ease;
-  -ms-transition: box-shadow .5s ease;
-  transition: box-shadow .5s ease;
-}
-
-.form-control {
-	width: 0%;
-	float: left;
-  	width: 85%;
-}
-
-.searchButton{
-	width: 0%;
-	float: left;
-  	width: 15%;
-}
-
-* { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
-
-
+	@import '../assets/search.css';
 </style>
