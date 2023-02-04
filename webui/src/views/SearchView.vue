@@ -38,6 +38,8 @@ export default {
 
 			this.users = [];
 			this.usersProfiles = [];
+
+			this.usernameToSearchBool = true;
 			
 			try {
 
@@ -56,6 +58,11 @@ export default {
 
 					this.getUserProfile(i)
 				}
+
+				// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
+				this.usersProfiles.sort(function(a,b){
+					return a.dateOfCreation - b.dateOfCreation;
+				})
 
 			} catch (e) {
 
@@ -181,10 +188,13 @@ export default {
 					</div>
 					<div class="card-body">
 						<p class="card-text">
+
 							Photo: {{ u.photoProfile}} <br/>
 							Username: {{ u.username }}<br/>
 							Name: {{ u.name }} <br/>
-							Biography: {{ u.biography }}
+							Biography: {{ u.biography }} <br/>
+							DateOfCreation: {{ u.dateOfCreation}}
+
 						</p>
 					</div>
 				</div>
