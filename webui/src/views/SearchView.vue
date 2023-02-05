@@ -218,7 +218,6 @@ export default {
 						<div class="usernameLabel">
 							<b> USERNAME: {{ u.username }} </b>
 						</div>
-						
 
 						<div class="buttons-menu">
 							<div class = "buttonsFollowBan">

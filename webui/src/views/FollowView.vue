@@ -23,8 +23,9 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
-			// Initializing two variables that will be used to Handle the Specific Search for a User.
-			// usernameToSearch: "",
+			// Initializing two variables that will be used to Handle the Specific Search for a User among the Followings and Followers.
+			usernameFollowingsToSearch: "",
+            usernameFollowersToSearch: "",
 			// usernameToSearchBool: true,
 
 			// Initializing four arrays for handling the list of respectively Followers and Followings and the two same arrays but with profiles. 
@@ -182,9 +183,171 @@ export default {
 			this.loading = false;
 		},
 
+
+        // SerchUsername: It will search for whether the Username inserted in the input is present among the FollowingsList.
+		async searchUsername(flag) {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followingsList = [];
+            this.followingsListProfiles = [];
+            this.followersList = [];
+            this.followersListProfiles = [];
+
+            // Set the flagFollow to true (meaning that I need to work on followersListProfiles)
+            this.flagFollow = flag;
+			
+            // Checking whether the followFlag is:
+            //  - true  (meaning that I need to update followersListProfiles).
+            //  - false (meaning that I need to update followingsListProfiles).
+            if (this.flagFollow === true) {
+
+                // Here I operate onto the followersListProfiles.
+                try{
+
+                    // Let's search for the username, only if it is > 0 (of course).
+                    if (this.usernameFollowersToSearch.length > 0) {
+                        
+                        // Let's get again get only the list of Followers (only the Usernames, however).
+                        try {
+
+                            // Getting the list of Users from the Back-End.
+                            let response = await this.$axios.get("/users/" + this.username +"/followers/", {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                                }
+                            })
+
+                            // Saving the response in the "users" array.
+                            this.followersList = response.data;
+
+                        } catch (e) {
+
+                            // If an error is encountered, display it!
+                            this.errormsg = e.toString();
+                        }
+
+                        // Let's check if the Username of the Followers to search for is first of all among the Followers.
+                        if (this.followersList.includes(this.usernameFollowersToSearch)){
+
+                            // Let's retrieve the Profile of the Username we are searching for.
+                            let responseProfile = await this.$axios.get("/users/"+this.usernameFollowersToSearch, {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                                }
+                            })
+
+                            // Let's add up to the "followersListProfiles" array the response of the profile. Note that it will be an array with only this element.
+                            this.followersListProfiles.push(responseProfile.data);
+                        } else {
+
+                            // This means the username we are searching for is not a Followers of mine.
+                            this.errormsg = "Err: The Username you are Searching for is not one of your Followers! Username: "+ this.usernameFollowersToSearch;
+                        }
+                    } else {
+
+                        // If an error is encountered, display it! 
+                        this.errormsg = "Err: The Username to Search for cannot be empty!";
+                    }
+                    
+
+                } catch (e) {
+
+                    // If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
+                    this.errormsg = e.toString();
+
+                    // Set the usernameToSearchBool flag to false, meaning that we have not found it.
+                    this.usernameToSearchBool = false;
+
+                    // Let's handle the cases when the Error Occurs.
+                    if (e.response && e.response.status === 400) {
+                        this.errormsg = e.response.statusText + " You Have either typed a Username that is not respecting the Regex or the User is not Present in WASAPhoto! \n The typed USERNAME is: " + this.usernameToSearch;
+                    }
+                }
+
+            } else {
+
+                // Here I operate onto the followingsListProfiles.
+                try{
+
+                    // Let's search for the username, only if it is > 0 (of course).
+                    if (this.usernameFollowingsToSearch.length > 0) {
+                        
+                        // Let's get again get only the list of Followings (only the Usernames, however).
+                        try {
+
+                            // Getting the list of Users from the Back-End.
+                            let response = await this.$axios.get("/users/" + this.username +"/followings/", {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                                }
+                            })
+
+                            // Saving the response in the "users" array.
+                            this.followingsList = response.data;
+
+                        } catch (e) {
+
+                            // If an error is encountered, display it!
+                            this.errormsg = e.toString();
+                        }
+
+                        // Let's check if the Username of the Following to search for is first of all among the Followings.
+                        if (this.followingsList.includes(this.usernameFollowingsToSearch)){
+
+                            // Let's retrieve the Profile of the Username we are searching for.
+                            let responseProfile = await this.$axios.get("/users/"+this.usernameFollowingsToSearch, {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                                }
+                            })
+
+                            // Let's add up to the "followingsListProfiles" array the response of the profile. Note that it will be an array with only this element.
+                            this.followingsListProfiles.push(responseProfile.data);
+                        } else {
+
+                            // This means the username we are searching for is not a Following of mine.
+                            this.errormsg = "Err: The Username you are Searching for is not one of your Following! Username: "+ this.usernameFollowingsToSearch;
+                        }
+                    } else {
+
+                        // If an error is encountered, display it! 
+                        this.errormsg = "Err: The Username to Search for cannot be empty!";
+                    }
+                    
+
+                } catch (e) {
+
+                    // If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
+                    this.errormsg = e.toString();
+
+                    // Set the usernameToSearchBool flag to false, meaning that we have not found it.
+                    this.usernameToSearchBool = false;
+
+                    // Let's handle the cases when the Error Occurs.
+                    if (e.response && e.response.status === 400) {
+                        this.errormsg = e.response.statusText + " You Have either typed a Username that is not respecting the Regex or the User is not Present in WASAPhoto! \n The typed USERNAME is: " + this.usernameToSearch;
+                    }
+                }
+            }
+	
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		// SerchUsername: It will search for whether the Username inserted in the input is present.
+		async goToFollowView() {
+
+			// Re-addressing the page to the personal profile page of a user.
+			this.$router.push({ path: `/users/${this.username}/follow/` })
+		},
+
 	},
 }
 </script>
+
 
 <!-- Actual Page for handling the page setting. -->
 <template>
@@ -197,7 +360,7 @@ export default {
 
 				<!-- "Users List" Button -->
 				<div class="topMenuButtons">
-					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowings"> Users List </button>
+					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowings">  Followings List </button>
 				</div>
 
 				<!-- WASA Photo Icon -->
@@ -208,10 +371,10 @@ export default {
 				<!-- "Search Username Field" -->
 				<div class="topMenuButtons">
 					<div class="formControl">
-						<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
+						<input type="text" id="usernameFollowingsToSearch" v-model="usernameFollowingsToSearch" placeholder="Search Username..." class="form-control">
 					</div>
 					<div class= "searchButton">
-						<svg class="feather" v-if="!loading" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+						<svg class="feather" v-if="!loading" @click="searchUsername(false)" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 					</div>
 				</div>
 
@@ -226,20 +389,20 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If the Username to search was not found, report the error. -->
-				<div class="card" v-if="usernameToSearchBool === false">
+				<div class="card" v-if="usernameFollowingsToSearch === false">
 					<div class="card-body">
-						<p>No User present in the Database with the {{ this.usernameToSearch }} username.</p>
+						<p>No User present in the Database with the {{ this.usernameFollowingsToSearch }} username.</p>
 					</div>
 				</div>
 
 
                 <!-- ------------------------ FOLLOWINGS PART ------------------------  -->
                 <!-- If the followingsListProfiles is empty after the computation, refer this fact. -->
-				<div class="card" v-if="followingsListProfiles.length == 0">
+				<!-- <div class="card" v-if="followingsListProfiles.length == 0">
 					<div class="card-body">
 						<p>Unfortunately you are not following still anyone! </p>
 					</div>
-				</div>
+				</div> -->
                 
                 <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles in the followingsList -->
 				<div class="card" v-if="!loading && flagFollow == false" v-for="u in followingsListProfiles">
@@ -286,11 +449,11 @@ export default {
 
                 <!-- ------------------------ FOLLOWERS PART ------------------------  -->
                 <!-- If the followersListProfiles is empty after the computation, refer this fact. -->
-				<div class="card" v-if="followersListProfiles.length === 0">
+				<!-- <div class="card" v-if="followersListProfiles.length === 0">
 					<div class="card-body">
 						<p>Unfortunately you are not followed still by anyone! </p>
 					</div>
-				</div>
+				</div> -->
                 
                 <!-- In alternative, Display a sort of card for each of the User Profiles in the followersList -->
                 <div class="card" v-if="!loading && followFlag === true" v-for="u in followersListProfiles">
@@ -343,5 +506,5 @@ export default {
 
 <!-- Declaration of the style(scoped) to use. -->
 <style scoped>
-	@import '../assets/search.css';
+	@import '../assets/follow.css';
 </style>
