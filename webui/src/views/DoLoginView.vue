@@ -1,20 +1,23 @@
 <!-- Starting of the actual Login Page Handling. -->
 <script>
 
+import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
+
 // Declaration of the export set.
 export default {
 
     // Including some components that will be used in the page.
     components: {
         LoadingSpinner,
+        ErrorMsg,
     },
 
     // Describing what are the Return variables.
     data: function() {
         return {
             // Variables handling the eventual error message and the Loading of the action.
-            errormessage: null,
+            errormessage: "",
             loading: false,
 
             // Logged user Info.
@@ -31,9 +34,10 @@ export default {
         // Declaration of the DoLogin page. 
         async doLogin() {
 
-            // Declaring the variables responsible for the Loading handling of the Loading Spinner components and for the error message.
-            this.loading = true;
-            this.errormessage = null;
+            // Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
 
             try {
                 
@@ -45,9 +49,12 @@ export default {
                 // Setting the uuid (Bearer Token) received as response by the Post action.
                 this.uuid  = response.data,
                 localStorage.setItem('Authorization', this.uuid),
+                localStorage.setItem('Username', this.username),
 
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: '/users/'+ this.loginUsername.username })
+			    
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.replace({ path: `/users/${this.username}` })
 
             } catch (e) {
 
@@ -84,7 +91,7 @@ export default {
             <input type="text" id="username" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
 
             <!-- Creation of the Login Button linked to the doLogin action. -->
-            <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="doLogin">Login</button>
+            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="doLogin">Login</button>
             <LoadingSpinner v-if="loading"></LoadingSpinner>
         </form>
 

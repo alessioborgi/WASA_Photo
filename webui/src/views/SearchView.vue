@@ -144,82 +144,31 @@ export default {
 				// If an error is encountered, display it! Moreover, here, put the "usernameToSearchBool" flag to false.
 				this.errormsg = e.toString();
 
-				// this.errormsg = e.response.statusText;
+				// Set the usernameToSearchBool flag to false, meaning that we have not found it.
 				this.usernameToSearchBool = false;
+
+				// Let's handle the cases when the Error Occurs.
+				if (e.response && e.response.status === 400) {
+                    this.errormsg = e.response.statusText + " You Have either typed a Username that is not respecting the Regex or the User is not Present in WASAPhoto! \n The typed USERNAME is: " + this.usernameToSearch;
+				}
 			}
 	
 			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
 		},
 
-		// followUser: Given in input the username of the person to follow, it will let the Username Logged to follow the user passed.
-		async followUser(followingUsername){
-			
-		},
+		// SerchUsername: It will search for whether the Username inserted in the input is present.
+		async goToFollowView() {
 
-		// getFollowings: It returns the list of usernames of the people I am following.
-		async getFollowings() {
-
-			// Re-initializing variables to their default value.
-			this.errormsg = "";
-			this.loading = true;
-
-			this.followingsList = [];
-			
-			try {
-
-				// Getting the list of Users from the Back-End.
-                let response = await this.$axios.get("/users/" + this.username +"/followings/", {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
-
-				// Saving the response in the "users" array.
-				this.followingsList = response.data;
-
-			} catch (e) {
-
-				// If an error is encountered, display it!
-				this.errormsg = e.toString();
-			}
-
-			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
-			this.loading = false;
-		},
-
-		// getFollowers: It returns the list of usernames of the people that are following me.
-		async getFollowers(){
-
-			// Re-initializing variables to their default value.
-			this.errormsg = "";
-			this.loading = true;
-
-			this.followersList = [];
-			
-			try {
-
-				// Getting the list of Users from the Back-End.
-                let response = await this.$axios.get("/users/" + this.username +"/followers/", {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
-
-				// Saving the response in the "users" array.
-				this.followersList = response.data;
-
-			} catch (e) {
-
-				// If an error is encountered, display it!
-				this.errormsg = e.toString();
-			}
-
-			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
-			this.loading = false;
+			// Re-addressing the page to the personal profile page of a user.
+			this.$router.push({ path: `/users/${this.username}/follow/` })
 		},
 
 	},
+
+	// created() {
+    //     this.$root.$refs.Search = this;
+    // },
 }
 </script>
 
@@ -262,13 +211,6 @@ export default {
 				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-				<!-- If the Username to search was not found, report the error. -->
-				<div class="card" v-if="usernameToSearchBool === false">
-					<div class="card-body">
-						<p>No User present in the Database with the {{ this.usernameToSearch }} username.</p>
-					</div>
-				</div>
-
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 				<div class="card" v-if="!loading" v-for="u in usersProfiles">
 
@@ -280,7 +222,8 @@ export default {
 
 						<div class="buttons-menu">
 							<div class = "buttonsFollowBan">
-								<svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
 								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
 
 							</div>

@@ -31,10 +31,16 @@ export default {
 </script>
 
 <template>
-	<div class="alert alert-danger" role="alert">
+	<div class="alert alert-danger" role="alert" >
 		{{ msg }}
 	</div>
 </template>
 
 <style>
+
+.alert-danger{
+	font-size: 25px;
+}
 </style>
+
+

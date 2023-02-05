@@ -1,8 +1,30 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 </script>
+
 <script>
-export default {}
+export default {
+
+	data: function() {
+		return {
+
+			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
+            username: localStorage.getItem('Username'),
+            BearerTokenStorage: localStorage.getItem('BearerToken'),
+		}
+	},
+
+	methods: {
+		
+		// GetUsers Function: It fills the "users" array with the usernames present in the DB.
+		async replaceLogin() {
+
+				// Re-addressing the page to the personal profile page of a user.
+                this.$router.replace({ path: '/session/' })
+		},
+	},
+
+}
 </script>
 
 <template>
@@ -24,24 +46,24 @@ export default {}
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="replaceLogin"/></svg>
 								Login
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/users/:username" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
+							<RouterLink :to="'/users/'+username" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
 								My Profile
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link2" class="nav-link">
+							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
 								New Photo
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/users/:username" class="nav-link">
+							<RouterLink :to="'/users/'+username+'/stream/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
 								Home
 							</RouterLink>
@@ -59,13 +81,13 @@ export default {}
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink :to="'/some/' + 'variable_here' + '/path'" class="nav-link">
+							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
 								Ban
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink :to="'/some/' + 'variable_here' + '/path'" class="nav-link">
+							<RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
 								Follow
 							</RouterLink>
