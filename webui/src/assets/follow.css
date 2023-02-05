@@ -32,17 +32,33 @@
 	margin-top: 60px;
 }
 
+.h2 {
+	color: #055b8a;
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	margin-top: -50px;
+}
+
 .topMenuColumn {
   float: left;
   width: 33.33%;
 }
 
-.topMenuButtons{
+.followingsMenu{
 	margin-top: 78px;
 	margin-left: 10px;
 	margin-right: 10px;
 	float: left;
   	width: 30%;
+}
+.topMenuButtons{
+	margin-top: 0px;
+	margin-left: 00px;
+	margin-right: 10px;
+	margin-top: 10px;
+	float: left;
+  	width: 100%;
 }
 
 .usernameLabel{

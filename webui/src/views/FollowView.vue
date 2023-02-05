@@ -358,25 +358,53 @@ export default {
 
 			<div class="topMenu">
 
-				<!-- "Users List" Button -->
-				<div class="topMenuButtons">
-					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowings">  Followings List </button>
-				</div>
+                <!-- Followings Menu left-Part -->
+                <div class="followingsMenu">
+                    
+                    <h2 class="h2">FOLLOWINGS</h2>
+
+                    <!-- "Users List" Button -->
+                    <div class="topMenuButtons">
+                        <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowings">  Followings List </button>
+                    </div>
+
+                    <!-- "Search Username Field" -->
+                    <div class="topMenuButtons">
+                        <div class="formControl">
+                            <input type="text" id="usernameFollowingsToSearch" onfocus="this.value=''" v-model="usernameFollowingsToSearch" placeholder="Search Following..." class="form-control">
+                        </div>
+                        <div class= "searchButton">
+                            <svg class="feather" v-if="!loading" @click="searchUsername(false)" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+                        </div>
+                    </div>
+                </div>
 
 				<!-- WASA Photo Icon -->
 				<div class="topMenuColumn">
 					<img src="./img/wasa-logo.png" alt="" class="img">
 				</div>
 
-				<!-- "Search Username Field" -->
-				<div class="topMenuButtons">
-					<div class="formControl">
-						<input type="text" id="usernameFollowingsToSearch" v-model="usernameFollowingsToSearch" placeholder="Search Username..." class="form-control">
-					</div>
-					<div class= "searchButton">
-						<svg class="feather" v-if="!loading" @click="searchUsername(false)" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-					</div>
-				</div>
+                <!-- Followings Menu left-Part -->
+                <div class="followingsMenu">
+                    
+                    <h2 class="h2">FOLLOWERS</h2>
+
+                    <!-- "Users List" Button -->
+                    <div class="topMenuButtons">
+                        <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowers">  Followers List </button>
+                    </div>
+
+                    <!-- "Search Username Field" -->
+                    <div class="topMenuButtons">
+                        <div class="formControl">
+                            <input type="text" id="usernameFollowersToSearch" onfocus="{{ this.value='' }}" v-model="usernameFollowersToSearch" placeholder="Search Follower..." class="form-control">
+                        </div>
+                        <div class= "searchButton">
+                            <svg class="feather" v-if="!loading" @click="searchUsername(true)"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+                        </div>
+                    </div>
+                </div>
+				
 
 			</div>
 
@@ -456,7 +484,7 @@ export default {
 				</div> -->
                 
                 <!-- In alternative, Display a sort of card for each of the User Profiles in the followersList -->
-                <div class="card" v-if="!loading && followFlag === true" v-for="u in followersListProfiles">
+				<div class="card" v-if="!loading && flagFollow == true" v-for="u in followersListProfiles">
 
 					<div class="card-header">
 						<div class="usernameLabel">
