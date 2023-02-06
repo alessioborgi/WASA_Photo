@@ -3,11 +3,15 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
+import CardProfile from '../components/CardProfile.vue'
+import { FRAGMENT } from '@vue/compiler-core'
 // Declaration of the export set.
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+		LoadingSpinner,
+		CardProfile,
 	},
 
 	// Describing what are the Return variables.
@@ -34,6 +38,13 @@ export default {
 			followersList: [],
 			followingsList: [],
 
+			// Initializing a flag indicating whether to update:
+            //   - followersList (value: true) or 
+            //   - followingsList (value: false)
+            flagFollow: false,
+
+			// Initializing background-color.
+			backgroundColor: ""
 		}
 	},
 
@@ -166,9 +177,11 @@ export default {
 
 	},
 
+
 	// created() {
     //     this.$root.$refs.Search = this;
     // },
+
 }
 </script>
 
@@ -212,45 +225,7 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<div class="card" v-if="!loading" v-for="u in usersProfiles">
-
-					<div class="card-header">
-						<div class="usernameLabel">
-							<b> USERNAME: {{ u.username }} </b>
-						</div>
-
-						<div class="buttons-menu">
-							<div class = "buttonsFollowBan">
-								<svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
-								<!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
-
-							</div>
-							<div class = "buttonsFollowBan">	
-								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
-								<!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
-
-							</div>
-
-						</div>
-
-					</div>
-					<div class="card-body">
-						<p class="card-text">
-
-							<p><b>PHOTO:</b> {{ u.photoProfile}} <br/> </p>
-							<p>
-								<b>NAME:</b> {{ u.name }}
-								<b>SURNAME:</b> {{ u.surname }}  
-								<b>FIXEDUSERNAME:</b> {{ u.fixedUsername }}<br/>
-							</p>
-							<p><b>BIOGRAPHY:</b> {{ u.biography }} <br/></p>
-							
-							<!-- DateOfCreation: {{ u.dateOfCreation}} -->
-
-						</p>
-					</div>
-				</div>
+				<CardProfile class="card" v-if="!loading" v-for="u in usersProfiles" :user="u"> </CardProfile>
 			</div>
 	</div>
 </template>

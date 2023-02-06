@@ -54,7 +54,7 @@ export default {
                 // Re-addressing the page to the personal profile page of a user.
 			    
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: `/users/${this.username}` })
+                this.$router.replace({ path: `/users/${this.loginUsername.username}` })
 
             } catch (e) {
 

@@ -1,0 +1,277 @@
+
+<script>
+
+export default {
+
+    props: ['user', 'color'],
+
+	// Describing what are the Return variables.
+	data: function() {
+		return {
+
+			// Initializing iconFollow, that can receive two values:
+            //   Follow:    /feather-sprite-v4.29.0.svg#user-check
+            //   NotFollow: /feather-sprite-v4.29.0.svg#user-plus
+			iconFollow: "/feather-sprite-v4.29.0.svg#user-plus",
+		}
+	},
+
+    
+	// Declaration of the methods that will be used.
+	methods: {
+
+        async changeBackgroundColor(gender){
+            // var divtag=document.getElementById("div1");
+            if (gender == "male"){
+                div1.style.backgroundColor= "#c2e9fc";
+            } else if (gender == "female"){
+                div1.style.backgroundColor="#fbd3f0";
+            } else {
+                div1.style.backgroundColor= "#e1ebf4";
+            }
+        }
+
+        // backgroundColor: It sets the background-color flag to the desired color.
+        // async backgroundColor(gender){
+			// if (gender == "male"){
+			// 	this.backgroundColor= "#c2e9fc";
+			// } else if (gender == "female"){
+			// 	this.backgroundColor= "#fbd3f0";
+			// } else {
+			// 	this.backgroundColor= "#e1ebf4";
+			// }
+		// },
+    }
+
+}    
+</script>
+    
+
+<template>
+
+    <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
+    <div class="card" id="div1">
+        <div class="usernameLabel">
+            <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }} 
+        </div>
+        
+        <!--  <div class="grid-container2"> -->
+
+            <div class="upperPart"> 
+                <div class="imageLabel">
+                    <div class="profileImage">
+                        <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
+                    </div>
+                    <div class="profileLabel">
+                        <p class="card__name" > <b>{{ user.username }}</b></p>
+                    </div>            
+                </div>
+
+                <div class="rightUpperPart">
+
+                    <div class="grid-container2">
+                        <div class="grid-child-posts">
+                        <b>Posts</b> {{ user.numberOfPhotos }}
+                        </div>
+
+                        <div class="grid-child-posts">
+                            <b>Followings</b> {{ user.numberFollowing }} 
+                        </div>
+
+                        <div class="grid-child-posts">
+                            <b>Followers</b> {{ user.numberFollowers }} 
+                        </div>
+                    </div>
+
+
+                    <div class="grid-container2">
+                        <div class="grid-child-posts2">
+                            <b>Is it Banned by me? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
+                            <!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
+                        </div> 
+
+                        <div class="grid-child-posts2">
+                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
+                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
+                        </div>
+
+                        <div class="grid-child-posts2">
+                            <b>Am I following him?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
+                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
+                        </div>                          
+                    </div>
+                </div>
+                    
+            </div>
+            
+            
+        <div class="grid-container">
+
+            <div class="grid-child-posts">
+                <b>Name</b> {{ user.name }}
+            </div>
+
+            <div class="grid-child-posts">
+                <b>Surname</b> {{ user.surname }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>Nationality</b> {{ user.nationality }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>DateOfBirth</b> {{ user.dateOfBirth }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>Email</b> {{ user.email }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>Gender</b> {{ user.gender }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>DateOfCreation</b> {{ user.dateOfCreation }} 
+            </div>
+
+            <div class="grid-child-posts">
+                <b>Biography</b> {{ user.biography }} 
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+
+
+
+
+<style scoped>
+
+.upperPart{
+    display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+    width: 50%;
+    width: 600px;
+    height: 230;
+    float: left;
+    /* background-color: yellow; */
+    
+}
+.imageLabel{
+    display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+    float: left;
+    height: auto;
+  	width: 50%;
+    width: 200px;
+    height: 230;
+    /* background-color: orange; */
+}
+
+.rightUpperPart{
+    float: left;
+  	width: 70%;
+    width: 400px;
+    /* background-color: purple; */
+    height: 230px;
+}
+.buttons-menu{
+    
+	float: left;
+  	width: 30%;
+}
+
+.usernameLabel{
+	float: left;
+  	width: 90%;
+    margin-top: 10px;
+    margin-left: -90px;
+    font-size: 9px;
+}
+
+
+.buttonsFollowBan{
+	float: left;
+  	width: 50%;
+}
+
+.feather {
+	color: #4a77d4;
+}
+
+
+
+.card {
+  background-color: #c2e9fc;
+  margin-bottom: 20px;
+  height: 45rem;
+  width: auto;
+  border-radius: 5px;
+  align-items: center;
+  margin-left: auto;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.7);
+  color: black;
+
+}
+
+.card__name {
+  align-items: center;
+  margin-right: auto;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 1.25em;
+}
+
+.card__image {
+  height: 160px;
+  width: 160px;
+  border-radius: 50%;
+  border: 5px solid #272133;
+  margin-top: 20px;
+  box-shadow: 0 10px 50px rgb(25, 214, 235);
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  font-size: 1.2em;
+  margin-left: 50px;
+  /* background-color: red; */
+  font-size: 15px;
+}
+
+.grid-container2 {
+margin-top: 50px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  font-size: 18px;
+  /* background-color: greenyellow; */
+}
+
+/* .grid-container3 {
+  margin-top: 80px;
+  margin-left: 120px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0px;
+  font-size: 15px;
+  background-color: grey;
+} */
+
+.grid-child-posts2{
+    font-size:12px;
+}
+</style>
+
+
