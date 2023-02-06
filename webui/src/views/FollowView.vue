@@ -494,12 +494,15 @@ export default {
 
 						<div class="buttons-menu">
 							<div class = "buttonsFollowBan">
-								<svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<svg class="feather" v-if="!loading" @click="followUser(u.username)"> <use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+                                
+                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)"> <use href="{{ this.iconFollow }}"/></svg> -->
+                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)"> <use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
 								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
 
 							</div>
 							<div class = "buttonsFollowBan">	
-								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
+								<svg class="feather" v-if="!loading" @click="getUsers"><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
 								<!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
 
 							</div>
