@@ -15,7 +15,7 @@
     // })
 export default {
 
-    props: ['user', 'followingQuestion', 'followerQuestion', 'color'],
+    props: ['user', 'followingQuestion', 'followerQuestion'],
 
     
 	// Describing what are the Return variables.
@@ -25,7 +25,8 @@ export default {
 			// Initializing iconFollow, that can receive two values:
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
             //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
-            colorBackground: this.color ? 'red' : 'yellow',
+            // colorBackground: backgroundColor(this.user.gender),
+            colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
 			iconFollowing: this.followingQuestion ? "/feather-sprite-v4.29.0.svg#user-plus" : "/feather-sprite-v4.29.0.svg#user-plus",
 		}
 	},
@@ -48,11 +49,11 @@ export default {
         // backgroundColor: It sets the background-color flag to the desired color.
         // async backgroundColor(gender){
 			// if (gender == "male"){
-			// 	this.backgroundColor= "#c2e9fc";
+			// 	this.backgroundColor= '#c2e9fc';
 			// } else if (gender == "female"){
-			// 	this.backgroundColor= "#fbd3f0";
+			// 	this.backgroundColor= '#fbd3f0';
 			// } else {
-			// 	this.backgroundColor= "#e1ebf4";
+			// 	this.backgroundColor= '#e1ebf4';
 			// }
 		// },
     }
@@ -170,13 +171,8 @@ export default {
 
 <style scoped>
 
-#div1{
-    background-color: #c2e9fc;
-}
 
-.bg-color {
-  background-color:red;
-}
+
 .upperPart{
     display: block;
   	margin-left: auto;

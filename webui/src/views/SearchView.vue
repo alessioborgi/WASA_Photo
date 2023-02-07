@@ -43,7 +43,7 @@ export default {
 			follower_question: false,
 
 			// Initializing background-color.
-			backgroundColor: ""
+			backgroundColor: true,
 		}
 	},
 
@@ -108,6 +108,7 @@ export default {
 				})
 
 				// Add the profile retrieved to the "usersProfiles" array.
+				responseProfile.data.boolGender = 
 				this.usersProfiles.push(responseProfile.data);
 
 			} catch (e) {
@@ -279,6 +280,22 @@ export default {
 			this.$router.push({ path: `/users/${this.username}/follow/` })
 		},
 
+		async returnGender(gender){
+
+			// Re-initializing variables to their default value.
+			this.loading = true;
+			// this.backgroundColor = '';
+
+			if (gender == "male"){
+				this.backgroundColor= true;
+			} else {
+				this.backgroundColor= false;
+			}
+
+			// Set the Loading to false.
+			this.loading = false;
+		}
+
 	},
 
 
@@ -332,9 +349,9 @@ export default {
 				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
 				    :user="u" 
 					:followingQuestion="searchFollowing(u.username)"
-					:followerQuestion="searchFollower(u.username)"
-					:color=false> 
+					:followerQuestion="searchFollower(u.username)"> 
 				</CardProfile>
+				<!-- :color= "'female'">  -->
 			</div>
 	</div>
 </template>
