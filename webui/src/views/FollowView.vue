@@ -409,6 +409,26 @@ export default {
 			</div>
 
 
+
+
+            <!-- Let's now handle the dynamic part. -->
+			<div class="result">
+
+                <!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+                <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+                <LoadingSpinner v-if="loading"></LoadingSpinner>
+
+                <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
+                <CardProfile v-if="!loading" v-for="u in usersProfiles" 
+                    :user="u"> 
+                </CardProfile>
+                <!-- :color= "'female'">  -->
+            </div>
+
+
+
+
+
 			<!-- Let's now handle the dynamic part. -->
 			<div class="result">
 

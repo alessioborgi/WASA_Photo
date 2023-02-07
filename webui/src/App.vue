@@ -16,11 +16,19 @@ export default {
 
 	methods: {
 		
-		// GetUsers Function: It fills the "users" array with the usernames present in the DB.
+		// replaceLogin Function: It fills the "users" array with the usernames present in the DB.
 		async replaceLogin() {
 
 				// Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/session/' })
+		},
+
+		// setLocalStorage Function: It will free-up the two localStorage settings (username and bearerauth).
+		async setLocalStorage() {
+			localStorage.setItem('Authorization', "")
+			BearerTokenStorage = "";
+            localStorage.setItem('Username', "")
+			username = "";
 		},
 	},
 
@@ -51,6 +59,12 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item">
+							<RouterLink to="/session/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage"/></svg>
+								Logout
+							</RouterLink>
+						</li>
+						<li class="nav-item">
 							<RouterLink :to="'/users/'+username" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
 								<!-- window.location.reload(true); -->
@@ -69,16 +83,13 @@ export default {
 								Home
 							</RouterLink>
 						</li>
-						<li class="nav-item">
-							<RouterLink to="/search/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-								Search
-							</RouterLink>
-						</li>
 					</ul>
 
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-						<span>Profile</span>
+				
+
+					
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>{{username}}</span>
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
@@ -91,6 +102,18 @@ export default {
 							<RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
 								Follow
+							</RouterLink>
+						</li>
+					</ul>
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>GENERAL</span>
+					</h6>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink to="/search/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+								Search
 							</RouterLink>
 						</li>
 					</ul>
