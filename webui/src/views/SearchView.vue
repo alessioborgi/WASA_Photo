@@ -4,7 +4,7 @@
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import CardProfile from '../components/CardProfile.vue'
-import { FRAGMENT } from '@vue/compiler-core'
+
 // Declaration of the export set.
 export default {
 
@@ -38,10 +38,9 @@ export default {
 			followersList: [],
 			followingsList: [],
 
-			// Initializing a flag indicating whether to update:
-            //   - followersList (value: true) or 
-            //   - followingsList (value: false)
-            flagFollow: false,
+			// Initializing two variables, handling whether the user in the card is following me and if I am following him respectively.
+			following_question: false,
+			follower_question: false,
 
 			// Initializing background-color.
 			backgroundColor: ""
@@ -168,6 +167,111 @@ export default {
 			this.loading = false;
 		},
 
+
+		// getFollowings: It returns the list of usernames of the people I am following.
+		async getFollowings() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followingsList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/followings/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "users" array.
+				this.followingsList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		async searchFollowing(usernameFollowingToSearch){
+
+			// Re-initializing variables to their default value.
+			this.loading = true;
+			this.following_question = false;
+
+
+			// Let's check now whether he/she is following me.
+			if (this.followingsList.includes(usernameFollowingToSearch)){
+				this.following_question = true;
+			} else {
+				this.following_question = false;
+			}
+
+			// Set the Loading to false.
+			this.loading = false;
+		},
+
+
+
+
+
+
+
+		// getFollowers: It returns the list of usernames of the people that are following me.
+		async getFollowersAndSearch(usernameFollowersToSearch){
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followersList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/followers/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})	
+
+				// Saving the response in the "users" array.
+				this.followersList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		async searchFollower(usernameFollowerToSearch){
+
+			// Re-initializing variables to their default value.
+			this.loading = true;
+			this.follower_question = false;
+
+			// Let's check now whether I am following he/she.
+			if (this.followersList.includes(usernameFollowerToSearch)){
+				this.follower_question = true;
+			} else {
+				this.follower_question = false;
+			}
+
+			// Set the Loading to false.
+			this.loading = false;
+		},
+
+
 		// SerchUsername: It will search for whether the Username inserted in the input is present.
 		async goToFollowView() {
 
@@ -225,7 +329,12 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<CardProfile class="card" v-if="!loading" v-for="u in usersProfiles" :user="u"> </CardProfile>
+				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
+				    :user="u" 
+					:followingQuestion="searchFollowing(u.username)"
+					:followerQuestion="searchFollower(u.username)"
+					:color=false> 
+				</CardProfile>
 			</div>
 	</div>
 </template>

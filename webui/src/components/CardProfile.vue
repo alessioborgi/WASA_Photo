@@ -1,18 +1,32 @@
 
 <script>
 
+    // document.getElementById("div1").style.backgroundColor='red';
+    // const div1 = document.getElementById("div1");
+    // window.addEventListener("load", () => {
+    //     div1.style.backgroundColor = "red";
+        // if (user.gender == "male"){
+        //     div1.style.backgroundColor = "#c2e9fc";
+        // } else if (user.gender == "female"){
+        //     div1.style.backgroundColor = "#fbd3f0";;
+        // } else {
+        //     div1.style.backgroundColor= "#e1ebf4";
+        // }
+    // })
 export default {
 
-    props: ['user', 'color'],
+    props: ['user', 'followingQuestion', 'followerQuestion', 'color'],
 
+    
 	// Describing what are the Return variables.
 	data: function() {
 		return {
 
 			// Initializing iconFollow, that can receive two values:
-            //   Follow:    /feather-sprite-v4.29.0.svg#user-check
-            //   NotFollow: /feather-sprite-v4.29.0.svg#user-plus
-			iconFollow: "/feather-sprite-v4.29.0.svg#user-plus",
+            //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
+            //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
+            colorBackground: this.color ? 'red' : 'yellow',
+			iconFollowing: this.followingQuestion ? "/feather-sprite-v4.29.0.svg#user-plus" : "/feather-sprite-v4.29.0.svg#user-plus",
 		}
 	},
 
@@ -20,16 +34,16 @@ export default {
 	// Declaration of the methods that will be used.
 	methods: {
 
-        async changeBackgroundColor(gender){
-            // var divtag=document.getElementById("div1");
-            if (gender == "male"){
-                div1.style.backgroundColor= "#c2e9fc";
-            } else if (gender == "female"){
-                div1.style.backgroundColor="#fbd3f0";
-            } else {
-                div1.style.backgroundColor= "#e1ebf4";
-            }
-        }
+        // async changeBackgroundColor(gender){
+        //     // var divtag=document.getElementById("div1");
+        //     if (gender == "male"){
+        //         div1.style.backgroundColor= "#c2e9fc";
+        //     } else if (gender == "female"){
+        //         div1.style.backgroundColor="#fbd3f0";
+        //     } else {
+        //         div1.style.backgroundColor= "#e1ebf4";
+        //     }
+        // }
 
         // backgroundColor: It sets the background-color flag to the desired color.
         // async backgroundColor(gender){
@@ -50,7 +64,7 @@ export default {
 <template>
 
     <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-    <div class="card" id="div1">
+    <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}">
         <div class="usernameLabel">
             <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }} 
         </div>
@@ -91,7 +105,10 @@ export default {
                         </div> 
 
                         <div class="grid-child-posts2">
-                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use id = myLink>
+                            </use>
+                        </svg>
+                                <!-- <use href="'iconFollowing'"/></svg> -->
                                 <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
                                 <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>
@@ -153,6 +170,13 @@ export default {
 
 <style scoped>
 
+#div1{
+    background-color: #c2e9fc;
+}
+
+.bg-color {
+  background-color:red;
+}
 .upperPart{
     display: block;
   	margin-left: auto;
@@ -190,10 +214,11 @@ export default {
 }
 
 .usernameLabel{
+    display: block;
 	float: left;
   	width: 90%;
     margin-top: 10px;
-    margin-left: -90px;
+    margin-left: -60px;
     font-size: 9px;
 }
 
@@ -207,10 +232,13 @@ export default {
 	color: #4a77d4;
 }
 
-
+#div1{
+    background: #c2e9fc;
+}
 
 .card {
-  background-color: #c2e9fc;
+  /* background-color: #c2e9fc; */
+  /* background-color: yellow; */
   margin-bottom: 20px;
   height: 45rem;
   width: auto;

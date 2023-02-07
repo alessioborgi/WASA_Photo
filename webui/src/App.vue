@@ -53,6 +53,7 @@ export default {
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
+								<!-- window.location.reload(true); -->
 								My Profile
 							</RouterLink>
 						</li>
