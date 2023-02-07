@@ -37,7 +37,7 @@ export default {
     <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
     <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}">
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ user }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
