@@ -44,6 +44,9 @@ export default {
 
 			// Initializing background-color.
 			backgroundColor: true,
+
+			// Initializing an array for handling the list of Banned user of the Logged Username.
+			bannedList: [],
 		}
 	},
 
@@ -62,6 +65,8 @@ export default {
 
 			this.usernameToSearchBool = true;
 			
+			this.followingsList = [];
+			
 			try {
 
 				// Getting the list of Users from the Back-End.
@@ -73,6 +78,11 @@ export default {
 
 				// Saving the response in the "users" array.
 				this.users = response.data;
+
+				// First, make this three calls to gather information about the followings, followers and bans of the Logged User.
+				await this.getFollowings()
+				await this.getFollowers()
+				await this.getBans()
 
 				// Retrieving for every username, its Profile.
 				for (let i = 0; i < this.users.length; i++) {
@@ -107,8 +117,12 @@ export default {
 					}
 				})
 
-				// Add the profile retrieved to the "usersProfiles" array.
-				responseProfile.data.boolGender = 
+				// Add the profile retrieved to the "usersProfiles" array with the flags of following, follower and ban.
+				responseProfile.data.boolFollowing = this.followingsList.includes(responseProfile.data.username) ? true : false
+				responseProfile.data.boolFollower = this.followersList.includes(responseProfile.data.username) ? true : false
+				responseProfile.data.boolBanned = this.bannedList.includes(responseProfile.data.username) ? true : false
+				
+				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.usersProfiles.push(responseProfile.data);
 
 			} catch (e) {
@@ -135,12 +149,22 @@ export default {
 				// Let's search for the username, only if it is > 0 (of course).
 				if (this.usernameToSearch.length > 0) {
 
+					// First, make this three calls to gather information about the followings, followers and bans of the Logged User.
+					await this.getFollowings()
+					await this.getFollowers()
+					await this.getBans()
+
 					// Let's retrieve the Profile of the Username we are searching for.
 					let responseProfile = await this.$axios.get("/users/"+this.usernameToSearch, {
 						headers: {
 							Authorization: "Bearer " + localStorage.getItem("BearerToken")
 						}
 					})
+
+					// Add the profile retrieved to the "usersProfiles" array.
+					responseProfile.data.boolFollowing = this.followingsList.includes(responseProfile.data.username) ? true : false
+					responseProfile.data.boolFollower = this.followersList.includes(responseProfile.data.username) ? true : false
+					responseProfile.data.boolBanned = this.bannedList.includes(responseProfile.data.username) ? true : false
 
 					// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 					this.usersProfiles.push(responseProfile.data);
@@ -187,7 +211,7 @@ export default {
 					}
 				})
 
-				// Saving the response in the "users" array.
+				// Saving the response in the "followingsList" array.
 				this.followingsList = response.data;
 
 			} catch (e) {
@@ -200,32 +224,8 @@ export default {
 			this.loading = false;
 		},
 
-		async searchFollowing(usernameFollowingToSearch){
-
-			// Re-initializing variables to their default value.
-			this.loading = true;
-			this.following_question = false;
-
-
-			// Let's check now whether he/she is following me.
-			if (this.followingsList.includes(usernameFollowingToSearch)){
-				this.following_question = true;
-			} else {
-				this.following_question = false;
-			}
-
-			// Set the Loading to false.
-			this.loading = false;
-		},
-
-
-
-
-
-
-
 		// getFollowers: It returns the list of usernames of the people that are following me.
-		async getFollowersAndSearch(usernameFollowersToSearch){
+		async getFollowers() {
 
 			// Re-initializing variables to their default value.
 			this.errormsg = "";
@@ -240,9 +240,9 @@ export default {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("BearerToken")
 					}
-				})	
+				})
 
-				// Saving the response in the "users" array.
+				// Saving the response in the "followingsList" array.
 				this.followersList = response.data;
 
 			} catch (e) {
@@ -255,20 +255,34 @@ export default {
 			this.loading = false;
 		},
 
-		async searchFollower(usernameFollowerToSearch){
+		// getBans: It returns the list of usernames of the people that has been banned by me.
+		async getBans() {
 
 			// Re-initializing variables to their default value.
+			this.errormsg = "";
 			this.loading = true;
-			this.follower_question = false;
 
-			// Let's check now whether I am following he/she.
-			if (this.followersList.includes(usernameFollowerToSearch)){
-				this.follower_question = true;
-			} else {
-				this.follower_question = false;
+			this.bannedList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/bans/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "bannedList" array.
+				this.bannedList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
 			}
 
-			// Set the Loading to false.
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
 		},
 
@@ -279,22 +293,6 @@ export default {
 			// Re-addressing the page to the personal profile page of a user.
 			this.$router.push({ path: `/users/${this.username}/follow/` })
 		},
-
-		async returnGender(gender){
-
-			// Re-initializing variables to their default value.
-			this.loading = true;
-			// this.backgroundColor = '';
-
-			if (gender == "male"){
-				this.backgroundColor= true;
-			} else {
-				this.backgroundColor= false;
-			}
-
-			// Set the Loading to false.
-			this.loading = false;
-		}
 
 	},
 
@@ -347,9 +345,7 @@ export default {
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
-				    :user="u" 
-					:followingQuestion="searchFollowing(u.username)"
-					:followerQuestion="searchFollower(u.username)"> 
+				    :user="u"> 
 				</CardProfile>
 				<!-- :color= "'female'">  -->
 			</div>

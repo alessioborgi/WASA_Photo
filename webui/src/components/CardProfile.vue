@@ -1,33 +1,24 @@
 
 <script>
 
-    // document.getElementById("div1").style.backgroundColor='red';
-    // const div1 = document.getElementById("div1");
-    // window.addEventListener("load", () => {
-    //     div1.style.backgroundColor = "red";
-        // if (user.gender == "male"){
-        //     div1.style.backgroundColor = "#c2e9fc";
-        // } else if (user.gender == "female"){
-        //     div1.style.backgroundColor = "#fbd3f0";;
-        // } else {
-        //     div1.style.backgroundColor= "#e1ebf4";
-        // }
-    // })
 export default {
 
-    props: ['user', 'followingQuestion', 'followerQuestion'],
+    props: ['user', ],
 
     
 	// Describing what are the Return variables.
 	data: function() {
 		return {
 
+            // Initializing colorBackground of the Card depending on the Gender.
+            colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
+
 			// Initializing iconFollow, that can receive two values:
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
             //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
-            // colorBackground: backgroundColor(this.user.gender),
-            colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
-			iconFollowing: this.followingQuestion ? "/feather-sprite-v4.29.0.svg#user-plus" : "/feather-sprite-v4.29.0.svg#user-plus",
+			iconFollowing: this.user.boolFollowing == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
+            iconFollower: this.user.boolFollower == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
+            iconBanned: this.user.boolBanned == true ? '/feather-sprite-v4.29.0.svg#lock' : '/feather-sprite-v4.29.0.svg#unlock',
 		}
 	},
 
@@ -35,27 +26,6 @@ export default {
 	// Declaration of the methods that will be used.
 	methods: {
 
-        // async changeBackgroundColor(gender){
-        //     // var divtag=document.getElementById("div1");
-        //     if (gender == "male"){
-        //         div1.style.backgroundColor= "#c2e9fc";
-        //     } else if (gender == "female"){
-        //         div1.style.backgroundColor="#fbd3f0";
-        //     } else {
-        //         div1.style.backgroundColor= "#e1ebf4";
-        //     }
-        // }
-
-        // backgroundColor: It sets the background-color flag to the desired color.
-        // async backgroundColor(gender){
-			// if (gender == "male"){
-			// 	this.backgroundColor= '#c2e9fc';
-			// } else if (gender == "female"){
-			// 	this.backgroundColor= '#fbd3f0';
-			// } else {
-			// 	this.backgroundColor= '#e1ebf4';
-			// }
-		// },
     }
 
 }    
@@ -101,21 +71,19 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts2">
-                            <b>Is it Banned by me? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
+                            <b>Is it Banned by me? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use :href="this.iconBanned"/></svg>
                             <!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
                         </div> 
 
                         <div class="grid-child-posts2">
-                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use id = myLink>
-                            </use>
-                        </svg>
+                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
                                 <!-- <use href="'iconFollowing'"/></svg> -->
                                 <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
                                 <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>
 
                         <div class="grid-child-posts2">
-                            <b>Am I following him?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+                            <b>Am I following him?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
                                 <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
                                 <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>                          
