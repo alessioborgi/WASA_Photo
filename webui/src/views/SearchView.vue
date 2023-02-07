@@ -37,14 +37,7 @@ export default {
 			// Initializing two arrays for handling the list of respectively Followers and Followings. 
 			followersList: [],
 			followingsList: [],
-
-			// Initializing two variables, handling whether the user in the card is following me and if I am following him respectively.
-			following_question: false,
-			follower_question: false,
-
-			// Initializing background-color.
-			backgroundColor: true,
-
+			
 			// Initializing an array for handling the list of Banned user of the Logged Username.
 			bannedList: [],
 		}
@@ -347,7 +340,6 @@ export default {
 				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
 				    :user="u"> 
 				</CardProfile>
-				<!-- :color= "'female'">  -->
 			</div>
 	</div>
 </template>
