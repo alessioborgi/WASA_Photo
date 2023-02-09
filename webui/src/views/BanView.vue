@@ -26,7 +26,6 @@ export default {
 			// Initializing two variables that will be used to Handle the Specific Search for a User among the Bans.
 			usernameBanToSearch: "",
             
-
 			// Initializing four arrays for handling the list of respectively Followers and Followings and the two same arrays but with profiles. 
 			followersList: [],
 			followingsList: [],
@@ -222,7 +221,7 @@ export default {
                     } else {
 
                         // This means the username we are searching for is not a Followers of mine.
-                        this.errormsg = "Err: The Username you are Searching for is not one of your Bans! Username: "+ this.usernameFollowersToSearch;
+                        this.errormsg = "Err: The Username you are Searching for is not one of your Bans! Username: "+ this.usernameBanToSearch;
                     }
                 } else {
 

@@ -24,6 +24,12 @@ export default {
 		}
 	},
 
+    methods: {
+        showAlert() {
+            alert('test')
+        }
+    }
+
     
 }    
 </script>
@@ -41,57 +47,49 @@ export default {
 
         </div>
         
-        <!--  <div class="grid-container2"> -->
-
-            <div class="upperPart"> 
-                <div class="imageLabel">
-                    <div class="profileImage">
-                        <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
-                    </div>
-                    <div class="profileLabel">
-                        <p class="card__name" > <b>{{ user.username }}</b></p>
-                    </div>            
+        <div class="upperPart"> 
+            <div class="imageLabel">
+                <div class="profileImage">
+                    <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
                 </div>
-
-                <div class="rightUpperPart">
-
-                    <div class="grid-container2">
-                        <div class="grid-child-posts">
-                        <b>Posts</b> {{ user.numberOfPhotos }}
-                        </div>
-
-                        <div class="grid-child-posts">
-                            <b>Followings</b> {{ user.numberFollowing }} 
-                        </div>
-
-                        <div class="grid-child-posts">
-                            <b>Followers</b> {{ user.numberFollowers }} 
-                        </div>
-                    </div>
-
-
-                    <div class="grid-container2">
-                        <div class="grid-child-posts2">
-                            <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use :href="this.iconBanned"/></svg>
-                            <!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
-                        </div> 
-
-                        <div class="grid-child-posts2">
-                            <b>Am I Following it?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
-                                <!-- <use href="'iconFollowing'"/></svg> -->
-                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
-                        </div>
-
-                        <div class="grid-child-posts2">
-                            <b>Is it my Follower?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
-                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
-                        </div>                          
-                    </div>
-                </div>
-                    
+                <div class="profileLabel">
+                    <p class="card__name" > <b>{{ user.username }}</b></p>
+                </div>            
             </div>
+
+            <div class="rightUpperPart">
+
+                <div class="grid-container2">
+                    <div class="grid-child-posts">
+                    <b>Posts</b> {{ user.numberOfPhotos }}
+                    </div>
+
+                    <div class="grid-child-posts">
+                        <b>Followings</b> {{ user.numberFollowing }} 
+                    </div>
+
+                    <div class="grid-child-posts">
+                        <b>Followers</b> {{ user.numberFollowers }} 
+                    </div>
+                </div>
+
+
+                <div class="grid-container2">
+                    <div class="grid-child-posts2">
+                        <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="showAlert" ><use :href="this.iconBanned"/></svg>
+                    </div> 
+
+                    <div class="grid-child-posts2">
+                        <b>Am I Following it?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
+                    </div>
+
+                    <div class="grid-child-posts2">
+                        <b>Is it my Follower?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
+                    </div>                          
+                </div>
+            </div>
+                    
+        </div>
             
             
         <div class="grid-container">

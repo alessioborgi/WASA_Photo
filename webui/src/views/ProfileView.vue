@@ -3,7 +3,7 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-import CardProfile from '../components/CardProfile.vue'
+import MyProfileCard from '../components/MyProfileCard.vue'
 
 // Declaration of the export set.
 export default {
@@ -11,7 +11,7 @@ export default {
 	components: {
 		ErrorMsg,
 		LoadingSpinner,
-		CardProfile,
+		MyProfileCard,
 	},
 
 	// Describing what are the Return variables.
@@ -86,8 +86,8 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<CardProfile v-if="!loading"  :user=this.userProfile :gender="this.userProfile.gender" :style="{backgroundColor: this.colorBackground}"> 
-				</CardProfile>
+				<MyProfileCard v-if="!loading"  :user=this.userProfile :gender="this.userProfile.gender" :style="{backgroundColor: this.colorBackground}"> 
+				</MyProfileCard>
 			</div>
 	</div>
 </template>

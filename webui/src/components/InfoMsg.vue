@@ -1,44 +1,23 @@
-<!-- This component will be used to handle the different Errors we encounter during the execution of the WebApp. -->
-
-<!-- <script>
-export default {
-	props: ['msg']
-}
-</script>
-
-<template>
-	<div class="alert alert-danger" role="alert" >
-		{{ msg }}
-	</div>
-</template>
-
-<style>
-
-.alert-danger{
-	font-size: 25px;
-}
-</style>
- -->
+<!-- This component will be used to handle the different Info we encounter during the execution of the WebApp. -->
 
 <script>
- export default {
-	props: ['msg']
-}
+    export default {
+	    props: ['msg']
+    }
 </script>
 
 <template>
 
 	<head>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	</head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 	
-	
-	<div class="alert alert-danger alert-white rounded">
-    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    	<div class="icon"><i class="fa fa-times-circle"></i></div>
-    	<strong>Error!</strong> {{ msg }}.
-	</div>
-	
+    <div class="alert alert-info alert-white rounded">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <div class="icon"><i class="fa fa-info-circle"></i></div>
+        <strong>Info!</strong> {{ msg }}
+    </div>
+
 </template>
 
 <style>
