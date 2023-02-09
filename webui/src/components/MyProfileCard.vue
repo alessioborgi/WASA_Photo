@@ -10,12 +10,7 @@ export default {
 	data: function() {
 		return {
 
-            // Initializing colorBackground of the Card depending on the Gender.
-            colorBackground: this.user.gender == "male" ? '#c2e9fc' : this.user.gender == "female" ? '#fbd3f0' : '#cff6cc',
-            // colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
-
-
-			// Initializing iconFollow, that can receive two values:
+        	// Initializing iconFollow, that can receive two values:
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
             //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
 			iconFollowing: this.user.boolFollowing == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
@@ -38,8 +33,7 @@ export default {
 <template>
 
     <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-    <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}">
-        <!-- <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}"> -->
+    <div class="card" id="div1">
 
         <div class="usernameLabel">
             <!-- <b> FIXEDUSERNAME: </b>{{ user.gender }}  -->

@@ -57,27 +57,8 @@ export default {
 						</li>
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage"/></svg>
+								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage"/></svg>
 								Logout
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
-								<!-- window.location.reload(true); -->
-								My Profile
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
-								New Photo
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/stream/'" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
-								Home
 							</RouterLink>
 						</li>
 					</ul>
@@ -90,6 +71,33 @@ export default {
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
+							<RouterLink :to="'/users/'+username" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
+								<!-- window.location.reload(true); -->
+								My Profile
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/stream/'" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
+								Home
+							</RouterLink>
+						</li>
+					</ul>
+
+
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>ACTIONS</span>
+					</h6>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
+								Update Profile
+							</RouterLink>
+						</li>
+						<li class="nav-item">
 							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
 								Ban
@@ -97,8 +105,14 @@ export default {
 						</li>
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 								Follow
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
+								New Photo
 							</RouterLink>
 						</li>
 					</ul>
@@ -111,6 +125,18 @@ export default {
 							<RouterLink to="/search/" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 								Search
+							</RouterLink>
+						</li>
+					</ul>
+
+					<h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>STATISTICS</span>
+					</h5>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink to="/search/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
+								Analytics
 							</RouterLink>
 						</li>
 					</ul>

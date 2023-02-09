@@ -20,7 +20,7 @@ body {
 	bottom: 0;
 	left: 0;
 	z-index: 100; /* Behind the navbar */
-	padding: 40px 5px 0; /* Height of navbar */
+	padding: 50px 5px 0; /* Height of navbar */
 	box-shadow: inset -1px 0 0 rgba(86, 151, 226, 0.1);
 }
 
@@ -39,7 +39,7 @@ body {
 
 /* Color of the Menu Options when they are not selected. */
 .sidebar .nav-link {
-	font-weight: 500;
+	font-weight: 800;
 	color: #333;
 }
 
@@ -61,11 +61,11 @@ body {
 
 /* Sidebar Heading Font-Size */
 .sidebar-heading {
-	font-size: 1.375rem;
+	font-size: 1.575rem;
 }
 
 /*
- * Navbar (The Small Navbar above the site.
+ * Navbar (The Small Navbar above the site).
  */
 .navbar-brand {
 	padding-top: 1rem;
