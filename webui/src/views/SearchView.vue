@@ -37,7 +37,7 @@ export default {
 			// Initializing two arrays for handling the list of respectively Followers and Followings. 
 			followersList: [],
 			followingsList: [],
-			
+
 			// Initializing an array for handling the list of Banned user of the Logged Username.
 			bannedList: [],
 		}
@@ -57,9 +57,7 @@ export default {
 			this.usersProfiles = [];
 
 			this.usernameToSearchBool = true;
-			
-			this.followingsList = [];
-			
+						
 			try {
 
 				// Getting the list of Users from the Back-End.
