@@ -6,6 +6,7 @@ import axios from './services/axios.js';
 import ErrorMsg from './components/ErrorMsg.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 import CardProfile from './components/CardProfile.vue'
+import MyProfileCard from './components/MyProfileCard.vue'
 
 import './assets/dashboard.css'
 import './assets/main.css'
@@ -18,6 +19,7 @@ app.config.globalProperties.$axios = axios;
 app.component("ErrorMsg", ErrorMsg);
 app.component("LoadingSpinner", LoadingSpinner);
 app.component("CardProfile", CardProfile);
+app.component("MyProfileCard", MyProfileCard);
 app.use(router)
 app.mount('#app')
 

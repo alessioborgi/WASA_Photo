@@ -8,7 +8,8 @@ import LoadingSpinner from '../components/LoadingSpinner.vue'
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+        LoadingSpinner,
 	},
 
 	// Describing what are the Return variables.
@@ -213,6 +214,11 @@ export default {
                     this.getUserProfile(i)
                 }
 
+                // Let's check whether you are actually following some User.
+                if (this.followingsList.length == 0){
+                    this.errormsg = "Err: You don't have followed any User yet!";
+                }
+
 			} catch (e) {
 
 				// If an error is encountered, display it!
@@ -245,6 +251,11 @@ export default {
                 // Retrieving for every username, its Profile.
                 for (let i = 0; i < this.followersList.length; i++) {
                     this.getUserProfile(i)
+                }
+
+                // Let's check whether there are actually some user that are following you.
+                if (this.followingsList.length == 0){
+                    this.errormsg = "Err: You don't have any Follower User yet!";
                 }
 
 			} catch (e) {
@@ -462,19 +473,8 @@ export default {
 
 				<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
 				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-                <!-- If the Username to search was not found, report the error. -->
-				<!-- <div class="card" v-if="usernameFollowingsToSearch === false">
-					<div class="card-body">
-						<p>No User present in the Database with the {{ this.usernameFollowingsToSearch }} username.</p>
-					</div>
-				</div> -->
-
-
-                <!-- ------------------------ FOLLOWINGS PART ------------------------  -->
-                <!-- If the followingsListProfiles is empty after the computation, refer this fact. -->
-                
+                <!-- ------------------------ FOLLOWINGS PART ------------------------  -->                
                 <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles in the followingsList -->
 				
                 <CardProfile v-if="!loading && flagFollow == false" v-for="u in followingsListProfiles" 
@@ -482,14 +482,14 @@ export default {
                 </CardProfile>
                 
                 
-                <!-- ------------------------ FOLLOWERS PART ------------------------  -->
-                <!-- If the followersListProfiles is empty after the computation, refer this fact. -->
-                
+                <!-- ------------------------ FOLLOWERS PART ------------------------  -->                
                 <!-- In alternative, Display a sort of card for each of the User Profiles in the followersList -->
                 <CardProfile v-if="!loading && flagFollow == true" v-for="u in followersListProfiles" 
                     :user="u"> 
                 </CardProfile>
-                
+
+                <LoadingSpinner v-if="loading"></LoadingSpinner>
+
 			</div>
 	</div>
 </template>

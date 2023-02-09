@@ -83,8 +83,14 @@ export default {
 
 				// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
 				this.usersProfiles.sort(function(a,b){
-					return a.dateOfCreation - b.dateOfCreation;
+					
+					return new Date(a.dateOfCreation) - new Date(b.dateOfCreation);
 				})
+
+				// Let's check whether there are actually some user that are following you.
+                if (this.users.length == 0){
+                    this.errormsg = "Err: There are still no User except you yet!";
+                }
 
 			} catch (e) {
 

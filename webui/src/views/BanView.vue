@@ -169,6 +169,11 @@ export default {
                     this.getUserProfile(i)
                 }
 
+                // Let's check whether you have banned some User.
+                if (this.bannedList.length == 0){
+                    this.errormsg = "Err: You don't have Banned any user!";
+                }
+
 			} catch (e) {
 
 				// If an error is encountered, display it!
