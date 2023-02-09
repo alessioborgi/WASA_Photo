@@ -10,7 +10,7 @@ export default {
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
             username: localStorage.getItem('Username'),
-            BearerTokenStorage: localStorage.getItem('BearerToken'),
+            BearerToken: localStorage.getItem('BearerToken'),
 		}
 	},
 
@@ -25,10 +25,7 @@ export default {
 
 		// setLocalStorage Function: It will free-up the two localStorage settings (username and bearerauth).
 		async setLocalStorage() {
-			localStorage.setItem('Authorization', "")
-			BearerTokenStorage = "";
-            localStorage.setItem('Username', "")
-			username = "";
+			localStorage.clear();
 		},
 	},
 

@@ -11,7 +11,9 @@ export default {
 		return {
 
             // Initializing colorBackground of the Card depending on the Gender.
-            colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
+            colorBackground: this.user.gender == "male" ? '#c2e9fc' : this.user.gender == "female" ? '#fbd3f0' : '#cff6cc',
+            // colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
+
 
 			// Initializing iconFollow, that can receive two values:
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
@@ -73,19 +75,19 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts2">
-                            <b>Is it Banned by me? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use :href="this.iconBanned"/></svg>
+                            <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use :href="this.iconBanned"/></svg>
                             <!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
                         </div> 
 
                         <div class="grid-child-posts2">
-                            <b>Is it Following me?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
+                            <b>Am I Following it?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
                                 <!-- <use href="'iconFollowing'"/></svg> -->
                                 <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
                                 <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>
 
                         <div class="grid-child-posts2">
-                            <b>Am I following him?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
+                            <b>Is it my Follower?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
                                 <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
                                 <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>                          
@@ -265,7 +267,10 @@ margin-top: 50px;
 
 .grid-child-posts2{
     font-size:12px;
+    width: 109px;
 }
+
+
 </style>
 
 

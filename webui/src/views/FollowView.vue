@@ -232,6 +232,7 @@ export default {
 
             this.followersListProfiles = [];
 
+
             // Set the flagFollow to false (meaning that I need to work on followersListProfiles)
             this.flagFollow = true;
 			
