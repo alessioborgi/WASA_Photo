@@ -86,7 +86,7 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<MyProfileCard v-if="!loading"  :user=this.userProfile :gender="this.userProfile.gender" :style="{backgroundColor: this.colorBackground}"> 
+				<MyProfileCard v-if="!loading"  :user=this.userProfile :style="{backgroundColor: this.colorBackground}"> 
 				</MyProfileCard>
 			</div>
 	</div>
