@@ -58,23 +58,6 @@ export default {
                     <div class="grid-child-posts">
                         <b>Followers</b> {{ user.numberFollowers }} 
                     </div>
-
-                    <div class="grid-child-posts">
-                        <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
-                        <nav>
-                            <menu>
-                                <menuitem id="demo1">
-                                    <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
-                                    <menu>
-                                        <menuitem><a>Set Username</a></menuitem>
-                                        <menuitem><a>Set Profile</a></menuitem>
-                                        <menuitem><a>Delete Profile</a></menuitem>
-                                    </menu>
-                                </menuitem>
-                            
-                            </menu>
-	                    </nav>                  
-                    </div>
                 </div>
 
 
@@ -116,7 +99,28 @@ export default {
                 <b>DateOfCreation</b> {{ user.dateOfCreation }} 
             </div>
 
+            <div class="grid-child-posts"></div>
+
+            <div class="grid-child-posts">
+                        <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
+                        <nav>
+                            <menu>
+                                <menuitem id="demo1">
+                                    <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
+                                    <menu>
+                                        <menuitem><a><b>Set Username</b></a></menuitem>
+                                        <menuitem><a><b>Set Profile</b></a></menuitem>
+                                        <menuitem><a><b>Delete Profile</b></a></menuitem>
+                                    </menu>
+                                </menuitem>
+                            
+                            </menu>
+	                    </nav>                  
+            </div>
+
         </div>
+
+        
 
     </div>
 
@@ -129,7 +133,16 @@ export default {
 <style scoped>
 
 
-
+.settingsMenu{
+    display: block;
+    margin-top: -50px;
+    margin-left: 1050px;
+    width: 50%;
+    width: 600px;
+    float: left;
+    /* background-color: yellow; */
+    
+}
 .upperPart{
     display: block;
   	margin-left: auto;
@@ -236,7 +249,7 @@ margin-top: 50px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 50px;
-  width: 650px;
+  width: 600px;
   font-size: 18px;
   /* background-color: greenyellow; */
 }
