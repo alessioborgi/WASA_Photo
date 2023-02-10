@@ -25,13 +25,13 @@ export default {
             BearerToken: localStorage.getItem('BearerToken'),
 
             newUsername: "",
+            
+            deleteProfileBool: false,
 		}
 	},
 
     methods: {
-        // showAlert() {
-        //     alert('test')
-        // }
+        
         async setUsernameAlert() {
 
             this.newUsername = "";
@@ -67,9 +67,7 @@ export default {
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/users/'+this.newUsername })
                 this.newUsername = "";
-
-
-                window.location.reload();                
+                
 
 
             } catch (e) {
@@ -83,6 +81,19 @@ export default {
         },
 
 
+        async deleteProfileAlert() {
+
+            if (confirm("Your Profile" + this.username +" will be deleted from WASAPhoto. Are you sure?")){
+                this.deleteProfileBool = true;
+                alert("Profile Correctly Deleted");
+            } else {
+                this.deleteProfileBool = false;
+                alert("Profile still Alive!")
+            }
+            
+        },
+
+
         // Declaration of the DoLogin page. 
         async deleteProfile() {
 
@@ -90,29 +101,25 @@ export default {
             this.errormsg = "";
             this.loading = true;
 
-            await this.createAlert()
+            await this.deleteProfileAlert()
 
             try {
                 
                 // In the case the result is positive, we post the username received to the GO page.
-
-                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
+                if (this.deleteProfileBool == true){
+                    await this.$axios.delete(`/users/${this.username}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
-                    }
-                })
+                    }})
 
-                // Setting the uuid (Bearer Token) received as response by the Post action.
-                localStorage.setItem('Username', this.newUsername),
-                this.username = this.newUsername;
-                                
-                // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: '/users/'+this.newUsername })
-                this.newUsername = "";
-
-
-                window.location.reload();                
-
+                    // Setting the uuid (Bearer Token) received as response by the Post action.
+                    localStorage.clear();
+                    this.username = "";
+                    this.BearerToken = "";
+                                    
+                    // Re-addressing the page to the personal profile page of a user.
+                    this.$router.replace({ path: '/session/' })
+                }
 
             } catch (e) {
 
@@ -138,7 +145,7 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ user }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
@@ -220,19 +227,19 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button @click="setUsername">
+                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="setUsername">
                                                 <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button @click="createAlert">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="createAlert">
                                                 <b>Set Profile</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button @click="deleteProfile">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="deleteProfile">
                                                 <b>Delete Profile</b>
                                             </button>
                                         </menuitem>
@@ -257,6 +264,15 @@ export default {
 
 <style scoped>
 
+.btn { display: inline-block; *display: inline; *zoom: 1;   font-family: sans-serif; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center;text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0); border-color: #e6e6e6 #e6e6e6 #e6e6e6; border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); border: 1px solid #e6e6e6; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); cursor: pointer; *margin-left: .3em; }
+.btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] { background-color: #e6e6e6; }
+.btn-large { padding: 9px 14px; font-size: 20px; line-height: normal; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+.btn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; -webkit-transition: background-position 0.1s linear; -moz-transition: background-position 0.1s linear; -ms-transition: background-position 0.1s linear; -o-transition: background-position 0.1s linear; transition: background-position 0.1s linear; }
+.btn-primary, .btn-primary:hover { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); color: #ffffff; }
+.btn-primary.active { color: rgba(255, 255, 255, 0.75); }
+.btn-primary { background-color: #4a77d4; background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4); background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4)); background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4); background-image: -o-linear-gradient(top, #6eb6de, #4a77d4); background-image: linear-gradient(top, #6eb6de, #4a77d4); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);  border: 1px solid #3762bc; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5); }
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] { filter: none; background-color: #4a77d4; }
+.btn-block { width: 100%; display:block; }
 
 .settingsMenu{
     display: block;
@@ -439,7 +455,7 @@ nav {
 }
 
 nav a {
-   background:#c2e9fc;
+   background:#ffffff;
    color:#FFF;
    min-width:190px;
    transition: background 0.5s, color 0.5s, transform 0.5s;
@@ -465,7 +481,7 @@ nav > menu > menuitem > a + menu:after{
    content: '';
    position:absolute;
    border:10px solid transparent;
-   border-top: 10px solid white;
+   border-top: 10px solid #4a77d4;
    left:12px;
    top: -40px;  
 }

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 </script>
 
@@ -9,7 +10,7 @@ export default {
 		return {
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
+            username: localStorage.getItem('Username') == "" ? "NOT LOGGED" : localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 		}
 	},
@@ -51,7 +52,7 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="replaceLogin"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="{{ this.$router.replace({ path: '/session/' }); }}"/></svg>
 								Login
 							</RouterLink>
 						</li>
@@ -67,13 +68,12 @@ export default {
 
 					
 					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
-						<span>{{username}}</span>
+						<span>PERSONAL PROFILE</span>
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
-								<!-- window.location.reload(true); -->
 								My Profile
 							</RouterLink>
 						</li>
