@@ -58,7 +58,6 @@ button.close {
     cursor: pointer;
     background: transparent;
     border: 0;
-    -webkit-appearance: none;
 }
 
 .alert {
@@ -214,11 +213,6 @@ button.close {
 }
 
 .alert-white .icon:after {
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
     display: block;
     content: '';
     width: 10px;

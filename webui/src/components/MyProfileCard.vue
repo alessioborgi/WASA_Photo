@@ -1,25 +1,76 @@
 
 <script>
 
+import InfoMsg from '../components/InfoMsg.vue'
+
 export default {
 
     props: ['user'],
 
+    components: {
+        InfoMsg
+    },
+
     
 	// Describing what are the Return variables.
 	data: function() {
-		return {			
+		return {	
+            
+            errormsg: "",
+            loading: true,
 		}
 	},
 
     methods: {
-        showAlert() {
-            alert('test')
-        }
-    }
+        // showAlert() {
+        //     alert('test')
+        // }
+        createAlert() {
+            var input = prompt("Please enter your name:", "");
+            if (input != null) {
+                alert("Hello " + input + "! How are you today?");
+            }
+        },
 
-    
-}    
+        // Declaration of the DoLogin page. 
+        async setUsername() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            try {
+                
+                // In the case the result is positive, we post the username received to the GO page.
+                let response = await this.$axios.put("/session/", { 
+                    username: this.username 
+                });
+                
+                // Setting the uuid (Bearer Token) received as response by the Post action.
+                this.uuid  = response.data,
+                localStorage.setItem('BearerToken', this.uuid),
+                localStorage.setItem('Username', this.username),
+
+                // Re-addressing the page to the personal profile page of a user.
+                
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.replace({ path: `/users/${this.username}` })
+
+            } catch (e) {
+
+                // In case of error, retrieve it.
+                this.errormessage = e.toString();
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+                
+                
+    }
+}
+
+     
 </script>
     
 
@@ -108,8 +159,20 @@ export default {
                                 <menuitem id="demo1">
                                     <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
                                     <menu>
-                                        <menuitem><a><b>Set Username</b></a></menuitem>
-                                        <menuitem><a><b>Set Profile</b></a></menuitem>
+
+                                        <menuitem>
+                                            <!-- <button @click="showAlert"> -->
+                                                <button @click="createAlert">
+                                                <b>Set Username</b>
+                                            </button>
+                                        </menuitem>
+
+                                        <menuitem>
+                                            <button @click="showAlert">
+                                                <b>Set Profile</b>
+                                            </button>
+                                        </menuitem>
+
                                         <menuitem><a><b>Delete Profile</b></a></menuitem>
                                     </menu>
                                 </menuitem>
