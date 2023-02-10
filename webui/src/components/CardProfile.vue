@@ -10,6 +10,14 @@ export default {
 	data: function() {
 		return {
 
+            // Initializing the two errormessage and loading variables.
+            errormsg: "",
+			loading: false,
+
+            // Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
+            username: localStorage.getItem('Username'),
+            BearerToken: localStorage.getItem('BearerToken'),
+
             // Initializing colorBackground of the Card depending on the Gender.
             colorBackground: this.user.gender == "male" ? '#c2e9fc' : this.user.gender == "female" ? '#fbd3f0' : '#cff6cc',
             // colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
@@ -23,6 +31,65 @@ export default {
             iconBanned: this.user.boolBanned == true ? '/feather-sprite-v4.29.0.svg#lock' : '/feather-sprite-v4.29.0.svg#unlock',
 		}
 	},
+
+    methods: {
+
+        // banUnbanUser function: It has the role to add or delete a ban depending on the boolBanned value.
+        async banUnbanUser(){
+
+            // Initializing the two errormessage and loading variables.
+			this.errormsg= "";
+			this.loading= true;
+
+            // Let's handle first the case where the user is Banned.
+            // We must therefore delete the Ban.
+            if (this.user.boolBanned == true) {
+
+                try{
+
+                    // Deleting the Ban: /users/:username/bans/:usernameBanned.
+                    await this.$axios.delete("/users/"+this.username+"/bans/"+this.user.username, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
+
+                    // Once we have done with it, we must simply update the flag.
+                    this.user.boolBanned = false;
+
+                } catch (e) {
+
+                    // If an error is encountered, display it!
+                    this.errormsg = e.toString();
+                    }
+            } else {
+
+                // Let's handle first the case where the user is NOT Banned.
+                // We must therefore add the Ban.
+                try{
+
+                    // Deleting the Ban: /users/:username/bans/:usernameBanned.
+                    await this.$axios.put("/users/"+this.username+"/bans/"+this.user.username, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
+
+                    // Once we have done with it, we must simply update the flag.
+                    this.user.boolBanned = true;
+
+                } catch (e) {
+
+                    // If an error is encountered, display it!
+                    this.errormsg = e.toString();
+                    }
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+
+        }
+    }
 
     
 }    
@@ -72,21 +139,15 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts2">
-                            <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="getUsers" ><use :href="this.iconBanned"/></svg>
-                            <!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
+                            <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="banUnbanUser" ><use :href="this.iconBanned"/></svg>
                         </div> 
 
                         <div class="grid-child-posts2">
                             <b>Am I Following it?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollowing"/></svg>
-                                <!-- <use href="'iconFollowing'"/></svg> -->
-                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>
 
                         <div class="grid-child-posts2">
                             <b>Is it my Follower?</b><svg class="feather" v-if="!loading" @click="goToFollowView" ><use :href="this.iconFollower"/></svg>
-                                <!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-                                <!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
                         </div>                          
                     </div>
                 </div>
