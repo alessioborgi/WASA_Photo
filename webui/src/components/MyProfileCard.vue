@@ -16,8 +16,15 @@ export default {
 	data: function() {
 		return {	
             
-            errormsg: "",
-            loading: true,
+            // Initializing the two errormessage and loading variables.
+			errormsg: "",
+			loading: false,
+
+			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
+            username: localStorage.getItem('Username'),
+            BearerToken: localStorage.getItem('BearerToken'),
+
+            newUsername: "",
 		}
 	},
 
@@ -25,10 +32,12 @@ export default {
         // showAlert() {
         //     alert('test')
         // }
-        createAlert() {
-            var input = prompt("Please enter your name:", "");
-            if (input != null) {
-                alert("Hello " + input + "! How are you today?");
+        async setUsernameAlert() {
+
+            this.newUsername = "";
+            this.newUsername = prompt("Please enter the new Username:");
+            if (this.newUsername != "") {
+                alert("Your Username will change from " + this.username + " to " + this.newUsername);
             }
         },
 
@@ -39,22 +48,29 @@ export default {
             this.errormsg = "";
             this.loading = true;
 
+            await this.setUsernameAlert()
+
             try {
                 
                 // In the case the result is positive, we post the username received to the GO page.
-                let response = await this.$axios.put("/session/", { 
-                    username: this.username 
-                });
-                
-                // Setting the uuid (Bearer Token) received as response by the Post action.
-                this.uuid  = response.data,
-                localStorage.setItem('BearerToken', this.uuid),
-                localStorage.setItem('Username', this.username),
 
+                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+                // Setting the uuid (Bearer Token) received as response by the Post action.
+                localStorage.setItem('Username', this.newUsername),
+                this.username = this.newUsername;
+                                
                 // Re-addressing the page to the personal profile page of a user.
-                
-                // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: `/users/${this.username}` })
+                this.$router.replace({ path: '/users/'+this.newUsername })
+                this.newUsername = "";
+
+
+                window.location.reload();                
+
 
             } catch (e) {
 
@@ -65,8 +81,50 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         },
+
+
+        // Declaration of the DoLogin page. 
+        async deleteProfile() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            await this.createAlert()
+
+            try {
                 
-                
+                // In the case the result is positive, we post the username received to the GO page.
+
+                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                // Setting the uuid (Bearer Token) received as response by the Post action.
+                localStorage.setItem('Username', this.newUsername),
+                this.username = this.newUsername;
+                                
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.replace({ path: '/users/'+this.newUsername })
+                this.newUsername = "";
+
+
+                window.location.reload();                
+
+
+            } catch (e) {
+
+                // In case of error, retrieve it.
+                this.errormessage = e.toString();
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+                            
+                            
     }
 }
 
@@ -80,7 +138,7 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ user.gender }}  -->
+            <b> FIXEDUSERNAME: </b>{{ user }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
@@ -162,18 +220,22 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button @click="createAlert">
+                                                <button @click="setUsername">
                                                 <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button @click="showAlert">
+                                            <button @click="createAlert">
                                                 <b>Set Profile</b>
                                             </button>
                                         </menuitem>
 
-                                        <menuitem><a><b>Delete Profile</b></a></menuitem>
+                                        <menuitem>
+                                            <button @click="deleteProfile">
+                                                <b>Delete Profile</b>
+                                            </button>
+                                        </menuitem>
                                     </menu>
                                 </menuitem>
                             
