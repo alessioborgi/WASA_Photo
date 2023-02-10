@@ -28,7 +28,11 @@ export default {
 
 			// Initializing variable for handling the UserProfile retrieval.
 			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
-			colorBackground: ''
+			colorBackground: '',
+
+			// Initializing a list that will handle the links to the photos.
+			photoListLinks: [],
+			photoListRaw: [],
 		}
 	},
 
@@ -37,6 +41,10 @@ export default {
 		
         // GetUserProfile Function: It retrieves the whole profile of the Logged username.
         async getUserProfile() {
+
+			// Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
 
 			try{
 
@@ -60,12 +68,68 @@ export default {
 				// If an error is encountered, display it!
 				this.errormsg = e.toString();
 			}
+
+			// Setting again the Loading flag to false.
+            this.loading = false;
 		},
+
+		// getPhotoLinks Function: It retrieves the whole photolist(os links) of the username.
+		async getPhotoLinks() {
+
+			// Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+			try{
+
+				// Retrieving the Profile from the Back-end.
+				let responsePhotoList = await this.$axios.get(`/users/${this.username}/photos/`, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				this.photoListLinks = responsePhotoList.data;
+
+				// Retrieving for every username, its Profile.
+				for (let i = 0; i < this.photoListLinks; i++) {
+
+					try{
+
+						// Retrieving the Photo from the Back-end.
+						let responsePhoto = await this.$axios.get(`/users/${this.username}/photos/${this.photoListLinks[i].id}/view`, {
+							headers: {
+								Authorization: "Bearer " + localStorage.getItem("BearerToken")
+							}
+						})
+
+						// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+						this.photoListRaw.push(responsePhoto.data);
+
+					} catch (e) {
+
+						// If an error is encountered, display it!
+						this.errormsg = e.toString();
+					}
+				}
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Setting again the Loading flag to false.
+            this.loading = false;
+		},
+
+		
 
 		
 	},
 	mounted() {
 		this.getUserProfile()
+		this.getPhotoLinks()
 	}
 }
 </script>
@@ -89,6 +153,20 @@ export default {
 				<MyProfileCard v-if="!loading"  :user=this.userProfile :style="{backgroundColor: this.colorBackground}"> 
 				</MyProfileCard>
 			</div>
+
+			<div class="photos">
+
+			<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+			<LoadingSpinner v-if="loading"></LoadingSpinner>
+
+			<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
+			<div v-if="!loading" v-for="link in photoListLinks"> 
+				{{ link }}
+			</div>
+			</div>
+
+			
 	</div>
 </template>
 

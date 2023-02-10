@@ -1,5 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
+.photos{
+	margin-top: 150px;
+}
 .img {
 	display: block;
   	margin-left: auto;
