@@ -27,9 +27,9 @@ export default {
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
             //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
 			iconFollowing: this.user.boolFollowing == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
-            iconFollower: this.user.boolFollower == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
+            iconFollower: this.user.boolFollower == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-x',
             iconBanned: this.user.boolBanned == true ? '/feather-sprite-v4.29.0.svg#lock' : '/feather-sprite-v4.29.0.svg#unlock',
-		}
+        }
 	},
 
     methods: {
@@ -48,7 +48,7 @@ export default {
                 try{
 
                     // Deleting the Ban: /users/:username/bans/:usernameBanned.
-                    await this.$axios.delete("/users/"+this.username+"/bans/"+this.user.username, {
+                    await this.$axios.delete(`/users/${this.username}/bans/${this.user.username}`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
@@ -62,28 +62,28 @@ export default {
                     // If an error is encountered, display it!
                     this.errormsg = e.toString();
                 }
-            } //else {
+            } else{
 
                 // Let's handle first the case where the user is NOT Banned.
                 // We must therefore add the Ban.
-                // try{
+                try{
 
                     // Deleting the Ban: /users/:username/bans/:usernameBanned.
-                    // this.$axios.put(`/users/${this.username}/bans/${this.user.username}`, {
-                    //     headers: {
-                    //         Authorization: "Bearer " + localStorage.getItem("BearerToken")
-                    //     }
-                    // })
+                    await this.$axios.put(`/users/${this.username}/bans/${this.user.username}`, {}, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
 
                     // Once we have done with it, we must simply update the flag.
-                //     this.user.boolBanned = true;
+                    this.user.boolBanned = true;
 
-                // } catch (e) {
+                } catch (e) {
 
                     // If an error is encountered, display it!
-                    // this.errormsg = e.toString();
-                    // }
-            // }
+                    this.errormsg = e.toString();
+                    }
+            }
 
             // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
@@ -119,12 +119,32 @@ export default {
                     // If an error is encountered, display it!
                     this.errormsg = e.toString();
                 }
-            } else {
+            } else{
 
+                // Let's handle first the case where the user is NOT Followed by us.
+                // We must therefore add the Follow.
+                try{
+
+                    // Adding the Follow: /users/:username/followings/:usernameFollowing.
+                    await this.$axios.put(`/users/${this.username}/followings/${this.user.username}`, {}, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
+
+                    // Once we have done with it, we must simply update the flag.
+                    this.user.boolFollowing = true;
+
+                } catch (e) {
+
+                    // If an error is encountered, display it!
+                    this.errormsg = e.toString();
+                    }
             }
 
-            // If an error is encountered, display it!
-            this.errormsg = e.toString();
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+            this.loading = false;
+
         },
     }
 
@@ -140,7 +160,7 @@ export default {
         <!-- <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}"> -->
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ user.gender }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.response }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
