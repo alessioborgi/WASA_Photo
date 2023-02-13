@@ -4,6 +4,7 @@ import DoLoginView from '../views/DoLoginView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import BanView from '../views/BanView.vue'
 import FollowView from '../views/FollowView.vue'
+import UpdateView from '../views/UpdateProfile.vue'
 
 
 const router = createRouter({
@@ -14,6 +15,7 @@ const router = createRouter({
 		{path: '/users/:username', component: ProfileView},
 		{path: '/users/:username/ban/', component: BanView},
 		{path: '/users/:username/follow/', component: FollowView},
+		{path: '/users/:username/update/', component: UpdateView},
 	]
 })
 

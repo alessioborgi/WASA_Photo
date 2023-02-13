@@ -306,7 +306,7 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1">{{ username }}'s WASA Photo SEARCH</h1>
+			<h1 class="h1">{{ username }}'s SEARCH</h1>
 
 			<div class="topMenu">
 

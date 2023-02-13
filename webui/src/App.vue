@@ -92,7 +92,7 @@ export default {
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
+							<RouterLink :to="'/users/'+username+'/update/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
 								Update Profile
 							</RouterLink>
