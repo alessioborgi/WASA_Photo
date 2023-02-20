@@ -29,12 +29,6 @@ export default {
 		}
 	},
 
-    // watch: {
-    //     username(newValue, oldValue){
-    //         this.$emit('refreshProfile', newValue);
-    //     }
-    // },
-
     methods: {
         
         async setUsernameAlert() {
@@ -70,12 +64,12 @@ export default {
                 localStorage.setItem('Username', this.newUsername),
                 this.username = this.newUsername;
                 this.user.username = this.username;
-
-                // this.$router.go()
                                 
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/users/'+this.newUsername })
                 this.newUsername = "";
+
+                this.$emit('refreshProfile', this.username);
 
             } catch (e) {
 
@@ -83,7 +77,6 @@ export default {
                 this.errormessage = e.toString();
             }
 
-            
             // Setting again the Loading flag to false.
             this.loading = false;
         },

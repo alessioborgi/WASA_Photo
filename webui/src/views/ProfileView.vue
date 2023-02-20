@@ -139,7 +139,7 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1"> {{ username + "'s"}} PERSONAL PROFILE</h1>
+			<h1 class="h1"> {{ this.userProfile.username + "'s"}} PERSONAL PROFILE</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">
 
 			<!-- Let's now handle the dynamic part. -->
@@ -150,8 +150,8 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<MyProfileCard v-if="!loading"  :user=this.userProfile :style="{backgroundColor: this.colorBackground}" 
-					@refreshProfile = this.getUserProfile()
+				<MyProfileCard v-if="!loading" :user=this.userProfile :style="{backgroundColor: this.colorBackground}" 
+					@refreshProfile = "this.userProfile.username = $event"
 				></MyProfileCard>
 			</div>
 
