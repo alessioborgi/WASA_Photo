@@ -63,12 +63,14 @@ export default {
                 // Setting the uuid (Bearer Token) received as response by the Post action.
                 localStorage.setItem('Username', this.newUsername),
                 this.username = this.newUsername;
+
+                // this.$router.go()
                                 
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/users/'+this.newUsername })
                 this.newUsername = "";
-                
 
+                this.$forceUpdate();
 
             } catch (e) {
 
@@ -76,6 +78,7 @@ export default {
                 this.errormessage = e.toString();
             }
 
+            
             // Setting again the Loading flag to false.
             this.loading = false;
         },
