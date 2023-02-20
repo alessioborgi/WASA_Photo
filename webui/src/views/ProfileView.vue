@@ -91,7 +91,7 @@ export default {
 
 				this.photoListLinks = responsePhotoList.data;
 
-				// Retrieving for every username, its Profile.
+				// Retrieving every photo, "/users/:username/photos/:photoid/view"		
 				for (let i = 0; i < this.photoListLinks; i++) {
 
 					try{
@@ -123,9 +123,6 @@ export default {
             this.loading = false;
 		},
 
-		
-
-		
 	},
 	mounted() {
 		this.getUserProfile()
@@ -165,6 +162,7 @@ export default {
 			<div v-if="!loading" v-for="link in photoListLinks"> 
 				{{ link }}
 			</div>
+
 			</div>
 
 			

@@ -56,6 +56,8 @@ export default {
 
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolBanned = false;
+                    this.iconBanned = '/feather-sprite-v4.29.0.svg#unlock';
+                    this.$emit('refreshBan', false);
 
                 } catch (e) {
 
@@ -77,6 +79,8 @@ export default {
 
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolBanned = true;
+                    this.iconBanned = '/feather-sprite-v4.29.0.svg#lock';
+                    this.$emit('refreshBan', true);
 
                 } catch (e) {
 
@@ -113,12 +117,15 @@ export default {
 
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolFollowing = false;
+                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
+                    this.$emit('refreshFollowing', false);
 
                 } catch (e) {
 
                     // If an error is encountered, display it!
                     this.errormsg = e.toString();
                 }
+
             } else{
 
                 // Let's handle first the case where the user is NOT Followed by us.
@@ -134,6 +141,9 @@ export default {
 
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolFollowing = true;
+                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
+                    this.$emit('refreshFollowing', true);
+                    
 
                 } catch (e) {
 
@@ -160,7 +170,7 @@ export default {
         <!-- <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}"> -->
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.response }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>

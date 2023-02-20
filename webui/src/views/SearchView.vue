@@ -342,8 +342,10 @@ export default {
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
-				    :user="u"> 
-				</CardProfile>
+				    :user="u" 
+					@refreshFollowing = "u.boolFollowing = $event"
+					@refreshBan = "u.boolBanned = $event"
+				></CardProfile>
 			</div>
 	</div>
 </template>
