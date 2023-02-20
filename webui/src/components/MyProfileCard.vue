@@ -10,7 +10,6 @@ export default {
     components: {
         InfoMsg
     },
-
     
 	// Describing what are the Return variables.
 	data: function() {
@@ -30,12 +29,19 @@ export default {
 		}
 	},
 
+    // watch: {
+    //     username(newValue, oldValue){
+    //         this.$emit('refreshProfile', newValue);
+    //     }
+    // },
+
     methods: {
         
         async setUsernameAlert() {
 
             this.newUsername = "";
             this.newUsername = prompt("Please enter the new Username:");
+            
             if (this.newUsername != "") {
                 alert("Your Username will change from " + this.username + " to " + this.newUsername);
             }
@@ -63,14 +69,13 @@ export default {
                 // Setting the uuid (Bearer Token) received as response by the Post action.
                 localStorage.setItem('Username', this.newUsername),
                 this.username = this.newUsername;
+                this.user.username = this.username;
 
                 // this.$router.go()
                                 
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/users/'+this.newUsername })
                 this.newUsername = "";
-
-                this.$forceUpdate();
 
             } catch (e) {
 
@@ -230,7 +235,7 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="setUsername">
+                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="setUsername()">
                                                 <b>Set Username</b>
                                             </button>
                                         </menuitem>
