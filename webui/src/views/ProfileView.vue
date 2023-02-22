@@ -92,26 +92,26 @@ export default {
 				this.photoListLinks = responsePhotoList.data;
 
 				// Retrieving every photo, "/users/:username/photos/:photoid/view"		
-				for (let i = 0; i < this.photoListLinks; i++) {
+				// for (let i = 0; i < this.photoListLinks; i++) {
 
-					try{
+				// 	try{
 
-						// Retrieving the Photo from the Back-end.
-						let responsePhoto = await this.$axios.get(`/users/${this.username}/photos/${this.photoListLinks[i].id}/view`, {
-							headers: {
-								Authorization: "Bearer " + localStorage.getItem("BearerToken")
-							}
-						})
+				// 		// Retrieving the Photo from the Back-end.
+				// 		let responsePhoto = await this.$axios.get(`/users/${this.username}/photos/${this.photoListLinks[i].id}/view`, {
+				// 			headers: {
+				// 				Authorization: "Bearer " + localStorage.getItem("BearerToken")
+				// 			}
+				// 		})
 
-						// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
-						this.photoListRaw.push(responsePhoto.data);
+				// 		// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+				// 		this.photoListRaw.push(responsePhoto.data);
 
-					} catch (e) {
+				// 	} catch (e) {
 
-						// If an error is encountered, display it!
-						this.errormsg = e.toString();
-					}
-				}
+				// 		// If an error is encountered, display it!
+				// 		this.errormsg = e.toString();
+				// 	}
+				// }
 
 			} catch (e) {
 
@@ -160,7 +160,7 @@ export default {
 
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 			<div v-if="!loading" v-for="link in photoListLinks"> 
-				{{ link }}
+				<img :src=link alt="Image" />
 			</div>
 
 			</div>

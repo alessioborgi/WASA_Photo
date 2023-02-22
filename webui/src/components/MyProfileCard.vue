@@ -154,7 +154,14 @@ export default {
         <div class="upperPart"> 
             <div class="imageLabel">
                 <div class="profileImage">
-                    <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
+                    <!-- In this way works -->
+                    <!-- <img src="../../u1-photo-0.png" alt="Person" class="card__image"/> -->
+                    
+                    <!-- In this other way it does not :( -->
+                    <img src="Users/alessioborgi/Documents/GitHub/WASA_Photo/photos/u1-photo-0.png" alt="Person" class="card__image"/>
+                    <!-- <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image"> -->
+                    
+                    <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
                 <div class="profileLabel">
                     <p class="card__name" > <b>{{ user.username }}</b></p>
