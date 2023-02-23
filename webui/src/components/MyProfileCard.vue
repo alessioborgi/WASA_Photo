@@ -117,6 +117,7 @@ export default {
                     localStorage.clear();
                     this.username = "";
                     this.BearerToken = "";
+                    
                                     
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: '/session/' })
