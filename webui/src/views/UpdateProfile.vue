@@ -24,22 +24,131 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
-			// Initializing two variables that will be used to Handle the Specific Search for a User among the Bans.
-			usernameBanToSearch: "",
-            
-			// Initializing four arrays for handling the list of respectively Followers and Followings and the two same arrays but with profiles. 
-			followersList: [],
-			followingsList: [],
-            			
-			// Initializing two array for handling the list of Banned user of the Logged Username and the same list with profiles.
-			bannedList: [],
-            bannedListProfiles: [],
+			// Initializing variable for handling the UserProfile retrieval.
+			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
+			file: "",
         }
 	},
 
 	// Declaration of the methods that will be used.
 	methods: {
+
+        // GetUserProfile Function: It retrieves the whole profile of the Logged username.
+        async getUserProfile() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            try{
+
+                // Retrieving the Profile from the Back-end.
+                let responseProfile = await this.$axios.get("/users/"+this.username, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                responseProfile.data.boolFollowing = false;
+                responseProfile.data.boolFollower = false;
+                responseProfile.data.boolBanned = false;
+                
+                // Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+                this.userProfile = responseProfile.data;
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
+        async setUserProfile() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            // Creation of a multipart/form data to send to the go server.
+            const form = new FormData()
+            form.append('username', this.userProfile.username)
+            form.append('photoProfile', this.userProfile.photoProfile)
+            form.append('biography', this.userProfile.biography)
+            form.append('name', this.userProfile.name)
+            form.append('surname', this.userProfile.surname)
+            form.append('dateOfBirth', this.userProfile.dateOfBirth)
+            form.append('email', this.userProfile.email)
+            form.append('nationality', this.userProfile.nationality)
+            form.append('gender', this.userProfile.gender)
+
+            try {
+                
+                // In the case the result is positive, we set the userProfile updated to the GO page.
+
+                await this.$axios.put(`/users/${this.username}`, form, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+                // Setting the new username received as the new username saved in the local cache.
+                localStorage.setItem('Username', this.userProfile.username),
+                this.username = this.userProfile.username;
+                                
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.replace({ path: '/users/'+this.username })
+
+                // this.$emit('refreshProfile', this.username);
+
+            } catch (e) {
+
+                // In case of error, retrieve it.
+                this.errormessage = e.toString();
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
+
+            // this.$axios.put("/users/:userid="+this.profile.userid, form, {
+            // }).then((res) => {
+            //     console.log(res)
+            // })
+            // this.$router.push({ path: '/users/'+this.profile.username })
+        // },
+
+        onFileUpload (event) {
+          this.file = event.target.files[0]
+        },
+
+        onFileChange(e) {
+            const selectedFile = e.target.files[0]; // accessing file
+            this.profile.profilepic = selectedFile;
+        },
+        selectImage () {
+            this.$refs.fileInput.click()
+        },
+        pickFile () {
+            let input = this.$refs.fileInput
+            let file = input.files
+            if (file && file[0]) {
+                let reader = new FileReader
+                reader.onload = e => {
+                this.previewImage = e.target.result }
+                reader.readAsDataURL(file[0])
+                this.$emit('input', file[0])
+            }
+        },
+
 	},
+
+    mounted() {
+        this.getUserProfile();
+    }
 }
 </script>
 
@@ -54,27 +163,14 @@ export default {
 
 			<div class="topMenu">
 
-				<!-- "Users List" Button -->
-				<div class="topMenuButtons">
-					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getBans"> Users List </button>
-				</div>
-
 				<!-- WASA Photo Icon -->
+                <div class="topMenuButtons"></div>
 				<div class="topMenuColumn">
 					<img src="./img/wasa-logo.png" alt="" class="img">
 				</div>
+				<div class="topMenuButtons"></div>
 
-				<!-- "Search Username Field" -->
-				<div class="topMenuButtons">
-					<div class="formControl">
-						<input type="text" id="usernameToSearch" v-model="usernameBanToSearch" placeholder="Search Username..." class="form-control">
-					</div>
-					<div class= "searchButton">
-						<svg class="feather" v-if="!loading" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-					</div>
-				</div>
             </div>
-            
             <div class="formUpdate">
 
                 <form class="well form-horizontal" action=" " method="post"  id="contact_form">
@@ -86,42 +182,45 @@ export default {
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input  name="first_name" placeholder="First Name" class="form-control"  type="text">
+                                <input  name="first_name" :placeholder=this.userProfile.name v-model="userProfile.name" class="form-control"  type="text">
                             </div>
                         </div>
                     </div>
 
                     <!-- Surname -->
+                    <!-- <br> -->
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>Surname</b></h3></label> 
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input name="last_name" placeholder="Last Name" class="form-control"  type="text">
+                                <input name="last_name" :placeholder=this.userProfile.surname v-model="userProfile.surname" class="form-control"  type="text">
                             </div>
                         </div>
                     </div>
 
                     <!-- Email-->
+                    <!-- <br> -->
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>E-Mail</b></h3></label>  
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                <input name="email" placeholder="E-Mail Address" class="form-control"  type="text">
+                                <input name="email" :placeholder=this.userProfile.email v-model="userProfile.email" class="form-control"  type="text">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Select Basic -->
+                    <!-- Nationality -->
 
+                    <br><br>
                     <div class="form-group"> 
                         <label class="col-md-4 control-label"><h3><b>Nationality</b></h3></label>
                         <div class="col-md-4 selectContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-                                <select name="nationality" class="select">
-                                    <option value="">-- Select Nationality --</option>
+                                <select name="nationality" class="select" :placeholder=this.userProfile.nationality v-model="userProfile.nationality">
+                                    <option :value=userProfile.nationality>{{userProfile.nationality}}</option>
                                     <option value="afghan">Afghan</option>
                                     <option value="albanian">Albanian</option>
                                     <option value="algerian">Algerian</option>
@@ -325,11 +424,10 @@ export default {
                         <div class="col-md-4 selectContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-                                <select name="nationality" class="select">
-                                    <option value="do not specify"> -- Do Not Specify -- </option>
+                                <select name="nationality" class="select" :placeholder=this.userProfile.gender v-model="userProfile.gender">
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
-                                    <option value="do not specify"> -- Do Not Specify -- </option>
+                                    <option value="do not specify">Do Not Specify</option>
                                 </select>
                             </div>
                         </div>
@@ -338,19 +436,34 @@ export default {
 
                     <!-- Biography -->
 
+                    <br><br>
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>Biography</b></h3></label>
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                                <textarea class="form-control2" name="comment" placeholder="Biography"></textarea>
+                                <textarea class="form-control2" name="comment" :placeholder=this.userProfile.biography v-model="userProfile.biography"></textarea>
                             </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Image Change -->
+                    <!-- <br> -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <form @submit.prevent="setUserProfile">
+                                <div class="form-group">
+                                    <input type="file" @change="onFileUpload">
+                                </div>
+                        </form>
                         </div>
                     </div>
 
                     <!-- Send Button -->
                     <div class="form-group2">
-					    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getBans"> Update Profile </button>
+					    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="setUserProfile"> Update Profile </button>
 				    </div>
 
                 </fieldset>

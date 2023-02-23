@@ -2,7 +2,8 @@
 
 .formUpdate {
     display:block;
-    margin-top: 300px;    
+    margin-top: 300px;   
+	margin-left: 40%; 
 }
 
 .select{
@@ -128,9 +129,12 @@ input {
   	width: 15%;
 }
 
+.form-group{
+	width: 100%
+}
 .form-group2{
     margin-top: 31px;
-    width:35%;
+    width:33.5%;
 }
 * { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
 

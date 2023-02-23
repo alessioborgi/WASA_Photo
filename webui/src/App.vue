@@ -134,7 +134,7 @@ export default {
 					</h5>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink to="/search/" class="nav-link">
+							<RouterLink :to="'/users/'+username+'/analytics/'" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
 								Analytics
 							</RouterLink>

@@ -60,7 +60,7 @@ export default {
 					}
 				})
 
-                // Setting the uuid (Bearer Token) received as response by the Post action.
+                // Setting the new username received as the new username saved in the local cache.
                 localStorage.setItem('Username', this.newUsername),
                 this.username = this.newUsername;
                 this.user.username = this.username;
@@ -130,6 +130,18 @@ export default {
 
             // Setting again the Loading flag to false.
             this.loading = false;
+        },
+
+        async goToUpdate() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/update/`})
+        },
+
+        async goToAnalytics() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/analytics/`})
         },
                             
                             
@@ -241,8 +253,14 @@ export default {
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="createAlert">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToUpdate()">
                                                 <b>Set Profile</b>
+                                            </button>
+                                        </menuitem>
+
+                                        <menuitem>
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToAnalytics">
+                                                <b>See Analytics</b>
                                             </button>
                                         </menuitem>
 
@@ -251,6 +269,7 @@ export default {
                                                 <b>Delete Profile</b>
                                             </button>
                                         </menuitem>
+
                                     </menu>
                                 </menuitem>
                             
