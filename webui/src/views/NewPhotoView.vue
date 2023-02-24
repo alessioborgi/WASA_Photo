@@ -27,6 +27,9 @@ export default {
             // Initializing the phrase of the photo.
             phrase: "",
 			file: null,
+
+            // Initializing the PhotoId variable.
+            idPhoto: 0,
         }
 	},
 
@@ -37,8 +40,8 @@ export default {
         onFileSelected (event) {
 
             // This will assign to file the first selected file.
-            // this.file = event.target.files[0]
-            this.file = this.$refs.file.files[0]
+            this.file = event.target.files[0]
+            // this.file = this.$refs.file.files[0]
         },
 
         // uploadPhoto function: It has the role to add a new photo on the user profile.
@@ -56,11 +59,17 @@ export default {
                 form.append('filename', this.file)
     
                 // Adding the New Photo: /users/:username/photos/.
-                await this.$axios.post(`/users/${this.username}/photos/`, form, {
+                let response = await this.$axios.post(`/users/${this.username}/photos/`, form, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }
-                })     
+                })    
+                
+                // Saving the Photo's Id got in response.
+                this.idPhoto = response.data;
+
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.push({ path: `/users/${this.username}` })
 
             } catch (e) {
 
@@ -80,16 +89,11 @@ export default {
 
 <!-- Actual Page for handling the page setting. -->
 <template>
-    <div>
-        <!-- The @change will call the function and it will triggered whenever we select a new file -->
-        <input type="file" @change="onFileSelected" ref="file">
-        <button class="btn btn-success" @click="onFileSelected">Upload</button>
-    </div>
-
-	<div>
+   
+   <div>
 			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1">{{ username }}'s NEW PHOTO</h1>
-
+            {{ this.file }}
 			<div class="topMenu">
 
 				<!-- WASA Photo Icon -->
@@ -111,7 +115,7 @@ export default {
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input  name="phrase" placeholder="Insert the Phrase..." class="form-control"  type="text">
+                                <input  name="phrase" v-model="phrase" placeholder="Insert the Phrase..." class="form-control"  type="text">
                             </div>
                         </div>
                     </div>
@@ -123,7 +127,7 @@ export default {
                         <div class="col-md-4 inputGroupContainer">
                             <div class="form-group">
                                 <!-- The @change will call the function and it will triggered whenever we select a new file -->
-                                <input type="file" class="btn btn-primary btn-block btn-large" @change="onFileSelected" ref="file">
+                                <input type="file" @change="onFileSelected" ref="file">
                             </div>
                         </div>
                     </div>

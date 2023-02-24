@@ -62,6 +62,7 @@ export default {
 				
 				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.userProfile = responseProfile.data;
+				this.userProfile.photoProfile = "../../../service/api/photos/u1-photo-1.jpg";
 
 			} catch (e) {
 
@@ -151,6 +152,15 @@ export default {
 					@refreshProfile = "this.userProfile.username = $event"
 				></MyProfileCard>
 			</div>
+
+			<!-- Divider Profile-Photos -->
+			<div class="divider"><span></span><span>Divider</span><span></span></div>
+
+
+
+
+
+
 
 			<div class="photos">
 

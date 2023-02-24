@@ -50,10 +50,6 @@ export default {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }
                 })
-
-                responseProfile.data.boolFollowing = false;
-                responseProfile.data.boolFollower = false;
-                responseProfile.data.boolBanned = false;
                 
                 // Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
                 this.userProfile = responseProfile.data;
@@ -122,25 +118,6 @@ export default {
             this.file = event.target.files[0]
         },
 
-        // onFileChange(e) {
-        //     const selectedFile = e.target.files[0]; // accessing file
-        //     this.profile.profilepic = selectedFile;
-        // },
-        // selectImage () {
-        //     this.$refs.fileInput.click()
-        // },
-        // pickFile () {
-        //     let input = this.$refs.fileInput
-        //     let file = input.files
-        //     if (file && file[0]) {
-        //         let reader = new FileReader
-        //         reader.onload = e => {
-        //         this.previewImage = e.target.result }
-        //         reader.readAsDataURL(file[0])
-        //         this.$emit('input', file[0])
-        //     }
-        // },
-
 	},
 
     mounted() {
@@ -172,6 +149,17 @@ export default {
 
                 <form class="well form-horizontal" action=" " method="post"  id="contact_form">
                 <fieldset>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label"><h3><b>Username</b></h3></label>  
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <input  name="first_name" :placeholder=this.userProfile.username v-model="userProfile.username" class="form-control"  type="text">
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Name -->
                     <div class="form-group">
@@ -451,7 +439,7 @@ export default {
                         <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
                         <div class="col-md-4 inputGroupContainer">
                             <div class="form-group">
-                                <!-- The @change will call the function an it will triggered whenever we select a new file -->
+                                <!-- The @change will call the function and it will triggered whenever we select a new file -->
                                 <input type="file" @change="onFileUpload">
                             </div>
                         </div>

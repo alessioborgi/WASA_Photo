@@ -181,7 +181,7 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	} else if errors.Is(err, database.ErrBadRequest) {
 
-		// In this case we have already a user having the NewUsername as Username
+		// In this case we have already a user having the NewUsername as Username.
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Err: The newUsername we are trying to insert is already present. ")
 		return
