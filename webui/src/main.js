@@ -11,6 +11,8 @@ import SuccessMsg from './components/ErrorMsg.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 import CardProfile from './components/CardProfile.vue'
 import MyProfileCard from './components/MyProfileCard.vue'
+import PhotoCard from './components/PhotoCard.vue'
+
 
 import './assets/dashboard.css'
 import './assets/main.css'
@@ -29,6 +31,7 @@ app.component("SuccessMsg", SuccessMsg);
 app.component("LoadingSpinner", LoadingSpinner);
 app.component("CardProfile", CardProfile);
 app.component("MyProfileCard", MyProfileCard);
+app.component("PhotoCard", PhotoCard);
 app.use(router)
 app.mount('#app')
 
