@@ -26,12 +26,21 @@ export default {
 
             // Initializing the phrase of the photo.
             phrase: "",
-			file: "",
+			file: null,
         }
 	},
 
 	// Declaration of the methods that will be used.
 	methods: {
+
+        // This method will be triggered whenever we have to select a file to upload.
+        onFileSelected (event) {
+
+            // This will assign to file the first selected file.
+            // this.file = event.target.files[0]
+            this.file = this.$refs.file.files[0]
+        },
+
         // uploadPhoto function: It has the role to add a new photo on the user profile.
         async uploadPhoto(){
 
@@ -71,6 +80,11 @@ export default {
 
 <!-- Actual Page for handling the page setting. -->
 <template>
+    <div>
+        <!-- The @change will call the function and it will triggered whenever we select a new file -->
+        <input type="file" @change="onFileSelected" ref="file">
+        <button class="btn btn-success" @click="onFileSelected">Upload</button>
+    </div>
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
@@ -107,11 +121,10 @@ export default {
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>New Photo</b></h3></label>
                         <div class="col-md-4 inputGroupContainer">
-                            <form @submit.prevent="setUserProfile">
-                                <div class="form-group">
-                                    <input type="file" @change="">
-                                </div>
-                        </form>
+                            <div class="form-group">
+                                <!-- The @change will call the function and it will triggered whenever we select a new file -->
+                                <input type="file" class="btn btn-primary btn-block btn-large" @change="onFileSelected" ref="file">
+                            </div>
                         </div>
                     </div>
 

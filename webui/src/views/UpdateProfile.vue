@@ -26,7 +26,9 @@ export default {
 
 			// Initializing variable for handling the UserProfile retrieval.
 			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
-			file: "",
+			
+            // Initializing the variable that will take the photo.
+            file: null,
         }
 	},
 
@@ -75,7 +77,7 @@ export default {
             // Creation of a multipart/form data to send to the go server.
             const form = new FormData()
             form.append('username', this.userProfile.username)
-            form.append('photoProfile', this.userProfile.photoProfile)
+            form.append('photoProfile', this.file)
             form.append('biography', this.userProfile.biography)
             form.append('name', this.userProfile.name)
             form.append('surname', this.userProfile.surname)
@@ -101,8 +103,6 @@ export default {
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/users/'+this.username })
 
-                // this.$emit('refreshProfile', this.username);
-
             } catch (e) {
 
                 // In case of error, retrieve it.
@@ -114,35 +114,32 @@ export default {
         },
 
 
-            // this.$axios.put("/users/:userid="+this.profile.userid, form, {
-            // }).then((res) => {
-            //     console.log(res)
-            // })
-            // this.$router.push({ path: '/users/'+this.profile.username })
-        // },
-
+        
+        // This method will be triggered whenever we have to select a file to upload.
         onFileUpload (event) {
-          this.file = event.target.files[0]
+
+            // This will assign to file the first selected file.
+            this.file = event.target.files[0]
         },
 
-        onFileChange(e) {
-            const selectedFile = e.target.files[0]; // accessing file
-            this.profile.profilepic = selectedFile;
-        },
-        selectImage () {
-            this.$refs.fileInput.click()
-        },
-        pickFile () {
-            let input = this.$refs.fileInput
-            let file = input.files
-            if (file && file[0]) {
-                let reader = new FileReader
-                reader.onload = e => {
-                this.previewImage = e.target.result }
-                reader.readAsDataURL(file[0])
-                this.$emit('input', file[0])
-            }
-        },
+        // onFileChange(e) {
+        //     const selectedFile = e.target.files[0]; // accessing file
+        //     this.profile.profilepic = selectedFile;
+        // },
+        // selectImage () {
+        //     this.$refs.fileInput.click()
+        // },
+        // pickFile () {
+        //     let input = this.$refs.fileInput
+        //     let file = input.files
+        //     if (file && file[0]) {
+        //         let reader = new FileReader
+        //         reader.onload = e => {
+        //         this.previewImage = e.target.result }
+        //         reader.readAsDataURL(file[0])
+        //         this.$emit('input', file[0])
+        //     }
+        // },
 
 	},
 
@@ -453,11 +450,10 @@ export default {
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
                         <div class="col-md-4 inputGroupContainer">
-                            <form @submit.prevent="setUserProfile">
-                                <div class="form-group">
-                                    <input type="file" @change="onFileUpload">
-                                </div>
-                        </form>
+                            <div class="form-group">
+                                <!-- The @change will call the function an it will triggered whenever we select a new file -->
+                                <input type="file" @change="onFileUpload">
+                            </div>
                         </div>
                     </div>
 
