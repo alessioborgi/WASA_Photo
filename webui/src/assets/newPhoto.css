@@ -7,6 +7,18 @@
 	width: 1000px;
 }
 
+.clearButton {
+	display:block;
+    margin-left: 675px;   
+	/* width: 1000px; */
+}
+
+.form-group2{
+    margin-top: 31px;
+	margin-left: 380px;
+	width: 365px;
+}
+
 .select{
     background-color: #c2e9fc;
     width: 100%;
@@ -143,9 +155,6 @@ textarea {
 .form-group{
 	width: 100%
 }
-.form-group2{
-    margin-top: 31px;
-    width:33.5%;
-}
+
 * { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
 
