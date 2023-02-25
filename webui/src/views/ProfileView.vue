@@ -4,6 +4,7 @@
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import MyProfileCard from '../components/MyProfileCard.vue'
+import PhotoCard from '../components/PhotoCard.vue'
 
 // Declaration of the export set.
 export default {
@@ -12,6 +13,7 @@ export default {
 		ErrorMsg,
 		LoadingSpinner,
 		MyProfileCard,
+		PhotoCard,
 	},
 
 	// Describing what are the Return variables.
@@ -29,6 +31,7 @@ export default {
 			// Initializing variable for handling the UserProfile retrieval.
 			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
 			colorBackground: '',
+			colorPosts: '',
 
 			// Initializing a list that will handle the links to the photos.
 			photoListLinks: [],
@@ -59,6 +62,7 @@ export default {
 				responseProfile.data.boolFollower = false;
 				responseProfile.data.boolBanned = false;
 				this.colorBackground = responseProfile.data.gender == "male" ? '#c2e9fc' : responseProfile.data.gender == "female" ? '#fbd3f0' : '#cff6cc',
+				this.colorPosts = '#ffffff'
 				
 				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.userProfile = responseProfile.data;
@@ -154,25 +158,25 @@ export default {
 			</div>
 
 			<!-- Divider Profile-Photos -->
+			<br><br>
 			<div class="divider">
 				<span></span><span>Posts</span><span></span>
 			</div>
-
-			<div class="photos">
 
 			<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
 			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 			<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-			<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-			<div v-if="!loading" v-for="link in photoListLinks"> 
-				<img :src=link alt="Image" />
+			{{ this.photoListLinks }}
+			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
+			<div class="photoList"> 
+				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}"
+					:photo="p"
+				></PhotoCard>
 			</div>
 
-			</div>
+		</div>
 
-			
-	</div>
 </template>
 
 <!-- Declaration of the style(scoped) to use. -->

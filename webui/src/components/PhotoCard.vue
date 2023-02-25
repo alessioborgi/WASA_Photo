@@ -5,7 +5,7 @@ import InfoMsg from '../components/InfoMsg.vue'
 
 export default {
 
-    props: ['user'],
+    props: ['photo'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -22,129 +22,13 @@ export default {
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
-
-            newUsername: "",
-            
-            deleteProfileBool: false,
 		}
 	},
 
     methods: {
+                  
         
-        async setUsernameAlert() {
-
-            this.newUsername = "";
-            this.newUsername = prompt("Please enter the new Username:");
-            
-            if (this.newUsername != "") {
-                alert("Your Username will change from " + this.username + " to " + this.newUsername);
-            }
-        },
-
-        // Declaration of the DoLogin page. 
-        async setUsername() {
-
-            // Re-initializing variables to their default value.
-            this.errormsg = "";
-            this.loading = true;
-
-            await this.setUsernameAlert()
-
-            try {
-                
-                // In the case the result is positive, we post the username received to the GO page.
-
-                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
-
-                // Setting the new username received as the new username saved in the local cache.
-                localStorage.setItem('Username', this.newUsername),
-                this.username = this.newUsername;
-                this.user.username = this.username;
-                                
-                // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: '/users/'+this.newUsername })
-                this.newUsername = "";
-
-                this.$emit('refreshProfile', this.username);
-
-            } catch (e) {
-
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
-            }
-
-            // Setting again the Loading flag to false.
-            this.loading = false;
-        },
-
-
-        async deleteProfileAlert() {
-
-            if (confirm("Your Profile" + this.username +" will be deleted from WASAPhoto. Are you sure?")){
-                this.deleteProfileBool = true;
-                alert("Profile Correctly Deleted");
-            } else {
-                this.deleteProfileBool = false;
-                alert("Profile still Alive!")
-            }
-            
-        },
-
-
-        // Declaration of the DoLogin page. 
-        async deleteProfile() {
-
-            // Re-initializing variables to their default value.
-            this.errormsg = "";
-            this.loading = true;
-
-            await this.deleteProfileAlert()
-
-            try {
-                
-                // In the case the result is positive, we post the username received to the GO page.
-                if (this.deleteProfileBool == true){
-                    await this.$axios.delete(`/users/${this.username}`, {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
-                    }})
-
-                    // Setting the uuid (Bearer Token) received as response by the Post action.
-                    localStorage.clear();
-                    this.username = "";
-                    this.BearerToken = "";
-                                    
-                    // Re-addressing the page to the personal profile page of a user.
-                    this.$router.replace({ path: '/session/' })
-                }
-
-            } catch (e) {
-
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
-            }
-
-            // Setting again the Loading flag to false.
-            this.loading = false;
-        },
-
-        async goToUpdate() {
-
-            // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/update/`})
-        },
-
-        async goToAnalytics() {
-
-            // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/analytics/`})
-        },
-                            
-                            
+        
     }
 }
 
@@ -158,7 +42,7 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
+            <b> FIXEDUSERNAME: </b>{{ photo }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
@@ -177,111 +61,34 @@ export default {
                     <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
                 <div class="profileLabel">
-                    <p class="card__name" > <b>{{ user.username }}</b></p>
+                    <p class="card__name" > <b>{{ photo.photoid }}</b></p>
                 </div>            
             </div>
             <div class="rightUpperPart">
 
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <b>Posts</b> {{ user.numberOfPhotos }}
+                        <svg class="feather" v-if="!loading" @click="" ><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <b> Likes</b> 
+                        {{ photo.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followings</b> {{ user.numberFollowing }} 
-                    </div>
-
-                    <div class="grid-child-posts">
-                        <b>Followers</b> {{ user.numberFollowers }} 
+                        <svg class="feather" v-if="!loading" @click="" ><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <b> Comments</b> 
+                        {{ photo.numberComments }} 
                     </div>
                 </div>
 
 
                 <div class="grid-child-posts3">
-                    <b>Biography</b> {{ user.biography }} 
+                    <b>Phrase</b> {{ photo.phrase }} 
                 </div>
             </div>
                     
         </div>
-            
-            
-        <div class="grid-container">
-
-            <div class="grid-child-posts">
-                <b>Name</b> {{ user.name }}
-            </div>
-
-            <div class="grid-child-posts">
-                <b>Surname</b> {{ user.surname }} 
-            </div>
-
-            <div class="grid-child-posts">
-                <b>Nationality</b> {{ user.nationality }} 
-            </div>
-
-            <div class="grid-child-posts">
-                <b>DateOfBirth</b> {{ user.dateOfBirth }} 
-            </div>
-
-            <div class="grid-child-posts">
-                <b>Email</b> {{ user.email }} 
-            </div>
-
-            <div class="grid-child-posts">
-                <b>Gender</b> {{ user.gender }} 
-            </div>
-
-            <div class="grid-child-posts">
-                <b>DateOfCreation</b> {{ user.dateOfCreation }} 
-            </div>
-
-            <div class="grid-child-posts"></div>
-
-            <div class="grid-child-posts">
-                        <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
-                        <nav>
-                            <menu>
-                                <menuitem id="demo1">
-                                    <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
-                                    <menu>
-
-                                        <menuitem>
-                                            <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="setUsername()">
-                                                <b>Set Username</b>
-                                            </button>
-                                        </menuitem>
-
-                                        <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToUpdate()">
-                                                <b>Set Profile</b>
-                                            </button>
-                                        </menuitem>
-
-                                        <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToAnalytics">
-                                                <b>See Analytics</b>
-                                            </button>
-                                        </menuitem>
-
-                                        <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="deleteProfile">
-                                                <b>Delete Profile</b>
-                                            </button>
-                                        </menuitem>
-
-                                    </menu>
-                                </menuitem>
-                            
-                            </menu>
-	                    </nav>                  
-            </div>
 
         </div>
-
-        
-
-    </div>
 
 </template>
 
@@ -301,6 +108,9 @@ export default {
 .btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] { filter: none; background-color: #4a77d4; }
 .btn-block { width: 100%; display:block; }
 
+.grid-child-posts{
+    width: 145px;
+}
 .settingsMenu{
     display: block;
     margin-top: -50px;
@@ -363,7 +173,7 @@ export default {
 }
 
 .feather {
-	color: #4a77d4;
+	color: #ff0000;
 }
 
 #div1{
@@ -371,7 +181,7 @@ export default {
 }
 
 .card {
-  /* background-color: #c2e9fc; */
+  background-color: #ffffff; 
   /* background-color: yellow; */
   margin-bottom: 20px;
   height: 45rem;
