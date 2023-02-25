@@ -89,7 +89,12 @@ export default {
                 await this.$axios.put(`/users/${this.username}`, form, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
+					},
+
+                    // This is used for showing in the console the Upload Progress Percentage.
+                    onUploadProgress: uploadEvent => {
+                        console.log("Upload Progress: " + Math.round(uploadEvent.loaded / uploadEvent.total * 100) + "%")
+                    }
 				})
 
                 // Setting the new username received as the new username saved in the local cache.

@@ -2,8 +2,6 @@
 <script>
 
 import ErrorMsg from '../components/ErrorMsg.vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-
 
 // Declaration of the export set.
 export default {
@@ -65,7 +63,7 @@ export default {
             this.loading = false;
         },
 
-        // Declaration of the DoLogin page. 
+        // setUsername: This method is used for changing the Username. 
         async setUsername() {
 
             // Re-initializing variables to their default value.
@@ -85,12 +83,12 @@ export default {
                 // Setting the new username received as the new username saved in the local cache.
                 localStorage.setItem('Username', this.newUsername),
                 this.username = this.newUsername;
-                this.user.username = this.username;
+                this.userProfile.username = this.newUsername;
                                 
                 this.$emit('refreshProfile', this.username);
 
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: '/users/'+this.newUsername })
+                this.$router.push({ path: `/users/${this.username}` })
                 this.newUsername = "";
 
 

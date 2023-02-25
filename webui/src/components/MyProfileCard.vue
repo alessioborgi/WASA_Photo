@@ -22,8 +22,6 @@ export default {
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
-
-            newUsername: "",
             
             deleteProfileBool: false,
 		}
@@ -31,57 +29,6 @@ export default {
 
     methods: {
         
-        async setUsernameAlert() {
-
-            this.newUsername = "";
-            this.newUsername = prompt("Please enter the new Username:");
-            
-            if (this.newUsername != "") {
-                alert("Your Username will change from " + this.username + " to " + this.newUsername);
-            }
-        },
-
-        // Declaration of the DoLogin page. 
-        async setUsername() {
-
-            // Re-initializing variables to their default value.
-            this.errormsg = "";
-            this.loading = true;
-
-            await this.setUsernameAlert()
-
-            try {
-                
-                // In the case the result is positive, we post the username received to the GO page.
-
-                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
-
-                // Setting the new username received as the new username saved in the local cache.
-                localStorage.setItem('Username', this.newUsername),
-                this.username = this.newUsername;
-                this.user.username = this.username;
-                                
-                // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: '/users/'+this.newUsername })
-                this.newUsername = "";
-
-                this.$emit('refreshProfile', this.username);
-
-            } catch (e) {
-
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
-            }
-
-            // Setting again the Loading flag to false.
-            this.loading = false;
-        },
-
-
         async deleteProfileAlert() {
 
             if (confirm("Your Profile" + this.username +" will be deleted from WASAPhoto. Are you sure?")){
@@ -130,6 +77,12 @@ export default {
 
             // Setting again the Loading flag to false.
             this.loading = false;
+        },
+
+        async goToSetUsername() {
+
+        // Re-address the user to the right page.
+        this.$router.push({ path: `/users/${this.username}/newUsername/`})
         },
 
         async goToUpdate() {
@@ -247,14 +200,14 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="setUsername()">
+                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToSetUsername">
                                                 <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToUpdate()">
-                                                <b>Set Profile</b>
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToUpdate">
+                                                <b>Update Profile</b>
                                             </button>
                                         </menuitem>
 
