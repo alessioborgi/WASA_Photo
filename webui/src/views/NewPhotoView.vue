@@ -169,7 +169,6 @@ export default {
                                 <input type="file" @input="pickFile" ref="fileInput" @change="onFileSelected"> 
                                 <div class="imagePreviewWrapper" 
                                      :style="{'background-image': `url(${previewImage})` }" @click="selectImage"></div>
-                                <!-- <input type="file" ref="fileInput" style="display: none" accept="image/*"> -->
                             </div>
                             <!-- <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="onPickFile"> Choose File </button> -->
                         </div>
