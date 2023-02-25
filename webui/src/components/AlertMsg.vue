@@ -1,26 +1,6 @@
-<!-- This component will be used to handle the different Errors we encounter during the execution of the WebApp. -->
+<!-- This component will be used to handle the different Alerts we encounter during the execution of the WebApp. -->
 
-<!-- <script>
-export default {
-	props: ['msg']
-}
-</script>
-
-<template>
-	<div class="alert alert-danger" role="alert" >
-		{{ msg }}
-	</div>
-</template>
-
-<style>
-
-.alert-danger{
-	font-size: 25px;
-}
-</style>
- -->
-
-<script>
+ <script>
  export default {
 	props: ['msg']
 }
@@ -29,16 +9,15 @@ export default {
 <template>
 
 	<head>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	</head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 	
-	
-	<div class="alert alert-danger alert-white rounded">
-    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    	<div class="icon"><i class="fa fa-times-circle"></i></div>
-    	<strong>Error!</strong> {{ msg }}.
-	</div>
-	
+	<div class="alert alert-warning alert-white rounded">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <div class="icon"><i class="fa fa-warning"></i></div>
+        <strong>Alert!</strong> {{ msg }}
+    </div>
+
 </template>
 
 <style>
@@ -79,6 +58,7 @@ button.close {
     cursor: pointer;
     background: transparent;
     border: 0;
+    -webkit-appearance: none;
 }
 
 .alert {
@@ -234,6 +214,11 @@ button.close {
 }
 
 .alert-white .icon:after {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
     display: block;
     content: '';
     width: 10px;

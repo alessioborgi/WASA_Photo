@@ -21,10 +21,8 @@ export default {
             loading: false,
 
             // Logged user Info.
-            loginUsername: {
-                username: "",
-                uuid: "",
-            },
+            username: "",
+            uuid: "",
         }
     },
 
@@ -48,10 +46,8 @@ export default {
                 
                 // Setting the uuid (Bearer Token) received as response by the Post action.
                 this.uuid  = response.data,
-                localStorage.setItem('Authorization', this.uuid),
+                localStorage.setItem('BearerToken', this.uuid),
                 localStorage.setItem('Username', this.username),
-
-                // Re-addressing the page to the personal profile page of a user.
 			    
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: `/users/${this.username}` })
@@ -65,11 +61,7 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         }
-    },
-
-    mounted() {
-		this.refresh()
-	}
+    }
 }
 
 </script>
@@ -88,7 +80,7 @@ export default {
         <form method="post" class="login-form">
 
             <!-- Creation of the place where to type the Username. -->
-            <input type="text" id="username" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
+            <input type="text" id="usernameLabel" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
 
             <!-- Creation of the Login Button linked to the doLogin action. -->
             <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="doLogin">Login</button>

@@ -3,11 +3,15 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
+import CardProfile from '../components/CardProfile.vue'
+
 // Declaration of the export set.
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+		LoadingSpinner,
+		CardProfile,
 	},
 
 	// Describing what are the Return variables.
@@ -34,6 +38,8 @@ export default {
 			followersList: [],
 			followingsList: [],
 
+			// Initializing an array for handling the list of Banned user of the Logged Username.
+			bannedList: [],
 		}
 	},
 
@@ -51,7 +57,7 @@ export default {
 			this.usersProfiles = [];
 
 			this.usernameToSearchBool = true;
-			
+						
 			try {
 
 				// Getting the list of Users from the Back-End.
@@ -64,6 +70,11 @@ export default {
 				// Saving the response in the "users" array.
 				this.users = response.data;
 
+				// First, make this three calls to gather information about the followings, followers and bans of the Logged User.
+				await this.getFollowings()
+				await this.getFollowers()
+				await this.getBans()
+
 				// Retrieving for every username, its Profile.
 				for (let i = 0; i < this.users.length; i++) {
 
@@ -72,8 +83,14 @@ export default {
 
 				// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
 				this.usersProfiles.sort(function(a,b){
-					return a.dateOfCreation - b.dateOfCreation;
+					
+					return new Date(a.dateOfCreation) - new Date(b.dateOfCreation);
 				})
+
+				// Let's check whether there are actually some user that are following you.
+                if (this.users.length == 0){
+                    this.errormsg = "Err: There are still no User except you yet!";
+                }
 
 			} catch (e) {
 
@@ -97,7 +114,12 @@ export default {
 					}
 				})
 
-				// Add the profile retrieved to the "usersProfiles" array.
+				// Add the profile retrieved to the "usersProfiles" array with the flags of following, follower and ban.
+				responseProfile.data.boolFollowing = this.followingsList.includes(responseProfile.data.username) ? true : false
+				responseProfile.data.boolFollower = this.followersList.includes(responseProfile.data.username) ? true : false
+				responseProfile.data.boolBanned = this.bannedList.includes(responseProfile.data.username) ? true : false
+				
+				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.usersProfiles.push(responseProfile.data);
 
 			} catch (e) {
@@ -124,12 +146,22 @@ export default {
 				// Let's search for the username, only if it is > 0 (of course).
 				if (this.usernameToSearch.length > 0) {
 
+					// First, make this three calls to gather information about the followings, followers and bans of the Logged User.
+					await this.getFollowings()
+					await this.getFollowers()
+					await this.getBans()
+
 					// Let's retrieve the Profile of the Username we are searching for.
 					let responseProfile = await this.$axios.get("/users/"+this.usernameToSearch, {
 						headers: {
 							Authorization: "Bearer " + localStorage.getItem("BearerToken")
 						}
 					})
+
+					// Add the profile retrieved to the "usersProfiles" array.
+					responseProfile.data.boolFollowing = this.followingsList.includes(responseProfile.data.username) ? true : false
+					responseProfile.data.boolFollower = this.followersList.includes(responseProfile.data.username) ? true : false
+					responseProfile.data.boolBanned = this.bannedList.includes(responseProfile.data.username) ? true : false
 
 					// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 					this.usersProfiles.push(responseProfile.data);
@@ -157,6 +189,101 @@ export default {
 			this.loading = false;
 		},
 
+
+		// getFollowings: It returns the list of usernames of the people I am following.
+		async getFollowings() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followingsList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/followings/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "followingsList" array.
+				this.followingsList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		// getFollowers: It returns the list of usernames of the people that are following me.
+		async getFollowers() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.followersList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/followers/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "followingsList" array.
+				this.followersList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		// getBans: It returns the list of usernames of the people that has been banned by me.
+		async getBans() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.bannedList = [];
+
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/" + this.username +"/bans/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "bannedList" array.
+				this.bannedList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+
 		// SerchUsername: It will search for whether the Username inserted in the input is present.
 		async goToFollowView() {
 
@@ -166,9 +293,11 @@ export default {
 
 	},
 
+
 	// created() {
     //     this.$root.$refs.Search = this;
     // },
+
 }
 </script>
 
@@ -177,7 +306,7 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1">WASA Photo SEARCH</h1>
+			<h1 class="h1">{{ username }}'s SEARCH</h1>
 
 			<div class="topMenu">
 
@@ -212,45 +341,11 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<div class="card" v-if="!loading" v-for="u in usersProfiles">
-
-					<div class="card-header">
-						<div class="usernameLabel">
-							<b> USERNAME: {{ u.username }} </b>
-						</div>
-
-						<div class="buttons-menu">
-							<div class = "buttonsFollowBan">
-								<svg class="feather" v-if="!loading" @click="goToFollowView" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
-								<!-- <svg class="feather" v-if="!loading" @click="followUser(u.username)" ><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> -->
-								<!-- <use href="/feather-sprite-v4.29.0.svg#user-plus"/> -->
-
-							</div>
-							<div class = "buttonsFollowBan">	
-								<svg class="feather" v-if="!loading" @click="getUsers" ><use href="/feather-sprite-v4.29.0.svg#unlock"/></svg>
-								<!-- <use href="/feather-sprite-v4.29.0.svg#lock"/> -->
-
-							</div>
-
-						</div>
-
-					</div>
-					<div class="card-body">
-						<p class="card-text">
-
-							<p><b>PHOTO:</b> {{ u.photoProfile}} <br/> </p>
-							<p>
-								<b>NAME:</b> {{ u.name }}
-								<b>SURNAME:</b> {{ u.surname }}  
-								<b>FIXEDUSERNAME:</b> {{ u.fixedUsername }}<br/>
-							</p>
-							<p><b>BIOGRAPHY:</b> {{ u.biography }} <br/></p>
-							
-							<!-- DateOfCreation: {{ u.dateOfCreation}} -->
-
-						</p>
-					</div>
-				</div>
+				<CardProfile v-if="!loading" v-for="u in usersProfiles" 
+				    :user="u" 
+					@refreshFollowing = "u.boolFollowing = $event"
+					@refreshBan = "u.boolBanned = $event"
+				></CardProfile>
 			</div>
 	</div>
 </template>

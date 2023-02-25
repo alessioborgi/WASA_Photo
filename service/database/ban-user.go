@@ -77,6 +77,56 @@ func (db *appdbimpl) BanUser(username string, usernameBanned string, uuid string
 	if authorization == AUTHORIZED {
 
 		// If the uuid is requesting the action is the actual User Owner.
+		// First of all you should proceed to eliminate the "follow" of the owner w.r.t. the banned and the "follow" of the banned w.r.t. the owner.
+
+		// First, check whether there is a Follow from the fixedUsernameBanner and fixedUsernameBanned.
+		errFollowRetrieval := db.CheckFollowPresence(fixedUsernameBanner, fixedUsernameBanned)
+		if errors.Is(errFollowRetrieval, nil) {
+
+			// Here I can proceed to eliminate the Follow.
+			log.Println("The Follow between Banner and Banned exists.")
+
+			_, errDeleteFollow1 := db.c.Exec(`DELETE FROM Follows WHERE fixedUsername = ? AND fixedUsernameFollowing = ?`, fixedUsernameBanner, fixedUsernameBanned)
+			if !errors.Is(errDeleteFollow1, nil) {
+				log.Println("Error Encountered during deletion of follow between Banner and Banned.")
+				return "", errDeleteFollow1
+			}
+
+			// The Deletion went well.
+			log.Println("Deletion between Banner and Banned correctly executed!")
+
+		}
+
+		// Check if strange errors occurs.
+		if !errors.Is(errFollowRetrieval, nil) && !errors.Is(errFollowRetrieval, ErrFollowDoesNotExist) {
+			log.Println("Err: Strange error during the Check of Follow Presence")
+			return "", errFollowRetrieval
+		}
+
+		// Here I can now proceed to check if the converse Follow is present, i.e., if there is a follow from the fixedUsernameBanned to the fixedUsernameBanner
+		errFollowRetrieval2 := db.CheckFollowPresence(fixedUsernameBanned, fixedUsernameBanner)
+		if errors.Is(errFollowRetrieval2, nil) {
+
+			// Here I can proceed to eliminate the Follow.
+			log.Println("The Follow between Banned and Banner exists.")
+
+			_, errDeleteFollow2 := db.c.Exec(`DELETE FROM Follows WHERE fixedUsername = ? AND fixedUsernameFollowing = ?`, fixedUsernameBanned, fixedUsernameBanner)
+			if !errors.Is(errDeleteFollow2, nil) {
+				log.Println("Error Encountered during deletion of follow between Banned and Banner.")
+				return "", errDeleteFollow2
+			}
+
+			// The Deletion went well.
+			log.Println("Deletion between Banned and Banner correctly executed!")
+		}
+
+		// Check if strange errors occurs.
+		if !errors.Is(errFollowRetrieval2, nil) && !errors.Is(errFollowRetrieval2, ErrFollowDoesNotExist) {
+			log.Println("Err: Strange error during the Check of Follow Presence")
+			return "", errFollowRetrieval2
+		}
+
+		// Once we have eliminated follow, che can proceed in creating Ban.
 		// If Authorized, you can proceed to add up the Ban Object without any problem.
 		_, err := db.c.Exec(`INSERT INTO Bans (fixedUsernameBanner, fixedUsernameBanned) VALUES (?, ?)`, fixedUsernameBanner, fixedUsernameBanned)
 		if err != nil {

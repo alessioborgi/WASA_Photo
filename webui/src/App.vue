@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 </script>
 
@@ -9,18 +10,23 @@ export default {
 		return {
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
-            BearerTokenStorage: localStorage.getItem('BearerToken'),
+            username: localStorage.getItem('Username') == "" ? "NOT LOGGED" : localStorage.getItem('Username'),
+            BearerToken: localStorage.getItem('BearerToken'),
 		}
 	},
 
 	methods: {
 		
-		// GetUsers Function: It fills the "users" array with the usernames present in the DB.
+		// replaceLogin Function: It fills the "users" array with the usernames present in the DB.
 		async replaceLogin() {
 
 				// Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: '/session/' })
+		},
+
+		// setLocalStorage Function: It will free-up the two localStorage settings (username and bearerauth).
+		async setLocalStorage() {
+			localStorage.clear();
 		},
 	},
 
@@ -46,20 +52,29 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="replaceLogin"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="{{ this.$router.replace({ path: '/session/' }); }}"/></svg>
 								Login
 							</RouterLink>
 						</li>
 						<li class="nav-item">
+							<RouterLink to="/session/" class="nav-link">
+								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage"/></svg>
+								Logout
+							</RouterLink>
+						</li>
+					</ul>
+
+				
+
+					
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>PERSONAL PROFILE</span>
+					</h6>
+					<ul class="nav flex-column">
+						<li class="nav-item">
 							<RouterLink :to="'/users/'+username" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
 								My Profile
-							</RouterLink>
-						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
-								New Photo
 							</RouterLink>
 						</li>
 						<li class="nav-item">
@@ -68,18 +83,26 @@ export default {
 								Home
 							</RouterLink>
 						</li>
-						<li class="nav-item">
-							<RouterLink to="/search/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
-								Search
-							</RouterLink>
-						</li>
 					</ul>
 
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-						<span>Profile</span>
+
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>ACTIONS</span>
 					</h6>
 					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" >
+								<svg class="feather" @click=""><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
+								Set Username
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/update/'" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
+								Update Profile
+							</RouterLink>
+						</li>
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
@@ -88,8 +111,38 @@ export default {
 						</li>
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 								Follow
+							</RouterLink>
+						</li>
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
+								New Photo
+							</RouterLink>
+						</li>
+					</ul>
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>GENERAL</span>
+					</h6>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink to="/search/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+								Search
+							</RouterLink>
+						</li>
+					</ul>
+
+					<h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>STATISTICS</span>
+					</h5>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/analytics/'" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
+								Analytics
 							</RouterLink>
 						</li>
 					</ul>

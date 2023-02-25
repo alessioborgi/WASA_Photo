@@ -1,12 +1,22 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
-/* .card {
-	margin-bottom: 20px;
-	font-size: 20px;
-  	font-family: sans-serif;
-	/* background-color: #c2e9fc; */
-/* }  */
+.formUpdate {
+    display:block;
+    margin-top: 300px;   
+	margin-left: 40%; 
+}
 
+.select{
+    background-color: #c2e9fc;
+    width: 100%;
+    height: 40px;
+}
+
+.form-control2{
+    background-color: #c2e9fc;
+    width: 100%;
+    height: 100px;
+}
 .img {
 	display: block;
   	margin-left: auto;
@@ -119,5 +129,12 @@ input {
   	width: 15%;
 }
 
+.form-group{
+	width: 100%
+}
+.form-group2{
+    margin-top: 31px;
+    width:33.5%;
+}
 * { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
 
