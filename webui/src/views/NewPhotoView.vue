@@ -22,16 +22,16 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
-            // Initializing the phrase of the photo.
+            // Initializing the phrase of the photo and the photo's variable.
             phrase: "",
-			file: null,
+			photo: null,
 
-            // Initializing the PhotoId variable.
+            // Initializing the PhotoId variable and the variable that will handle the preview of the Image.
             idPhoto: 0,
-
-            imageUrl: '',
-            image: null,
             previewImage: null,
+
+            // Initializing the Background Text on the Image Box.
+            photoBackgroundText: "CLICK HERE to CHOOSE A FILE",
         }
 	},
 
@@ -41,25 +41,9 @@ export default {
         // This method will be triggered whenever we have to select a file to upload.
         onFileSelected (event) {
 
-            // This will assign to file the first selected file.
-            // this.file = event.target.files[0]
-            // this.file = this.$refs.file.files[0]
-
-
-            const files = event.target.files;
-            let filename = files[0].name;            
-            if (filename.lastIndexOf('.') <= 0){
-                return alert('Please add a valid File!');
-            }
-
-            // Convert in Base64.
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-                this.imageUrl = fileReader.result;
-            })
-            fileReader.readAsDataURL(files[0]);
-            this.image = files[0];
-
+            // This will assign to photo the first selected file.
+            this.photo = event.target.files[0]
+            this.photoflag = true;
         },
 
         // uploadPhoto function: It has the role to add a new photo on the user profile.
@@ -74,7 +58,7 @@ export default {
                 // Creation of a multipart/form data to send to the go server.
                 const form = new FormData()
                 form.append('phrase', this.phrase)
-                form.append('filename', this.file)
+                form.append('filename', this.photo)
     
                 // Adding the New Photo: /users/:username/photos/.
                 let response = await this.$axios.post(`/users/${this.username}/photos/`, form, {
@@ -99,11 +83,19 @@ export default {
             this.loading = false;
         },
 
-        // onPickFile will be used to simulate a click on the real "Choose file" that is hidden due to its uglyness.
+        // pickFile function: It will be used to simulate a click on the real "Choose file" that is hidden due to its uglyness.
         pickFile () {
+
+            // Let's take from the fileInput the reference.
             let input = this.$refs.fileInput
+
+            // Let's save the files.
             let file = input.files
+
+            // Check whether the file contains something.
             if (file && file[0]) {
+
+                // If it is so, create a new FileReader that will, onload, display the image in the photo box.
                 let reader = new FileReader
                 reader.onload = e => {
                     this.previewImage = e.target.result
@@ -113,9 +105,16 @@ export default {
             }
         },
 
+
+        // selectImage is a function that is called whenever a user clicks on the box where it is written "CLICK HERE to CHOOSE a FILE".
         selectImage () {
+
+            // First change the Background Text in such a way to eliminate it.
+            this.photoBackgroundText = ""
+
+            // Then, simulate the click on the Choose Photo button that is hidden due to its uglyness. 
             this.$refs.fileInput.click()
-        }
+        },
 
     },
 }
@@ -151,7 +150,7 @@ export default {
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input  name="phrase" v-model="phrase" placeholder="Insert the Phrase..." class="form-control"  type="text">
+                                <textarea  name="phrase" v-model="phrase" placeholder="Insert the Phrase..." class="form-control"  type="text"></textarea>
                             </div>
                         </div>
                     </div>
@@ -166,11 +165,12 @@ export default {
                                 <!-- Since it is very ugly in its naive version, I will hide it and simulate a click on it using ref if we click on the button below. -->
                                 <!-- <input type="file" @change="onFileSelected"> -->
 
-                                <input type="file" @input="pickFile" ref="fileInput" @change="onFileSelected"> 
+                                <input type="file" @input="pickFile" ref="fileInput" @change="onFileSelected" style="display:none"> 
                                 <div class="imagePreviewWrapper" 
-                                     :style="{'background-image': `url(${previewImage})` }" @click="selectImage"></div>
+                                     :style="{'background-image': `url(${previewImage})` }" @click="selectImage">
+                                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><h3 style="color:#c2e9fc;">{{ this.photoBackgroundText }}</h3>
+                                </div>
                             </div>
-                            <!-- <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="onPickFile"> Choose File </button> -->
                         </div>
                     </div>
 
