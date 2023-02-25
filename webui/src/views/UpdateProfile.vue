@@ -28,7 +28,11 @@ export default {
 			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
 			
             // Initializing the variable that will take the photo.
-            file: null,
+            photo: null,
+            previewImage: null,
+
+            // Initializing the Background Text on the Image Box.
+            photoBackgroundText: "CLICK HERE to CHOOSE A FILE",
         }
 	},
 
@@ -73,7 +77,7 @@ export default {
             // Creation of a multipart/form data to send to the go server.
             const form = new FormData()
             form.append('username', this.userProfile.username)
-            form.append('photoProfile', this.file)
+            form.append('photoProfile', this.photo)
             form.append('biography', this.userProfile.biography)
             form.append('name', this.userProfile.name)
             form.append('surname', this.userProfile.surname)
@@ -114,14 +118,53 @@ export default {
             this.loading = false;
         },
 
-
-        
         // This method will be triggered whenever we have to select a file to upload.
-        onFileUpload (event) {
+        onFileSelected (event) {
 
-            // This will assign to file the first selected file.
-            this.file = event.target.files[0]
+            // This will assign to photo the first selected file.
+            this.photo = event.target.files[0]
         },
+
+        // pickFile function: It will be used to simulate a click on the real "Choose file" that is hidden due to its uglyness.
+        pickFile () {
+
+            // Let's take from the fileInput the reference.
+            let input = this.$refs.fileInput
+
+            // Let's save the files.
+            let file = input.files
+
+            // Check whether the file contains something.
+            if (file && file[0]) {
+
+                // If it is so, create a new FileReader that will, onload, display the image in the photo box.
+                let reader = new FileReader
+                reader.onload = e => {
+                    this.previewImage = e.target.result
+                }
+
+                reader.readAsDataURL(file[0])
+            }
+        },
+
+
+        // selectImage is a function that is called whenever a user clicks on the box where it is written "CLICK HERE to CHOOSE a FILE".
+        selectImage () {
+
+            // First change the Background Text in such a way to eliminate it.
+            this.photoBackgroundText = ""
+
+            // Then, simulate the click on the Choose Photo button that is hidden due to its uglyness. 
+            this.$refs.fileInput.click()
+        },
+
+        clearPhoto () {
+
+            // Initializing the Background Text on the Image Box.
+            this.photoBackgroundText= "CLICK HERE to CHOOSE A FILE";
+            this.previewImage = null;
+        },
+
 
 	},
 
@@ -409,6 +452,7 @@ export default {
                     </div>
 
                     <!-- Gender -->
+                    <br>
                     <div class="form-group"> 
                         <label class="col-md-4 control-label"><h3><b>Gender</b></h3></label>
                         <div class="col-md-4 selectContainer">
@@ -440,24 +484,50 @@ export default {
 
                     <!-- Image Change -->
                     <!-- <br> -->
+                    <!-- <div class="form-group">
+                        <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="form-group"> -->
+                                <!-- The @change will call the function and it will triggered whenever we select a new file -->
+                                <!-- <input type="file" @change="onFileUpload">
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Image Change -->
+                    <br>
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
                         <div class="col-md-4 inputGroupContainer">
                             <div class="form-group">
                                 <!-- The @change will call the function and it will triggered whenever we select a new file -->
-                                <input type="file" @change="onFileUpload">
+                                <!-- Since it is very ugly in its naive version, I will hide it and simulate a click on it using ref if we click on the button below. -->
+                                <!-- <input type="file" @change="onFileSelected"> -->
+
+                                <input type="file" @input="pickFile" ref="fileInput" @change="onFileSelected" style="display:none"> 
+                                <div class="imagePreviewWrapper" 
+                                     :style="{'background-image': `url(${previewImage})` }" @click="selectImage">
+                                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><h3 style="color:#c2e9fc;">{{ this.photoBackgroundText }}</h3>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Send Button -->
-                    <div class="form-group2">
-					    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="setUserProfile"> Update Profile </button>
-				    </div>
-
                 </fieldset>
             </form>
         </div>
+
+        <!-- Clear Button -->
+        <div class="clearButton">
+            <!-- <button class="btn btn-primary btn-block btn-large" @click="clearPhoto">Clear</button> -->
+            <button @click="clearPhoto" v-if="!loading" style="background: #c2e9fc; border: 1px solid #FF4742; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px; box-sizing: border-box; color: #c2e9fc; cursor: pointer; display: inline-block; font-family: sans-serif; font-size: 16px; font-weight: 800; line-height: 16px; min-height: 40px; outline: 0; padding: 12px 14px; text-align: center; text-rendering: geometricprecision; text-transform: none; user-select: none; -webkit-user-select: none; touch-action: manipulation; vertical-align: middle; background-color: #c2e9fc; background-position: 0 0; color: black; ">
+                Clear</button>
+        </div>
+
+        <!-- Send Button -->
+        <div class="form-group2">
+			<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="setUserProfile"> Update Profile </button>
+		</div>
+        
     </div><!-- /.container -->
 </template>
 

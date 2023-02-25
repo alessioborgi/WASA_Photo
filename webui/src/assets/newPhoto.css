@@ -3,19 +3,18 @@
 .formUpdate {
     display:block;
     margin-top: 300px;   
-	margin-left: 40%; 
-	width: 1000px;
+	margin-left: 42%; 
+	width: 1100px;
 }
 
 .clearButton {
 	display:block;
-    margin-left: 675px;   
-	/* width: 1000px; */
+    margin-left: 56%;   
 }
 
 .form-group2{
     margin-top: 31px;
-	margin-left: 380px;
+	margin-left: 42%;
 	width: 365px;
 }
 

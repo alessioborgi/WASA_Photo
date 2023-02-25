@@ -43,7 +43,6 @@ export default {
 
             // This will assign to photo the first selected file.
             this.photo = event.target.files[0]
-            this.photoflag = true;
         },
 
         // uploadPhoto function: It has the role to add a new photo on the user profile.
@@ -121,9 +120,6 @@ export default {
             // Initializing the Background Text on the Image Box.
             this.photoBackgroundText= "CLICK HERE to CHOOSE A FILE";
             this.previewImage = null;
-            // Re-addressing the page to the personal profile page of a user.
-            this.$router.push({ path: `/users/${this.username}/photo/` })
-
         },
 
     },
@@ -153,7 +149,6 @@ export default {
 
                 <form class="well form-horizontal" action=" " method="post"  id="contact_form">
                 <fieldset>
-
                     <!-- Phrase -->
                     <div class="form-group">
                         <label class="col-md-4 control-label"><h3><b>Phrase</b></h3></label>  
@@ -191,7 +186,7 @@ export default {
         <!-- Clear Button -->
         <div class="clearButton">
             <!-- <button class="btn btn-primary btn-block btn-large" @click="clearPhoto">Clear</button> -->
-            <button @click="clearPhoto" style="background: #c2e9fc; border: 1px solid #FF4742; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px; box-sizing: border-box; color: #c2e9fc; cursor: pointer; display: inline-block; font-family: sans-serif; font-size: 16px; font-weight: 800; line-height: 16px; min-height: 40px; outline: 0; padding: 12px 14px; text-align: center; text-rendering: geometricprecision; text-transform: none; user-select: none; -webkit-user-select: none; touch-action: manipulation; vertical-align: middle; background-color: #c2e9fc; background-position: 0 0; color: black; ">
+            <button @click="clearPhoto" v-if="!loading" style="background: #c2e9fc; border: 1px solid #FF4742; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px; box-sizing: border-box; color: #c2e9fc; cursor: pointer; display: inline-block; font-family: sans-serif; font-size: 16px; font-weight: 800; line-height: 16px; min-height: 40px; outline: 0; padding: 12px 14px; text-align: center; text-rendering: geometricprecision; text-transform: none; user-select: none; -webkit-user-select: none; touch-action: manipulation; vertical-align: middle; background-color: #c2e9fc; background-position: 0 0; color: black; ">
                 Clear</button>
         </div>
 
