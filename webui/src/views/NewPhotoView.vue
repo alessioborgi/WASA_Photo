@@ -2,8 +2,6 @@
 <script>
 
 import ErrorMsg from '../components/ErrorMsg.vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-
 
 // Declaration of the export set.
 export default {
@@ -30,6 +28,10 @@ export default {
 
             // Initializing the PhotoId variable.
             idPhoto: 0,
+
+            imageUrl: '',
+            image: null,
+            previewImage: null,
         }
 	},
 
@@ -40,8 +42,24 @@ export default {
         onFileSelected (event) {
 
             // This will assign to file the first selected file.
-            this.file = event.target.files[0]
+            // this.file = event.target.files[0]
             // this.file = this.$refs.file.files[0]
+
+
+            const files = event.target.files;
+            let filename = files[0].name;            
+            if (filename.lastIndexOf('.') <= 0){
+                return alert('Please add a valid File!');
+            }
+
+            // Convert in Base64.
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.imageUrl = fileReader.result;
+            })
+            fileReader.readAsDataURL(files[0]);
+            this.image = files[0];
+
         },
 
         // uploadPhoto function: It has the role to add a new photo on the user profile.
@@ -80,6 +98,24 @@ export default {
             // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
             this.loading = false;
         },
+
+        // onPickFile will be used to simulate a click on the real "Choose file" that is hidden due to its uglyness.
+        pickFile () {
+            let input = this.$refs.fileInput
+            let file = input.files
+            if (file && file[0]) {
+                let reader = new FileReader
+                reader.onload = e => {
+                    this.previewImage = e.target.result
+                }
+
+                reader.readAsDataURL(file[0])
+            }
+        },
+
+        selectImage () {
+            this.$refs.fileInput.click()
+        }
 
     },
 }
@@ -127,8 +163,15 @@ export default {
                         <div class="col-md-4 inputGroupContainer">
                             <div class="form-group">
                                 <!-- The @change will call the function and it will triggered whenever we select a new file -->
-                                <input type="file" @change="onFileSelected" ref="file">
+                                <!-- Since it is very ugly in its naive version, I will hide it and simulate a click on it using ref if we click on the button below. -->
+                                <!-- <input type="file" @change="onFileSelected"> -->
+
+                                <input type="file" @input="pickFile" ref="fileInput" @change="onFileSelected"> 
+                                <div class="imagePreviewWrapper" 
+                                     :style="{'background-image': `url(${previewImage})` }" @click="selectImage"></div>
+                                <!-- <input type="file" ref="fileInput" style="display: none" accept="image/*"> -->
                             </div>
+                            <!-- <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="onPickFile"> Choose File </button> -->
                         </div>
                     </div>
 
@@ -145,5 +188,5 @@ export default {
 
 <!-- Declaration of the style(scoped) to use. -->
 <style scoped>
-	@import '../assets/updateProfile.css';
+	@import '../assets/newPhoto.css';
 </style>
