@@ -23,6 +23,7 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
             
+            // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
 		}
 	},

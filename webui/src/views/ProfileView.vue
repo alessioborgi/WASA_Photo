@@ -158,7 +158,7 @@ export default {
 			</div>
 
 			<!-- Divider Profile-Photos -->
-			<br><br>
+			<br><br><br><br><br><br><br><br>
 			<div class="divider">
 				<span></span><span>Posts</span><span></span>
 			</div>
@@ -170,7 +170,7 @@ export default {
 			{{ this.photoListLinks }}
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
-				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}"
+				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}" style="margin-top:80px;"
 					:photo="p"
 				></PhotoCard>
 			</div>
