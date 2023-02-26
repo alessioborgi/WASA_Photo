@@ -160,5 +160,5 @@ export default {
 
 <!-- Declaration of the style(scoped) to use. -->
 <style scoped>
-	@import '../assets/updateProfile.css';
+	@import '../assets/newUsername.css';
 </style>

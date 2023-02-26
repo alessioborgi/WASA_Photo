@@ -74,7 +74,7 @@ export default {
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" @click="" ><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" v-if="!loading" @click=""><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
                     </div>
