@@ -8,8 +8,6 @@ import PhotoCard from '../components/PhotoCard.vue'
 // Declaration of the export set.
 export default {
 
-    props: ['photo'], 
-
 	components: {
 		ErrorMsg,
 		LoadingSpinner,
@@ -50,7 +48,7 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1"> {{ this.username + "'s" + this.photo.photoid}} Photo</h1>
+			<h1 class="h1"> {{ this.username + "'s"}} Photo</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">
 
 			<!-- Let's now handle the dynamic part. -->

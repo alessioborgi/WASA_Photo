@@ -12,6 +12,7 @@ import LoadingSpinner from './components/LoadingSpinner.vue'
 import CardProfile from './components/CardProfile.vue'
 import MyProfileCard from './components/MyProfileCard.vue'
 import PhotoCard from './components/PhotoCard.vue'
+import StreamPhotoCard from './components/StreamPhotoCard.vue'
 
 
 import './assets/dashboard.css'
@@ -32,6 +33,7 @@ app.component("LoadingSpinner", LoadingSpinner);
 app.component("CardProfile", CardProfile);
 app.component("MyProfileCard", MyProfileCard);
 app.component("PhotoCard", PhotoCard);
+app.component("StreamPhotoCard", StreamPhotoCard);
 app.use(router)
 app.mount('#app')
 

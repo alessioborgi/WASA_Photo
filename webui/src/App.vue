@@ -78,9 +78,9 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/stream/'" class="nav-link" >
+							<RouterLink :to="'/users/'+username+'/myStream/'" class="nav-link" >
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
-								Home
+								My Stream
 							</RouterLink>
 						</li>
 					</ul>
