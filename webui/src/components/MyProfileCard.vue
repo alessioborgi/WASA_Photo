@@ -82,8 +82,8 @@ export default {
 
         async goToSetUsername() {
 
-        // Re-address the user to the right page.
-        this.$router.push({ path: `/users/${this.username}/newUsername/`})
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/newUsername/`})
         },
 
         async goToUpdate() {

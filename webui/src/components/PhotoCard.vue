@@ -31,7 +31,7 @@ export default {
     methods: {
 
         // deletePhotoAlert: This method allows us to open an alert that will be used to alert about the Photo Deletion.
-        deletePhotoAlert() {
+        async deletePhotoAlert() {
 
             if (confirm("Your Photo will be deleted from your Personal Profile. Are you sure?")){
                 this.deletePhotoBool = true;
@@ -51,25 +51,26 @@ export default {
             this.errormsg = "";
             this.loading = true;
 
-            this.deletePhotoAlert()
+            // Alerting the user to have the confirmation that he/she wants to Delete the photo.
+            await this.deletePhotoAlert();
 
             try {
                 
                 // In the case the result is positive, we post the username received to the GO page.
                 if (this.deletePhotoBool == true){
 
-                    alert("Entered Hereeeee")
-
                     // /users/:username/photos/:photoid
-                    await this.$axios.delete(`/users/${this.username}/photos/${photo.photoid}`, {
-                    headers: {
+                    // await this.$axios.delete("/users/"+this.username+"/photos/"+this.photo.photoid, {
+                    await this.$axios.delete(`/users/${this.username}/photos/${this.photo.photoid}`, {
+                        headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
-                                    
+                             
+                    // this.photoList = this.removeObjectWithId(this.photoList, this.photoid)
+                    // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
+
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
-                } else {
-                    alert("Entered Here")
                 }
 
             } catch (e) {
@@ -81,9 +82,18 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         },
+
+        async goToPhotoPage() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/update/`})
+        },
+
+        async removeObjectWithId(arr, photoid) {
+            
+            return arr.filter((obj) => obj.photoid !== photoid);
+        },
                   
-        
-        
     }
 }
 
@@ -94,7 +104,7 @@ export default {
 <template>
 
     <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-    <div class="card" id="div1">
+    <div class="card" id="div1" >
 
         <div class="usernameLabel">
             <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }} 
@@ -124,13 +134,13 @@ export default {
                 <!-- Grid for containing number of likes and of comments. -->
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" @click="" ><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
                         {{ photo.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" @click="" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
                     </div>
@@ -148,7 +158,8 @@ export default {
 
                 <!-- Deletion -->
                 <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: 80px;"><use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
+                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: 80px; color:midnightblue">
+                        <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
                 </div>
                 
             </div>
