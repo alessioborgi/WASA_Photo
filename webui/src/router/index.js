@@ -7,6 +7,7 @@ import FollowView from '../views/FollowView.vue'
 import UpdateView from '../views/UpdateProfile.vue'
 import NewUsernameView from '../views/NewUsernameView.vue'
 import NewPhotoView from '../views/NewPhotoView.vue'
+import PhotoDetailsView from '../views/PhotoDetailsView.vue'
 import AnalyticsView from '../views/AnalyticsView.vue'
 
 
@@ -21,6 +22,7 @@ const router = createRouter({
 		{path: '/users/:username/update/', component: UpdateView},
 		{path: '/users/:username/newUsername/', component: NewUsernameView},
 		{path: '/users/:username/photo/', component: NewPhotoView},
+		{path: '/users/:username/photo/:idphoto', component: PhotoDetailsView},
 		{path: '/users/:username/analytics/', component: AnalyticsView},
 	]
 })

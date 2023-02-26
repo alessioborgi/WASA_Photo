@@ -83,10 +83,10 @@ export default {
             this.loading = false;
         },
 
-        async goToPhotoPage() {
+        async goToViewPhotoDetails() {
 
             // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/update/`})
+            this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
         },
 
         async removeObjectWithId(arr, photoid) {
@@ -107,8 +107,8 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }} 
-            <b> FIXEDUSERNAME: </b>{{ photo }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>
         
@@ -156,9 +156,19 @@ export default {
                     <b>Upload Date</b> {{ photo.uploadDate }} 
                 </div>
 
+
+                <!-- Send Button -->
+                <div class="form-group2">
+                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                    @click="goToViewPhotoDetails" 
+                    style="width: 250px; margin-top: 100px;"
+                    :photo="this.photo"
+                    > View Photo Details </button>
+                </div>
+
                 <!-- Deletion -->
                 <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: 80px; color:midnightblue">
+                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: -80px; color:midnightblue">
                         <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
                 </div>
                 
