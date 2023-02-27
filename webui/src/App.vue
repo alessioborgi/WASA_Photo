@@ -28,6 +28,10 @@ export default {
 		async setLocalStorage() {
 			localStorage.clear();
 		},
+
+		async setUsernameAgain() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+		},
 	},
 
 }
@@ -58,7 +62,7 @@ export default {
 						</li>
 						<li class="nav-item">
 							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage"/></svg>
+								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage()"/></svg>
 								Logout
 							</RouterLink>
 						</li>
@@ -71,9 +75,9 @@ export default {
 						<span>PERSONAL PROFILE</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item">
+						<li class="nav-item" @click="setUsernameAgain">
 							<RouterLink :to="'/users/'+username" class="nav-link" >
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram" onclick=""/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
 								My Profile
 							</RouterLink>
 						</li>

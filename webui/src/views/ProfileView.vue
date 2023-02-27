@@ -25,8 +25,13 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
+			// Notice that here I need also to keep track of the username that is Logged since anyone(that is not banned, of course) can view others profiles.
             BearerToken: localStorage.getItem('BearerToken'),
+			usernameLogged: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
+
+			// Initializing flag that allows to see whether the user that is accessing the page is the actual user owner or not.
+			userOwnerFlag: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? true : false,
 
 			// Initializing variable for handling the UserProfile retrieval.
 			userProfile: { fixedUsername: "", username: "", photoProfile: "", biography: "", dateOfCreation: "", numberOfPhotos: 0, numberFollowers: 0, numberFollowing: 0, name: "", surname: "", dateOfBirth: "", email: "", nationality: "", gender: ""},
@@ -96,28 +101,6 @@ export default {
 
 				this.photoListLinks = responsePhotoList.data;
 
-				// Retrieving every photo, "/users/:username/photos/:photoid/view"		
-				// for (let i = 0; i < this.photoListLinks; i++) {
-
-				// 	try{
-
-				// 		// Retrieving the Photo from the Back-end.
-				// 		let responsePhoto = await this.$axios.get(`/users/${this.username}/photos/${this.photoListLinks[i].id}/view`, {
-				// 			headers: {
-				// 				Authorization: "Bearer " + localStorage.getItem("BearerToken")
-				// 			}
-				// 		})
-
-				// 		// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
-				// 		this.photoListRaw.push(responsePhoto.data);
-
-				// 	} catch (e) {
-
-				// 		// If an error is encountered, display it!
-				// 		this.errormsg = e.toString();
-				// 	}
-				// }
-
 			} catch (e) {
 
 				// If an error is encountered, display it!
@@ -141,6 +124,10 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
+			<div>
+				<h3 class="h3"> <b> User Logged:</b> {{ this.usernameLogged }} </h3>
+			</div>
+
 			<h1 class="h1"> {{ this.userProfile.username + "'s"}} PERSONAL PROFILE</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">
 
@@ -152,7 +139,9 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<MyProfileCard v-if="!loading" :user=this.userProfile :style="{backgroundColor: this.colorBackground}" 
+				<MyProfileCard v-if="!loading" :user=this.userProfile 
+					:style="{backgroundColor: this.colorBackground}" 
+					:userOwnerFlag = this.userOwnerFlag
 				></MyProfileCard>
 			</div>
 
@@ -171,6 +160,7 @@ export default {
 			<div class="photoList"> 
 				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 					:photo="p"
+					:userOwnerFlag = !this.userOwnerFlag
 				></PhotoCard>
 			</div>
 

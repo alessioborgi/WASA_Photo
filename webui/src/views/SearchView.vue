@@ -326,7 +326,9 @@ export default {
 						<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
 					</div>
 					<div class= "searchButton">
-						<svg class="feather" v-if="!loading" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+						<svg class="feather" v-if="!loading" 
+							@click="searchUsername" 
+							style="color:floralwhite"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 					</div>
 				</div>
 

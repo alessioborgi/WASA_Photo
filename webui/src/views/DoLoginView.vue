@@ -48,6 +48,7 @@ export default {
                 this.uuid  = response.data,
                 localStorage.setItem('BearerToken', this.uuid),
                 localStorage.setItem('Username', this.username),
+                localStorage.setItem('usernameProfileToView', this.username),
 			    
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.replace({ path: `/users/${this.username}` })

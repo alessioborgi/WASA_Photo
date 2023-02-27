@@ -5,7 +5,7 @@ import InfoMsg from '../components/InfoMsg.vue'
 
 export default {
 
-    props: ['photo'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -98,7 +98,13 @@ export default {
         //     EventBus.$emit('photo', this.photo);
         // }
                   
-    }
+    },
+
+    computed: {
+        isDisabled: function(){
+            return this.userOwnerFlag;
+        }
+    }, 
 }
 
      
@@ -112,7 +118,7 @@ export default {
 
         <div class="usernameLabel">
             <!-- <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }}  -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
         
@@ -169,7 +175,9 @@ export default {
 
                 <!-- Deletion -->
                 <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: -80px; color:midnightblue">
+                    <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
+                        @click="deletePhoto" 
+                        style="margin-left: 450px; margin-top: -80px; color:midnightblue">
                         <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
                 </div>
                 

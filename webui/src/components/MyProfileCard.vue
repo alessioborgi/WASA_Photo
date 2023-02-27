@@ -5,7 +5,7 @@ import InfoMsg from '../components/InfoMsg.vue'
 
 export default {
 
-    props: ['user'],
+    props: ['user', 'userOwnerFlag'],
 
     components: {
         InfoMsg
@@ -96,10 +96,15 @@ export default {
 
             // Re-address the user to the right page.
             this.$router.push({ path: `/users/${this.username}/analytics/`})
-        },
+        },                         
                             
-                            
-    }
+    },
+
+    computed: {
+        isDisabled: function(){
+            return !this.userOwnerFlag;
+        }
+    }, 
 }
 
      
@@ -112,11 +117,10 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ userOwnerFlag }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
-        
         <div class="upperPart"> 
             <div class="imageLabel">
                 <div class="profileImage">
@@ -201,25 +205,32 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToSetUsername">
+                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                    @click="goToSetUsername"
+                                                    :disabled='isDisabled'>
                                                 <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToUpdate">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="goToUpdate"
+                                                :disabled='isDisabled'>
                                                 <b>Update Profile</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="goToAnalytics">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="goToAnalytics">
                                                 <b>See Analytics</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="deleteProfile">
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="deleteProfile"
+                                                :disabled='isDisabled'>
                                                 <b>Delete Profile</b>
                                             </button>
                                         </menuitem>
