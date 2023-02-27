@@ -93,65 +93,75 @@ export default {
     <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
     <div class="card" id="div1" >
 
-        <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
+<div class="usernameLabel">
+    <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
+    <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
-        </div>
-        
-        <div class="upperPart"> 
-            
-            <div class="rightUpperPart">
+</div>
 
-                <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2" style="margin-left: 50px;">
-                    <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
-                        <b> Likes</b> 
-                        {{ photo.numberLikes }} 
-                    </div>
-
-                    <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
-                        <b> Comments</b> 
-                        {{ photo.numberComments }} 
-                    </div>
-                </div>
-
-                <!-- Phrase -->
-                <div class="grid-child-posts3" style="margin-left: 50px;">
-                    <b>Phrase</b> {{ photo.phrase }} 
-                </div>
-
-                <!-- Upload Date -->
-                <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
-                    <b>Upload Date</b> {{ photo.uploadDate }} 
-                </div>
-
-
-                <!-- View Photo Details Button -->
-                <div class="form-group2" style="margin-left: 50px;">
-                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="addComment()" 
-                    style="width: 250px; margin-top: 140px;"
-                    :photo="this.photo"
-                    > Add Comment </button>
-                </div>
-
-                <!-- Deletion -->
-                <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
-                        @click="deletePhoto" 
-                        style="margin-left: 450px; margin-top: -180px; color:midnightblue">
-                        <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
-                </div>
+    <div class="upperPart"> 
+        <div class="imageLabel">
+            <div class="profileImage">
+                <!-- In this way works -->
+                <!-- <img src="../../u1-photo-0.png" alt="Person" class="card__image"/> -->
                 
+                <!-- In this other way it does not :( -->
+                <!-- <img src="Users/alessioborgi/Documents/GitHub/WASA_Photo/service/api/photos/u1-photo-0.png" alt="Person" class="card__image"/> -->
+                <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
+                
+                <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
+                <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
+            </div>           
+        </div>
+        <div class="rightUpperPart">
+
+            <!-- Grid for containing number of likes and of comments. -->
+            <div class="grid-container2" style="margin-left: 50px;">
+                <div class="grid-child-posts">
+                    <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                    <b> Likes</b> 
+                    {{ photo.numberLikes }} 
+                </div>
+
+                <div class="grid-child-posts">
+                    <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                    <b> Comments</b> 
+                    {{ photo.numberComments }} 
+                </div>
             </div>
-                    
-        </div>
 
-        </div>
+            <!-- Phrase -->
+            <div class="grid-child-posts3" style="margin-left: 50px;">
+                <b>Phrase</b> {{ photo.phrase }} 
+            </div>
 
+            <!-- Upload Date -->
+            <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
+                <b>Upload Date</b> {{ photo.uploadDate }} 
+            </div>
+
+
+            <!-- View Photo Details Button -->
+            <div class="form-group2" style="margin-left: 50px;">
+                <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                @click="goToViewPhotoDetails(this.photo.photoid)" 
+                style="width: 250px; margin-top: 100px;"
+                :photo="this.photo"
+                > View Photo Details </button>
+            </div>
+
+            <!-- Deletion -->
+            <div class="grid-child-posts3">
+                <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
+                    @click="deletePhoto" 
+                    style="margin-left: 450px; margin-top: -80px; color:midnightblue">
+                    <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
+            </div>
+            
+        </div>
+                
+    </div>
+    </div>
 </template>
 
 
