@@ -100,11 +100,6 @@ export default {
                             
     },
 
-    computed: {
-        isDisabled: function(){
-            return !this.userOwnerFlag;
-        }
-    }, 
 }
 
      
@@ -198,24 +193,21 @@ export default {
             <div class="grid-child-posts">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
-                            <menu>
-                                <menuitem id="demo1">
+                            <menu >
+                                <menuitem id="demo1" v-if="!loading && userOwnerFlag === true">
                                     <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
                                     <menu>
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
                                                 <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
-                                                    @click="goToSetUsername"
-                                                    :disabled='isDisabled'>
-                                                <b>Set Username</b>
+                                                    @click="goToSetUsername">                                                <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
                                             <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
-                                                @click="goToUpdate"
-                                                :disabled='isDisabled'>
+                                                @click="goToUpdate">
                                                 <b>Update Profile</b>
                                             </button>
                                         </menuitem>
@@ -229,8 +221,7 @@ export default {
 
                                         <menuitem>
                                             <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
-                                                @click="deleteProfile"
-                                                :disabled='isDisabled'>
+                                                @click="deleteProfile">
                                                 <b>Delete Profile</b>
                                             </button>
                                         </menuitem>

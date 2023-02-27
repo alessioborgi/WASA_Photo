@@ -83,7 +83,10 @@ export default {
             this.loading = false;
         },
 
-        async goToViewPhotoDetails() {
+        async goToViewPhotoDetails(idPhoto) {
+
+            // Saving on the Local Cache the IdPhoto that we have to retrieve the information then in the next view.
+            localStorage.setItem('idPhoto', idPhoto),
 
             // Re-address the user to the right page.
             this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
@@ -93,18 +96,9 @@ export default {
             
             return arr.filter((obj) => obj.photoid !== photoid);
         },
-
-        // emitMethod () {
-        //     EventBus.$emit('photo', this.photo);
-        // }
-                  
+   
     },
 
-    computed: {
-        isDisabled: function(){
-            return this.userOwnerFlag;
-        }
-    }, 
 }
 
      
@@ -117,7 +111,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.photo }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
@@ -167,7 +161,7 @@ export default {
                 <!-- View Photo Details Button -->
                 <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="goToViewPhotoDetails" 
+                    @click="goToViewPhotoDetails(this.photo.photoid)" 
                     style="width: 250px; margin-top: 100px;"
                     :photo="this.photo"
                     > View Photo Details </button>
