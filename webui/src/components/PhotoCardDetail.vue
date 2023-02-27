@@ -92,7 +92,7 @@ export default {
             this.newComment = prompt("Please enter the new Comment:");
 
             if (this.newComment != "") {
-                if (confirm("The comment that will be added is " + this.newComment)){
+                if (confirm("The comment that will be added is: " + this.newComment)){
                     
                     alert("Comment Correctly Added");
                 } else {
@@ -124,8 +124,10 @@ export default {
                 // Setting the uuid (Bearer Token) received as response by the Post action.
 
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: `/users/${this.username}/photos/${this.photo.photoid}`})
+                this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
                 this.newUsername = "";
+                this.$emit('refreshNumberComments', this.photo.numberComments + 1);
+
             } catch (e) {
 
                 // In case of error, retrieve it.
@@ -149,7 +151,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.photo }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>

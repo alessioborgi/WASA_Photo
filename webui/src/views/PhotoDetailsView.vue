@@ -82,7 +82,7 @@ export default {
 <template>
 
 	<div>
-            {{ this.photoData }}
+            <!-- {{ this.photoData }} -->
 			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1"> {{ this.username + "'s"}} Photo</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">
@@ -99,6 +99,7 @@ export default {
 					:photo="this.photoData"
 					:style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 					:userOwnerFlag = !this.userOwnerFlag
+					@refreshNumberComments = "this.photoData.numberComments = $event"
 				></PhotoCardDetail>
 			</div>
 
