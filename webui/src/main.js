@@ -13,7 +13,9 @@ import CardProfile from './components/CardProfile.vue'
 import MyProfileCard from './components/MyProfileCard.vue'
 import PhotoCard from './components/PhotoCard.vue'
 import PhotoCardDetail from './components/PhotoCardDetail.vue'
+import Comment from './components/Comment.vue'
 import StreamPhotoCard from './components/StreamPhotoCard.vue'
+
 
 
 import './assets/dashboard.css'
@@ -34,6 +36,7 @@ app.component("CardProfile", CardProfile);
 app.component("MyProfileCard", MyProfileCard);
 app.component("PhotoCard", PhotoCard);
 app.component("PhotoCardDetail", PhotoCardDetail);
+app.component("Comment", Comment);
 app.component("StreamPhotoCard", StreamPhotoCard);
 app.use(router)
 app.mount('#app')
