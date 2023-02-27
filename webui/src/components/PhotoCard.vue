@@ -93,6 +93,10 @@ export default {
             
             return arr.filter((obj) => obj.photoid !== photoid);
         },
+
+        // emitMethod () {
+        //     EventBus.$emit('photo', this.photo);
+        // }
                   
     }
 }
@@ -124,15 +128,12 @@ export default {
                     
                     <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
                     <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
-                </div>
-                <div class="profileLabel">
-                    <p class="card__name" > <b>{{ photo.photoid }}</b></p>
-                </div>            
+                </div>           
             </div>
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2">
+                <div class="grid-container2" style="margin-left: 50px;">
                     <div class="grid-child-posts">
                         <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
@@ -147,18 +148,18 @@ export default {
                 </div>
 
                 <!-- Phrase -->
-                <div class="grid-child-posts3">
+                <div class="grid-child-posts3" style="margin-left: 50px;">
                     <b>Phrase</b> {{ photo.phrase }} 
                 </div>
 
                 <!-- Upload Date -->
-                <div class="grid-child-posts3" style="margin-top: 20px;">
+                <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
                     <b>Upload Date</b> {{ photo.uploadDate }} 
                 </div>
 
 
-                <!-- Send Button -->
-                <div class="form-group2">
+                <!-- View Photo Details Button -->
+                <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
                     @click="goToViewPhotoDetails" 
                     style="width: 250px; margin-top: 100px;"
@@ -293,12 +294,11 @@ export default {
 }
 
 .card__image {
-  height: 160px;
-  width: 160px;
-  border-radius: 50%;
+  height: 350px;
+  width: 350px;
+  margin-top: 40px;
   border: 5px solid #272133;
-  margin-top: 20px;
-  box-shadow: 0 10px 50px rgb(25, 214, 235);
+  margin-left: -150px;
 }
 .grid-container {
   display: grid;
@@ -317,7 +317,6 @@ margin-top: 50px;
   grid-gap: 50px;
   width: 600px;
   font-size: 18px;
-  /* background-color: greenyellow; */
 }
 
 .grid-child-posts3{

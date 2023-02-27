@@ -4,6 +4,7 @@
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import PhotoCard from '../components/PhotoCard.vue'
+// import EventBus from '../event-bus'
 
 // Declaration of the export set.
 export default {
@@ -31,6 +32,7 @@ export default {
 
 			// Initializing variable for handling the UserProfile retrieval.
 			colorPosts: '',
+            photo: null,
 		}
 	},
 
@@ -38,8 +40,11 @@ export default {
 	methods: {	
 
 	},
-	mounted() {
-	}
+	// mounted() {
+    //     EventBus.$on(photo, function (payLoad) {
+    //         this.photo = payLoad;
+    //     });
+	// }
 }
 </script>
 
@@ -47,6 +52,7 @@ export default {
 <template>
 
 	<div>
+            {{ this.photo }}
 			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1"> {{ this.username + "'s"}} Photo</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">

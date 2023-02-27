@@ -77,7 +77,7 @@ export default {
 
 	<div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1"> {{ this.username + "'s"}} Stream</h1>
+			<h1 class="h1"> {{ this.username + "'s"}} MyStream</h1>
 			<img src="./img/wasa-logo.png" alt="" class="img">
 
 			<!-- Divider Profile-Photos -->

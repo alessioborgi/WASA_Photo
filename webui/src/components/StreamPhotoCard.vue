@@ -23,64 +23,71 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
-            // Initializing variable for handling the deletion of the Photo.
-            deletePhotoBool: false,
 		}
 	},
 
     methods: {
 
-        // deletePhotoAlert: This method allows us to open an alert that will be used to alert about the Photo Deletion.
-        async deletePhotoAlert() {
+        // followUnfollowUser function: It has the role to add or delete a follow depending on the boolFollowing value.
+        async followUnfollowUser(){
 
-            if (confirm("Your Photo will be deleted from your Personal Profile. Are you sure?")){
-                this.deletePhotoBool = true;
-                alert("Photo Correctly Deleted");
-            } else {
-                this.deletePhotoBool = false;
-                alert("Photo still present!")
-            }
+            // Initializing the two errormessage and loading variables.
+            this.errormsg= "";
+            this.loading= true;
 
-        },
+            // Let's handle first the case where we are currently following the user.
+            // We must therefore delete the Follow.
+            if (this.user.boolFollowing == true) {
 
+                try{
 
-        // deletePhoto: This method allows us to delete a Photo from the user Profile.
-        async deletePhoto() {
-
-            // Re-initializing variables to their default value.
-            this.errormsg = "";
-            this.loading = true;
-
-            // Alerting the user to have the confirmation that he/she wants to Delete the photo.
-            await this.deletePhotoAlert();
-
-            try {
-                
-                // In the case the result is positive, we post the username received to the GO page.
-                if (this.deletePhotoBool == true){
-
-                    // /users/:username/photos/:photoid
-                    // await this.$axios.delete("/users/"+this.username+"/photos/"+this.photo.photoid, {
-                    await this.$axios.delete(`/users/${this.username}/photos/${this.photo.photoid}`, {
+                    // Deleting the Follow: /users/:username/followings/:usernameFollowing.
+                    await this.$axios.delete("/users/"+this.username+"/followings/"+this.user.username, {
                         headers: {
-                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
-                    }})
-                             
-                    // this.photoList = this.removeObjectWithId(this.photoList, this.photoid)
-                    // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
 
-                    // Re-addressing the page to the personal profile page of a user.
-                    this.$router.replace({ path: `/users/${this.username}` })
+                    // Once we have done with it, we must simply update the flag.
+                    this.user.boolFollowing = false;
+                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
+                    this.$emit('refreshFollowing', false);
+
+                } catch (e) {
+
+                    // If an error is encountered, display it!
+                    this.errormsg = e.toString();
                 }
 
-            } catch (e) {
+            } else{
 
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
+                // Let's handle first the case where the user is NOT Followed by us.
+                // We must therefore add the Follow.
+                try{
+
+                    // Adding the Follow: /users/:username/followings/:usernameFollowing.
+                    await this.$axios.put(`/users/${this.username}/followings/${this.user.username}`, {}, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
+
+                    // Once we have done with it, we must simply update the flag.
+                    this.user.boolFollowing = true;
+                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
+                    this.$emit('refreshFollowing', true);
+                    
+
+                } catch (e) {
+
+                    // If an error is encountered, display it!
+                    this.errormsg = e.toString();
+                    }
             }
 
-            // Setting again the Loading flag to false.
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
             this.loading = false;
+
         },
 
         async goToViewPhotoDetails() {
@@ -161,20 +168,34 @@ export default {
                     <b>Upload Date</b> {{ photo.uploadDate }} 
                 </div>
 
+                <div class="grid-container2">
+                    <div class="grid-child-posts">
+                        <svg class="feather" v-if="!loading" @click="putLike"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <b> Put Like</b> 
+                    </div>
 
-                <!-- Send Button -->
+                    <div class="grid-child-posts">
+                        <svg class="feather" v-if="!loading" style="color:green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <b> Add Comment</b> 
+                    </div>
+                </div>
+
+                <!-- View Photo Details Button -->
                 <div class="form-group2">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
                     @click="goToViewPhotoDetails" 
-                    style="width: 250px; margin-top: 100px;"
+                    style="width: 200px; margin-top: 20px;"
                     :photo="this.photo"
                     > View Photo Details </button>
                 </div>
 
-                <!-- Deletion -->
-                <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading" @click="deletePhoto" style="margin-left: 450px; margin-top: -80px; color:midnightblue">
-                        <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
+                <!-- See  Button -->
+                <div class="form-group2">
+                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                    @click="goToViewPhotoDetails" 
+                    style="width: 250px; margin-left: 250px; margin-top: -43px;"
+                    :photo="this.photo"
+                    > View {{this.photo.username}}'s Profile </button>
                 </div>
                 
             </div>
