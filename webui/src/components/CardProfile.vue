@@ -20,15 +20,17 @@ export default {
 
             // Initializing colorBackground of the Card depending on the Gender.
             colorBackground: this.user.gender == "male" ? '#c2e9fc' : this.user.gender == "female" ? '#fbd3f0' : '#cff6cc',
-            // colorBackground: this.user.gender == "male" ? '#c2e9fc' : '#fbd3f0',
-
 
 			// Initializing iconFollow, that can receive two values:
             //   Follow(true):    /feather-sprite-v4.29.0.svg#user-check
             //   NotFollow(false): /feather-sprite-v4.29.0.svg#user-plus
 			iconFollowing: this.user.boolFollowing == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-plus',
+            colorIconFollowing: this.user.boolFollowing == true ? 'green' : 'red',
             iconFollower: this.user.boolFollower == true ? '/feather-sprite-v4.29.0.svg#user-check' : '/feather-sprite-v4.29.0.svg#user-x',
+            colorIconFollower: this.user.boolFollower == true ? 'green' : 'red',
             iconBanned: this.user.boolBanned == true ? '/feather-sprite-v4.29.0.svg#lock' : '/feather-sprite-v4.29.0.svg#unlock',
+            colorIconBanned: this.user.boolBanned == true ? 'red' : 'green',
+
         }
 	},
 
@@ -57,6 +59,7 @@ export default {
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolBanned = false;
                     this.iconBanned = '/feather-sprite-v4.29.0.svg#unlock';
+                    this.colorIconBanned = 'green';
                     this.$emit('refreshBan', false);
 
                 } catch (e) {
@@ -80,6 +83,7 @@ export default {
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolBanned = true;
                     this.iconBanned = '/feather-sprite-v4.29.0.svg#lock';
+                    this.colorIconBanned = 'red';
                     this.$emit('refreshBan', true);
 
                 } catch (e) {
@@ -118,6 +122,7 @@ export default {
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolFollowing = false;
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
+                    this.colorIconFollowing = 'red';
                     this.$emit('refreshFollowing', false);
 
                 } catch (e) {
@@ -142,6 +147,7 @@ export default {
                     // Once we have done with it, we must simply update the flag.
                     this.user.boolFollowing = true;
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
+                    this.colorIconFollowing = 'green';
                     this.$emit('refreshFollowing', true);
                     
 
@@ -212,15 +218,26 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts2">
-                            <b>Is it Banned? </b> <svg class="feather" v-if="!loading" @click="banUnbanUser" ><use :href="this.iconBanned"/></svg>
+                            <b>Is it Banned? </b> <svg class="feather" 
+                                v-if="!loading"     
+                                @click="banUnbanUser" 
+                                :style="{color: this.colorIconBanned}">
+                                <use :href="this.iconBanned"/></svg>
                         </div> 
 
                         <div class="grid-child-posts2">
-                            <b>Am I Following it?</b><svg class="feather" v-if="!loading" @click="followUnfollowUser" ><use :href="this.iconFollowing"/></svg>
+                            <b>Am I Following it?</b><svg class="feather" 
+                                v-if="!loading" 
+                                @click="followUnfollowUser" 
+                                :style="{color: this.colorIconFollowing}">
+                                <use :href="this.iconFollowing"/></svg>
                         </div>
 
                         <div class="grid-child-posts2">
-                            <b>Is it my Follower?</b><svg class="feather" v-if="!loading"><use :href="this.iconFollower"/></svg>
+                            <b>Is it my Follower?</b><svg class="feather" 
+                                v-if="!loading"
+                                :style="{color: this.colorIconFollower}">
+                                <use :href="this.iconFollower"/></svg>
                         </div>                          
                     </div>
                 </div>
