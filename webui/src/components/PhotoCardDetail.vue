@@ -1,7 +1,7 @@
 
 <script>
 
-import InfoMsg from '../components/InfoMsg.vue'
+import InfoMsg from './InfoMsg.vue'
 
 export default {
 
@@ -25,6 +25,9 @@ export default {
 
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,
+
+            // Initializing a newComment variable for handling the addition of the comment.
+            newComment: "",
 		}
 	},
 
@@ -83,20 +86,55 @@ export default {
             this.loading = false;
         },
 
-        async goToViewPhotoDetails(idPhoto) {
+        async addCommentAlert() {
 
-            // Saving on the Local Cache the IdPhoto that we have to retrieve the information then in the next view.
-            localStorage.setItem('idPhoto', idPhoto),
+            this.newComment = "";
+            this.newComment = prompt("Please enter the new Comment:");
 
-            // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
+            if (this.newComment != "") {
+                if (confirm("The comment that will be added is " + this.newComment)){
+                    
+                    alert("Comment Correctly Added");
+                } else {
+                    
+                    alert("Comment not Added!")
+                }
+            }
         },
 
-        async removeObjectWithId(arr, photoid) {
-            
-            return arr.filter((obj) => obj.photoid !== photoid);
+        // Declaration of the DoLogin page. 
+        async addComment() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            await this.addCommentAlert()
+
+            try {
+                
+                // In the case the result is positive, we post the username received to the GO page.
+                // /users/:username/photos/:photoid/comments/
+                await this.$axios.post(`/users/${this.username}/photos/${this.photo.photoid}/comments/`, { phrase: this.newComment}, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                // Setting the uuid (Bearer Token) received as response by the Post action.
+
+                // Re-addressing the page to the personal profile page of a user.
+                this.$router.push({ path: `/users/${this.username}/photos/${this.photo.photoid}`})
+                this.newUsername = "";
+            } catch (e) {
+
+                // In case of error, retrieve it.
+                this.errormessage = e.toString();
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
         },
-   
     },
 
 }
@@ -111,7 +149,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.photo }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
@@ -161,17 +199,17 @@ export default {
                 <!-- View Photo Details Button -->
                 <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="goToViewPhotoDetails(this.photo.photoid)" 
-                    style="width: 250px; margin-top: 100px;"
+                    @click="addComment()" 
+                    style="width: 250px; margin-top: 140px;"
                     :photo="this.photo"
-                    > View Photo Details </button>
+                    > Add Comment </button>
                 </div>
 
                 <!-- Deletion -->
                 <div class="grid-child-posts3">
                     <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
                         @click="deletePhoto" 
-                        style="margin-left: 450px; margin-top: -80px; color:midnightblue">
+                        style="margin-left: 450px; margin-top: -180px; color:midnightblue">
                         <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
                 </div>
                 

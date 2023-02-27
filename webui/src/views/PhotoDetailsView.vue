@@ -3,7 +3,7 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-import PhotoCard from '../components/PhotoCard.vue'
+import PhotoCardDetail from '../components/PhotoCardDetail.vue'
 
 // Declaration of the export set.
 export default {
@@ -11,7 +11,7 @@ export default {
 	components: {
 		ErrorMsg,
 		LoadingSpinner,
-		PhotoCard,
+		PhotoCardDetail,
 	},
 
 	// Describing what are the Return variables.
@@ -95,11 +95,11 @@ export default {
 
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
-				<PhotoCard v-if="!loading" 
+				<PhotoCardDetail v-if="!loading" 
 					:photo="this.photoData"
 					:style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 					:userOwnerFlag = !this.userOwnerFlag
-				></PhotoCard>
+				></PhotoCardDetail>
 			</div>
 
 		</div>
