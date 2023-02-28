@@ -253,22 +253,25 @@ export default {
 		{{ this.commentsList }}
 		<!-- Comments List -->
 		<div class="commentsList">  
-			<Like v-if="!loading && flagCommentsLikes == false" 
+			<Comment v-if="!loading && flagCommentsLikes == false" 
 				v-for="c in commentsList" 
 				:style="{backgroundColor: this.colorPosts}" 
-				style="background-color: #f3c3b2 ; margin-top:80px;"
-				:comment="c"
-				:userOwnerFlag = !this.userOwnerFlag
-			></Like>
-		</div>
-
-		{{ this.likesList }}
-		<!-- <div class="likessList">  
-			<Comment v-if="!loading && flagCommentsLikes == true" v-for="c in commentsList" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
+				style="background-color: #c0f3b2 ; margin-top:80px;"
 				:comment="c"
 				:userOwnerFlag = !this.userOwnerFlag
 			></Comment>
-		</div> -->
+		</div>
+
+		{{ this.likesList }}
+		<div class="likessList">  
+			<Like v-if="!loading && flagCommentsLikes == true" 
+				v-for="l in likesList" 
+				:style="{backgroundColor: this.colorPosts}" 
+				style="background-color:#f3c3b2 ; margin-top:80px;"
+				:like="l"
+				:userOwnerFlag = !this.userOwnerFlag
+			></Like>
+		</div>
 
 
 	

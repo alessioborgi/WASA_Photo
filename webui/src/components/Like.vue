@@ -5,7 +5,7 @@ import InfoMsg from './InfoMsg.vue'
 
 export default {
 
-    props: ['comment', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['like', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -102,31 +102,10 @@ export default {
 
     <div class="upperPart"> 
         <div class="rightUpperPart">
-
-            <!-- Grid for containing number of likes and of comments. -->
-            <!-- Upload Date -->
-            <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
-                <b>Upload Date</b> {{ comment.UploadDate }} 
-            </div>
-
-            <!-- Upload Date -->
-            <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
-                <b>Commenter </b> {{ comment.CommenterFixedUsername }} 
-            </div>
             
-            <!-- Phrase -->
+            <!-- Like Username -->
             <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;">
-                <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
-                <b>Comment </b> {{ comment.Phrase }} 
-            </div>
-
-
-            <!-- Deletion -->
-            <div class="grid-child-posts3">
-                <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
-                    @click="deletePhoto" 
-                    style="margin-left: 650px; margin-top: -31px; color:midnightblue">
-                    <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
+                <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>                <b>Liker </b> {{ like }} 
             </div>
             
         </div>
@@ -217,6 +196,7 @@ export default {
 
 .feather {
 	color: #ff0000;
+    fill: #ff0000;
 }
 
 #div1{
@@ -227,7 +207,7 @@ export default {
   background-color: #c0f3b2; 
   /* background-color: yellow; */
   margin-bottom: 20px;
-  height: 25rem;
+  height: 11rem;
   width: auto;
   border-radius: 5px;
   align-items: center;

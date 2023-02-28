@@ -135,13 +135,13 @@ export default {
                 <!-- Grid for containing number of likes and of comments. -->
                 <div class="grid-container2" style="margin-left: 50px;">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <svg class="feather" v-if="!loading" style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
                         {{ photo.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" v-if="!loading" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
                     </div>

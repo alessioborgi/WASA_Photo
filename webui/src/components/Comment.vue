@@ -116,7 +116,7 @@ export default {
             
             <!-- Phrase -->
             <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;">
-                <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                <svg class="feather" v-if="!loading" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                 <b>Comment </b> {{ comment.Phrase }} 
             </div>
 
