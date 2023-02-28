@@ -389,17 +389,18 @@ export default {
   align-items: center;
   margin-right: auto;
   margin-top: 15px;
+  margin-left: -125px;
   text-align: center;
-  font-size: 1.25em;
+  font-size: 2em;
 }
 
 .card__image {
-  height: 160px;
-  width: 160px;
+  height: 180px;
+  width: 180px;
   border-radius: 50%;
   border: 5px solid #272133;
   margin-top: 20px;
-  box-shadow: 0 10px 50px rgb(25, 214, 235);
+  margin-left: -60px;
 }
 .grid-container {
   display: grid;

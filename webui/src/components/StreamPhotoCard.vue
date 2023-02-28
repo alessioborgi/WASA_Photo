@@ -93,12 +93,17 @@ export default {
         async goToViewPhotoDetails() {
 
             // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
+            // alert(`/users/${userToView}/photo/${this.photo.photoid}`)
+            localStorage.setItem('usernameProfileToView', this.photo.username),
+            this.$router.push({ path: `/users/${this.photo.username}/photo/${this.photo.photoid}`})
         },
 
-        async removeObjectWithId(arr, photoid) {
-            
-            return arr.filter((obj) => obj.photoid !== photoid);
+        async goToProfile() {
+
+            // Re-address the user to the right page.
+            // alert(`/users/${userToView}/photo/${this.photo.photoid}`)
+            localStorage.setItem('usernameProfileToView', this.photo.username),
+            this.$router.push({ path: `/users/${this.photo.username}`})
         },
                   
     }
@@ -183,16 +188,16 @@ export default {
                 <!-- View Photo Details Button -->
                 <div class="form-group2">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="goToViewPhotoDetails" 
+                    @click="goToViewPhotoDetails()" 
                     style="width: 200px; margin-top: 20px;"
                     :photo="this.photo"
                     > View Photo Details </button>
                 </div>
 
-                <!-- See  Button -->
+                <!-- View Profile Button -->
                 <div class="form-group2">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="goToViewPhotoDetails" 
+                    @click="goToProfile" 
                     style="width: 250px; margin-left: 250px; margin-top: -43px;"
                     :photo="this.photo"
                     > View {{this.photo.username}}'s Profile </button>
@@ -319,13 +324,13 @@ export default {
 }
 
 .card__image {
-  height: 160px;
-  width: 160px;
-  border-radius: 50%;
+  height: 350px;
+  width: 350px;
+  margin-top: 40px;
   border: 5px solid #272133;
-  margin-top: 20px;
-  box-shadow: 0 10px 50px rgb(25, 214, 235);
+  margin-left: -200px;
 }
+
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

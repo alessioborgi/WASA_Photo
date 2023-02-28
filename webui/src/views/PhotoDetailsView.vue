@@ -116,11 +116,15 @@ export default {
 				// Saving the response in the "users" array.
 				this.commentsList = response.data;
 
-				// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
-				this.commentsList.sort(function(a,b){
+				if (this.commentsList.length > 0){
+					// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
+					this.commentsList.sort(function(a,b){
 
-					return new Date(b.UploadDate) - new Date(a.UploadDate);
-				})
+						return new Date(b.UploadDate) - new Date(a.UploadDate);
+					})
+				} else {
+					this.errormsg = "There are no Comments to the Photo yet!";
+				}
 
 			} catch (e) {
 
@@ -158,6 +162,10 @@ export default {
 
 				// Saving the response in the "users" array.
 				this.likesList = response.data;
+
+				if (this.commentsList.length == 0){
+					this.errormsg = "There are no Likes to the Photo yet!";
+				}
 
 			} catch (e) {
 
@@ -329,10 +337,6 @@ export default {
 		<!-- Photo Cards -->
 		<div>
 			<div class="result" style="margin-top: 300px;">
-				<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
-				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-				<LoadingSpinner v-if="loading"></LoadingSpinner>
-
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 				<div class="photoList" > 
 					<PhotoCardDetail v-if="!loading" 
@@ -351,6 +355,10 @@ export default {
 		<div class="divider" style="margin-top: -50px;">
 			<span></span><span>Likes & Comments</span><span></span>
 		</div>
+
+		<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+		<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 		<!-- {{ this.commentsList }} -->
 		<!-- Comments List -->
