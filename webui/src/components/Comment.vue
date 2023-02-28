@@ -5,7 +5,7 @@ import InfoMsg from './InfoMsg.vue'
 
 export default {
 
-    props: ['comment', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['comment', 'userOwnerFlag', 'photoid', 'numberComments'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -23,44 +23,43 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
-            deletePhotoBool: true,
+            // Initializing the variable that will handle whether we want or not to delete the comment. 
+            deleteCommentBool: false,
 		}
 	},
 
     methods: {
 
         // deletePhotoAlert: This method allows us to open an alert that will be used to alert about the Photo Deletion.
-        async deletePhotoAlert() {
+        async deleteCommentAlert() {
 
-            if (confirm("Your Photo will be deleted from your Personal Profile. Are you sure?")){
-                this.deletePhotoBool = true;
-                alert("Photo Correctly Deleted");
+            if (confirm("Your Comment will be deleted from the Photo. Are you sure?")){
+                this.deleteCommentBool = true;
+                alert("Photo's Comment Correctly Deleted");
             } else {
-                this.deletePhotoBool = false;
-                alert("Photo still present!")
+                this.deleteCommentBool = false;
             }
 
         },
 
 
-        // deletePhoto: This method allows us to delete a Photo from the user Profile.
-        async deletePhoto() {
+        // deleteComment: This method allows us to delete a Photo's Comment.
+        async deleteComment() {
 
             // Re-initializing variables to their default value.
             this.errormsg = "";
             this.loading = true;
 
-            // Alerting the user to have the confirmation that he/she wants to Delete the photo.
-            await this.deletePhotoAlert();
+            // Alerting the user to have the confirmation that he/she wants to Delete the photo's comment.
+            await this.deleteCommentAlert();
 
             try {
                 
-                // In the case the result is positive, we post the username received to the GO page.
-                if (this.deletePhotoBool == true){
+                // In the case the result is positive, we delete the post's comment using the GO's Server.
+                if (this.deleteCommentBool == true){
 
-                    // /users/:username/photos/:photoid
-                    // await this.$axios.delete("/users/"+this.username+"/photos/"+this.photo.photoid, {
-                    await this.$axios.delete(`/users/${this.username}/photos/${this.photo.photoid}`, {
+                    // /users/:username/photos/:photoid/comments/:commentid
+                    await this.$axios.delete(`/users/${this.username}/photos/${this.photoid}/comments/${this.comment.Commentid}`, {
                         headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
@@ -69,7 +68,10 @@ export default {
                     // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
 
                     // Re-addressing the page to the personal profile page of a user.
-                    this.$router.replace({ path: `/users/${this.username}` })
+                    this.$router.replace({ path: `/users/${this.username}/photo/${this.photoid}` })
+                    this.$emit('refreshNumberCommentsFromComment', this.photo.numberComments - 1);
+                    // this.$emit('refreshComments');
+
                 }
 
             } catch (e) {
@@ -124,7 +126,7 @@ export default {
             <!-- Deletion -->
             <div class="grid-child-posts3">
                 <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
-                    @click="deletePhoto" 
+                    @click="deleteComment" 
                     style="margin-left: 650px; margin-top: -31px; color:midnightblue">
                     <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
             </div>

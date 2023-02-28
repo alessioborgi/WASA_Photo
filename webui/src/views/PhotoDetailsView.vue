@@ -164,11 +164,18 @@ export default {
 			this.loading = false;
 		},
 
+		async refresh() {
+            await this.getComments();
+            await this.getLikes();
+        },
+
 	},
 
 
 	mounted() {
 		this.getPhoto()
+		// this.getComments()
+		// this.getLikes()
 	}
 }
 </script>
@@ -177,7 +184,12 @@ export default {
 <template>
 
 	<div>
+		<!-- {{ this.photoData }} -->
 			<!-- Let's handle first the upper part that will be the static one. -->
+			<div>
+				<h3 class="h3"> <b> User Logged:</b> {{ this.usernameLogged }} </h3>
+			</div>
+			
 			<h1 class="h1">{{ username }}'s Photo</h1>
 
 			<div class="topMenu">
@@ -259,6 +271,9 @@ export default {
 				style="background-color: #c0f3b2 ; margin-top:80px;"
 				:comment="c"
 				:userOwnerFlag = !this.userOwnerFlag
+				:photoid="this.photoData.photoid"
+				:numberComments="this.photoData.numberComments"
+				@refreshNumberCommentsFromComment = "this.photoData.numberComments = $event"
 			></Comment>
 		</div>
 

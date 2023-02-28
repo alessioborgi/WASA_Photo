@@ -28,6 +28,9 @@ export default {
 
             // Initializing a newComment variable for handling the addition of the comment.
             newComment: "",
+
+            // Initializing also a flag that handles whether we want or not to add up the Comment.
+            newCommentBool: false,
 		}
 	},
 
@@ -93,11 +96,10 @@ export default {
 
             if (this.newComment != "") {
                 if (confirm("The comment that will be added is: " + this.newComment)){
-                    
+                    this.newCommentBool = true;
                     alert("Comment Correctly Added");
                 } else {
-                    
-                    alert("Comment not Added!")
+                    this.newCommentBool = false;
                 }
             }
         },
@@ -111,7 +113,9 @@ export default {
 
             await this.addCommentAlert()
 
-            try {
+            if (this.newCommentBool){
+
+                try {
                 
                 // In the case the result is positive, we post the username received to the GO page.
                 // /users/:username/photos/:photoid/comments/
@@ -125,15 +129,19 @@ export default {
 
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
-                this.newUsername = "";
                 this.$emit('refreshNumberComments', this.photo.numberComments + 1);
 
-            } catch (e) {
+                } catch (e) {
 
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
+                    // In case of error, retrieve it.
+                    this.errormessage = e.toString();
+                }
+
+                // Setting again the Loading flag to false.
+                this.loading = false;
+
             }
-
+            
             // Setting again the Loading flag to false.
             this.loading = false;
         },
