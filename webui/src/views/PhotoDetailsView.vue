@@ -5,6 +5,8 @@ import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import PhotoCardDetail from '../components/PhotoCardDetail.vue'
 import Comment from '../components/Comment.vue'
+import Like from '../components/Like.vue'
+
 
 // Declaration of the export set.
 export default {
@@ -14,6 +16,7 @@ export default {
 		LoadingSpinner,
 		PhotoCardDetail,
 		Comment,
+		Like,
 	},
 
 	// Describing what are the Return variables.
@@ -108,6 +111,12 @@ export default {
 				// Saving the response in the "users" array.
 				this.commentsList = response.data;
 
+				// Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
+				this.commentsList.sort(function(a,b){
+
+					return new Date(b.UploadDate) - new Date(a.UploadDate);
+				})
+
 			} catch (e) {
 
 				// If an error is encountered, display it!
@@ -117,7 +126,46 @@ export default {
 			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
 			this.loading = false;
 		},
+
+
+		// getLikes: It returns the list of likes of a determinate photo.
+		async getLikes(){
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.likesList = [];
+
+			// Set the flagCommentsLikes to true (meaning that I need to work on likesList)
+			this.flagCommentsLikes = true;
+
+			// ----- Getting Likes. -----
+			try {
+
+				// Getting the list of Comments from the Back-End.
+				// /users/:username/photos/:photoid/likes/
+				let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoData.photoid}/likes/`, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "users" array.
+				this.likesList = response.data;
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
 	},
+
 
 	mounted() {
 		this.getPhoto()
@@ -143,7 +191,7 @@ export default {
                     <div class="topMenuButtons">
                         <button type="login-button" class="btn btn-primary btn-block btn-large" 
 							v-if="!loading" 
-							@click="">  
+							@click="getLikes">  
 							Likes List 
 						</button>
                     </div>
@@ -205,11 +253,22 @@ export default {
 		{{ this.commentsList }}
 		<!-- Comments List -->
 		<div class="commentsList">  
-			<Comment v-if="!loading" v-for="c in commentsList" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
+			<Like v-if="!loading && flagCommentsLikes == false" 
+				v-for="c in commentsList" 
+				:style="{backgroundColor: this.colorPosts}" 
+				style="background-color: #f3c3b2 ; margin-top:80px;"
+				:comment="c"
+				:userOwnerFlag = !this.userOwnerFlag
+			></Like>
+		</div>
+
+		{{ this.likesList }}
+		<!-- <div class="likessList">  
+			<Comment v-if="!loading && flagCommentsLikes == true" v-for="c in commentsList" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 				:comment="c"
 				:userOwnerFlag = !this.userOwnerFlag
 			></Comment>
-		</div>
+		</div> -->
 
 
 	
