@@ -5,7 +5,7 @@ import InfoMsg from './InfoMsg.vue'
 
 export default {
 
-    props: ['comment', 'userOwnerFlag', 'photoid', 'numberComments'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['comment', 'userOwnerFlag', 'photoid', 'numberComments', 'usersProfiles'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -20,15 +20,52 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
+			usernameLogged: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
 
             // Initializing the variable that will handle whether we want or not to delete the comment. 
             deleteCommentBool: false,
+
+            // Initializing the usernameCommenter.
+            usernameCommenter: "",
+
+            // Initializing the UserOwnerCommentFlag that is used for checking whether a user can eliminate or not a comment.
+            // HERE WE MUST CHECK WHETHER THE USERNAME LOGGED IS EQUAL TO THE USERNAME OF THE COMMENTER
+            // PROBLEM: HERE I HAVE THE FIXEDUSERNAME!!!
+            userOwnerCommentFlag: false,
 		}
 	},
 
     methods: {
+
+        async findUsernameCommenter() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            // Looping for the couples [username, fixedUsername]
+            for (let i = 0; i < this.usersProfiles.length; i++) {
+
+                // Saving the couple in a variable.
+                let usernameFixedUsernameCouple = this.usersProfiles[i];
+
+                // Check whether the fixedUsername in the couple is the same as the CommenterFixedUsername.
+                if (usernameFixedUsernameCouple[1] == this.comment.CommenterFixedUsername) {
+
+                    // If it is so, let's save the username of the Commenter.
+                    this.usernameCommenter = usernameFixedUsernameCouple[0];
+                }
+
+            }
+
+            // At the end, check whether the username of the person is logged is the same as the Commenter.
+            this.userOwnerCommentFlag = this.usernameLogged == this.usernameCommenter ? true : false;
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
 
         // deletePhotoAlert: This method allows us to open an alert that will be used to alert about the Photo Deletion.
         async deleteCommentAlert() {
@@ -83,8 +120,11 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         },
-
     },
+
+    mounted() {
+        this.findUsernameCommenter()
+    }
 
 }
 
@@ -98,8 +138,8 @@ export default {
     <div class="card" id="div1" >
 
     <div class="usernameLabel">
-        <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
-        <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
+        <!-- <br><br><br><br><b> COMMENTER FIXEDUSERNAME: </b>{{ this.comment.CommenterFixedUsername }}  -->
+        <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerCommentFlag }}  -->
     </div>
 
     <div class="upperPart"> 
@@ -107,13 +147,13 @@ export default {
 
             <!-- Grid for containing number of likes and of comments. -->
             <!-- Upload Date -->
-            <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
+            <div class="grid-child-posts3" style="margin-top: 50px; margin-left: 50px;">
                 <b>Upload Date</b> {{ comment.UploadDate }} 
             </div>
 
             <!-- Upload Date -->
             <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
-                <b>Commenter </b> {{ comment.CommenterFixedUsername }} 
+                <b>Commenter </b> {{ this.usernameCommenter }} 
             </div>
             
             <!-- Phrase -->
@@ -125,9 +165,9 @@ export default {
 
             <!-- Deletion -->
             <div class="grid-child-posts3">
-                <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
+                <svg class="feather" v-if="!loading && userOwnerCommentFlag == true" 
                     @click="deleteComment" 
-                    style="margin-left: 650px; margin-top: -31px; color:midnightblue">
+                    style="margin-left: 650px; margin-top: -100px; color:midnightblue">
                     <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
             </div>
             

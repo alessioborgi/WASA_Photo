@@ -20,8 +20,9 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
+			usernameLogged: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
 
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,

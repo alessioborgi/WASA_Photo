@@ -28,14 +28,15 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
-
-			// Retrieving also the photo information from the idPhoto saved in the Local Cache.
-			idPhoto: localStorage.getItem('idPhoto'),
+			usernameLogged: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
 
 			// Initializing flag that allows to see whether the user that is accessing the page is the actual user owner or not.
 			userOwnerFlag: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? true : false,
+
+			// Retrieving also the photo information from the idPhoto saved in the Local Cache.
+			idPhoto: localStorage.getItem('idPhoto'),
 
 			// Initializing the Photo variable.
 			photoData: {Photoid: 0, FixedUsername:"", Filename:"", UploadDate:"", Phrase:"", NumberLikes:0, NumberComments:0},
@@ -49,6 +50,10 @@ export default {
 			// Initializing the Comments and the Like List.
 			commentsList: [],
 			likesList: [],
+
+			// Initializing the two lists that will keep track of both the users and the usersProfiles.
+			users: [],
+			usersProfiles: [],
 		}
 	},
 
@@ -164,16 +169,100 @@ export default {
 			this.loading = false;
 		},
 
-		async refresh() {
-            await this.getComments();
-            await this.getLikes();
-        },
+		// GetUsers Function: It fills the "users" array with the usernames present in the DB.
+		async getUsers() {
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			this.users = [];
+			this.usersProfiles = [];
+						
+			try {
+
+				// Getting the list of Users from the Back-End.
+				let response = await this.$axios.get("/users/", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the response in the "users" array.
+				this.users = response.data;
+
+				// Retrieving for every username, its Profile.
+				for (let i = 0; i < this.users.length; i++) {
+
+					this.getUserProfile(i)
+				}
+
+				await this.getUserProfilesLogged();
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
+		},
+
+		// GetUserProfile Function: It retrieves the whole profile of a username.
+		async getUserProfile(i) {
+
+			try{
+
+				// Retrieving the Profile from the Back-end.
+				let responseProfile = await this.$axios.get("/users/"+this.users[i], {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+				this.usersProfiles.push([responseProfile.data.username, responseProfile.data.fixedUsername]);
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+		},
+
+		// GetUserProfile Function: It retrieves the whole profile of a username.
+		async getUserProfilesLogged() {
+
+			try{
+
+				// Retrieving the Profile from the Back-end.
+				let responseProfile = await this.$axios.get("/users/"+this.usernameLogged, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
+				this.usersProfiles.push([responseProfile.data.username, responseProfile.data.fixedUsername]);
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+		},
 
 	},
 
+		// async refresh() {
+        //     await this.getComments();
+        //     await this.getLikes();
+        // },
 
 	mounted() {
 		this.getPhoto()
+		this.getUsers()
 		// this.getComments()
 		// this.getLikes()
 	}
@@ -256,13 +345,14 @@ export default {
 			</div>
 		</div>
 
+		<!-- {{ this.usersProfiles }} -->
 		<!-- Divider Profile-Photos -->
 		<br><br><br><br><br><br><br><br>
 		<div class="divider" style="margin-top: -50px;">
 			<span></span><span>Likes & Comments</span><span></span>
 		</div>
 
-		{{ this.commentsList }}
+		<!-- {{ this.commentsList }} -->
 		<!-- Comments List -->
 		<div class="commentsList">  
 			<Comment v-if="!loading && flagCommentsLikes == false" 
@@ -273,12 +363,13 @@ export default {
 				:userOwnerFlag = !this.userOwnerFlag
 				:photoid="this.photoData.photoid"
 				:numberComments="this.photoData.numberComments"
+				:usersProfiles="this.usersProfiles"
 				@refreshNumberCommentsFromComment = "this.photoData.numberComments = $event"
 			></Comment>
 		</div>
 
-		{{ this.likesList }}
-		<div class="likessList">  
+		<!-- {{ this.likesList }} -->
+		<div class="likesList">  
 			<Like v-if="!loading && flagCommentsLikes == true" 
 				v-for="l in likesList" 
 				:style="{backgroundColor: this.colorPosts}" 

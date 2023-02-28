@@ -141,7 +141,7 @@ export default {
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
 				<MyProfileCard v-if="!loading" :user=this.userProfile 
 					:style="{backgroundColor: this.colorBackground}" 
-					:userOwnerFlag = this.userOwnerFlag
+					:userOwnerFlag = "this.userOwnerFlag"
 				></MyProfileCard>
 			</div>
 
@@ -160,7 +160,8 @@ export default {
 			<div class="photoList"> 
 				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 					:photo="p"
-					:userOwnerFlag = !this.userOwnerFlag
+					:userOwnerFlag = "!this.userOwnerFlag"
+					:usernameLogged = "this.usernameLogged"
 				></PhotoCard>
 			</div>
 

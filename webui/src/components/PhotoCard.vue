@@ -5,7 +5,7 @@ import InfoMsg from '../components/InfoMsg.vue'
 
 export default {
 
-    props: ['photo', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'userOwnerFlag',],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
