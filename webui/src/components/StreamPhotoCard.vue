@@ -29,7 +29,7 @@ export default {
     methods: {
 
         // followUnfollowUser function: It has the role to add or delete a follow depending on the boolFollowing value.
-        async followUnfollowUser(){
+        async likeUnLikePhoto(){
 
             // Initializing the two errormessage and loading variables.
             this.errormsg= "";
@@ -119,7 +119,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.deletePhotoBool }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.photo }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>
@@ -137,22 +137,23 @@ export default {
                     <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
                     <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
-                <div class="profileLabel">
-                    <p class="card__name" > <b>{{ photo.photoid }}</b></p>
-                </div>            
+                          
             </div>
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <svg class="feather" v-if="!loading"
+                        style="fill: #ff0000;">
+                        <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
                         {{ photo.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="color:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" v-if="!loading" 
+                        style="color:green; fill:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
                     </div>
@@ -175,12 +176,16 @@ export default {
 
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" @click="putLike"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <svg class="feather" v-if="!loading" 
+                        @click="putLike">
+                        <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Put Like</b> 
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="color:green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" v-if="!loading" 
+                        style="color:green;">
+                        <use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Add Comment</b> 
                     </div>
                 </div>

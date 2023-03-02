@@ -30,6 +30,7 @@ export default {
 
 			// Initializing a list that will handle the links to the photos.
 			streamListLinks: [],
+			// responseLikeList: [],
 		}
 	},
 
@@ -53,7 +54,14 @@ export default {
 					}
 				})
 
+				// Saving the list of links in the variable.
 				this.streamListLinks = responsePhotoList.data;
+
+				// // Retrieving for every photo, its Likes.
+				for (let i = 0; i < this.streamListLinks.length; i++) {
+
+					this.getLikes(i)
+				}
 
 			} catch (e) {
 
@@ -63,6 +71,39 @@ export default {
 
 			// Setting again the Loading flag to false.
             this.loading = false;
+		},
+
+		// getLikes: It returns the list of likes of a determinate photo.
+		async getLikes(i){
+
+			// Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			// ----- Getting Likes. -----
+			try {
+
+				// Getting the list of Likes from the Back-End.
+				// /users/:username/photos/:photoid/likes/
+				let responseLikeList = await this.$axios.get(`/users/${this.streamListLinks[i].username}/photos/${this.streamListLinks[i].photoid}/likes/`, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Add the boolLike to the "streamListLinks" array. 
+				this.streamListLinks[i].boolFollowing = responseLikeList.data.includes(this.username) ? true : false
+
+				// this.streamListLinks[i].boolLike = this.responseLikeList.includes(this.username) ? true : false
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			this.loading = false;
 		},
 
 	},
