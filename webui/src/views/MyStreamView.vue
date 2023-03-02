@@ -143,6 +143,7 @@ export default {
 					:photo="p"
 					@refreshLike = "p.boolLike = $event"
 					@refreshLikeFill = "p.fillHeart = $event"
+					@refreshLikeNumber = "p.numberLikes = $event"
 				></StreamPhotoCard>
 			</div>
 

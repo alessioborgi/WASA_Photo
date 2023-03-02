@@ -42,7 +42,7 @@ export default {
                 try{
 
                     // Deleting the Like: /users/:username/photos/:photoid/likes/:usernameLiker.
-                    await this.$axios.delete("/users/"+this.photo.username+"/photos/"+this.photo.photoid+"/likes/"+this.username, {
+                    await this.$axios.delete(`/users/${this.photo.username}/photos/${this.photo.photoid}/likes/${this.username}`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
@@ -50,8 +50,11 @@ export default {
 
                     // Once we have done with it, we must simply update the flag.
                     this.photo.boolLike = false;
-                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
                     this.$emit('refreshLike', false);
+                    this.photo.fillHeart = "white";
+                    this.$emit('refreshLikeFill', this.photo.fillHeart);
+                    this.photo.numberLikes = this.photo.numberLikes - 1;
+                    this.$emit('refreshLikeNumber', this.photo.numberLikes);
 
                 } catch (e) {
 
@@ -61,22 +64,24 @@ export default {
 
             } else{
 
-                // Let's handle first the case where the user is NOT Followed by us.
-                // We must therefore add the Follow.
+                // Let's handle then the case where the photo is NOT liked by the user.
+                // We must therefore add the Like.
                 try{
 
-                    // Adding the Follow: /users/:username/followings/:usernameFollowing.
-                    await this.$axios.put(`/users/${this.username}/followings/${this.user.username}`, {}, {
+                    // Adding the Follow: /users/:username/photos/:photoid/likes/:usernameLiker.                        
+                    await this.$axios.put(`/users/${this.photo.username}/photos/${this.photo.photoid}/likes/${this.username}`, {}, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolFollowing = true;
-                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
-                    this.$emit('refreshFollowing', true);
-                    
+                    this.photo.boolLike = true;
+                    this.$emit('refreshLike', true);
+                    this.photo.fillHeart = "red";
+                    this.$emit('refreshLikeFill', this.photo.fillHeart);
+                    this.photo.numberLikes = this.photo.numberLikes + 1;
+                    this.$emit('refreshLikeNumber', this.photo.numberLikes);
 
                 } catch (e) {
 
