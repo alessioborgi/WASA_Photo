@@ -23,6 +23,11 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
+            // Initializing a newComment variable for handling the addition of the comment.
+            newComment: "",
+
+            // Initializing also a flag that handles whether we want or not to add up the Comment.
+            newCommentBool: false,
 		}
 	},
 
@@ -95,6 +100,63 @@ export default {
 
         },
 
+        async addCommentAlert() {
+
+            this.newComment = "";
+            this.newComment = prompt("Please enter the new Comment:");
+
+            if (this.newComment != "") {
+                if (confirm("The comment that will be added is: " + this.newComment)){
+                    this.newCommentBool = true;
+                    alert("Comment Correctly Added");
+                } else {
+                    this.newCommentBool = false;
+                }
+            }
+        },
+
+        // Declaration of the DoLogin page. 
+        async addComment() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            await this.addCommentAlert()
+
+            if (this.newCommentBool){
+
+                try {
+                
+                    // In the case the result is positive, we post the username received to the GO page.
+                    // /users/:username/photos/:photoid/comments/
+                    await this.$axios.post(`/users/${this.photo.username}/photos/${this.photo.photoid}/comments/`, { phrase: this.newComment}, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                        }
+                    })
+
+                    // Setting the uuid (Bearer Token) received as response by the Post action.
+
+                    // Re-addressing the page to the personal profile page of a user.
+                    // this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
+                    this.$emit('refreshNumberComments', this.photo.numberComments + 1);
+
+                } catch (e) {
+
+                    // In case of error, retrieve it.
+                    this.errormessage = e.toString();
+                }
+
+                // Setting again the Loading flag to false.
+                this.loading = false;
+
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
         async goToViewPhotoDetails() {
 
             // Re-address the user to the right page.
@@ -124,7 +186,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.photo }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>
@@ -164,9 +226,9 @@ export default {
                     </div>
                 </div>
 
-                <!-- Phrase -->
-                <div class="grid-child-posts3">
-                    <b>Phrase</b> {{ photo.phrase }} 
+                <!-- Upload Date -->
+                <div class="grid-child-posts3" style="margin-top: 40px;">
+                    <b>Upload Date</b> {{ photo.uploadDate }} 
                 </div>
 
                 <!-- Username -->
@@ -174,12 +236,12 @@ export default {
                     <b>Username</b> {{ photo.username }} 
                 </div>
 
-                <!-- Upload Date -->
+                <!-- Phrase -->
                 <div class="grid-child-posts3" style="margin-top: 20px;">
-                    <b>Upload Date</b> {{ photo.uploadDate }} 
+                    <b>Phrase</b> {{ photo.phrase }} 
                 </div>
 
-                <div class="grid-container2">
+                <div class="grid-container2" style="margin-top: 80px;">
                     <div class="grid-child-posts">
                         <svg class="feather" v-if="!loading" 
                         @click="likeUnLikePhoto"
@@ -188,8 +250,9 @@ export default {
                         <b> Put Like</b> 
                     </div>
 
-                    <div class="grid-child-posts">
+                    <div class="grid-child-posts" style="width:300px;">
                         <svg class="feather" v-if="!loading" 
+                        @click="addComment"
                         style="color:green; fill:white;">
                         <use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Add Comment</b> 

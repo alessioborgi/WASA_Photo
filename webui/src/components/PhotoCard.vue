@@ -147,22 +147,21 @@ export default {
                     </div>
                 </div>
 
-                <!-- Phrase -->
-                <div class="grid-child-posts3" style="margin-left: 50px;">
-                    <b>Phrase</b> {{ photo.phrase }} 
-                </div>
-
                 <!-- Upload Date -->
-                <div class="grid-child-posts3" style="margin-top: 20px; margin-left: 50px;">
+                <div class="grid-child-posts3" style="margin-top: 50px; margin-left: 50px;">
                     <b>Upload Date</b> {{ photo.uploadDate }} 
                 </div>
 
+                <!-- Phrase -->
+                <div class="grid-child-posts3" style="margin-left: 50px; margin-top: 10px;">
+                    <b>Phrase</b> {{ photo.phrase }} 
+                </div>
 
                 <!-- View Photo Details Button -->
                 <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
                     @click="goToViewPhotoDetails(this.photo.photoid)" 
-                    style="width: 250px; margin-top: 100px;"
+                    style="width: 250px; margin-top: 165px;"
                     :photo="this.photo"
                     > View Photo Details </button>
                 </div>
@@ -171,7 +170,7 @@ export default {
                 <div class="grid-child-posts3">
                     <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
                         @click="deletePhoto" 
-                        style="margin-left: 450px; margin-top: -80px; color:midnightblue">
+                        style="margin-left: 450px; margin-top: -190px; color:midnightblue">
                         <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
                 </div>
                 
