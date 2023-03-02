@@ -28,30 +28,30 @@ export default {
 
     methods: {
 
-        // followUnfollowUser function: It has the role to add or delete a follow depending on the boolFollowing value.
+        // likeUnLikePhoto function: It has the role to add or delete a like depending on the boolLike value.
         async likeUnLikePhoto(){
 
             // Initializing the two errormessage and loading variables.
             this.errormsg= "";
             this.loading= true;
 
-            // Let's handle first the case where we are currently following the user.
-            // We must therefore delete the Follow.
-            if (this.user.boolFollowing == true) {
+            // Let's handle first the case where we are currently liking the photo.
+            // We must therefore delete the Like.
+            if (this.photo.boolLike == true) {
 
                 try{
 
-                    // Deleting the Follow: /users/:username/followings/:usernameFollowing.
-                    await this.$axios.delete("/users/"+this.username+"/followings/"+this.user.username, {
+                    // Deleting the Like: /users/:username/photos/:photoid/likes/:usernameLiker.
+                    await this.$axios.delete("/users/"+this.photo.username+"/photos/"+this.photo.photoid+"/likes/"+this.username, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolFollowing = false;
+                    this.photo.boolLike = false;
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
-                    this.$emit('refreshFollowing', false);
+                    this.$emit('refreshLike', false);
 
                 } catch (e) {
 
@@ -177,14 +177,15 @@ export default {
                 <div class="grid-container2">
                     <div class="grid-child-posts">
                         <svg class="feather" v-if="!loading" 
-                        @click="putLike">
+                        @click="likeUnLikePhoto"
+                        :style="{fill: this.photo.fillHeart}">
                         <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Put Like</b> 
                     </div>
 
                     <div class="grid-child-posts">
                         <svg class="feather" v-if="!loading" 
-                        style="color:green;">
+                        style="color:green; fill:white;">
                         <use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Add Comment</b> 
                     </div>

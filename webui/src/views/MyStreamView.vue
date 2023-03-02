@@ -92,9 +92,14 @@ export default {
 				})
 
 				// Add the boolLike to the "streamListLinks" array. 
-				this.streamListLinks[i].boolFollowing = responseLikeList.data.includes(this.username) ? true : false
+				this.streamListLinks[i].boolLike = responseLikeList.data.includes(this.username) ? true : false
 
-				// this.streamListLinks[i].boolLike = this.responseLikeList.includes(this.username) ? true : false
+				// Check whether it is true or not that it is Liking the Photo and changing, by consequence, the Like that is filled or not.
+				if (this.streamListLinks[i].boolLike == true){
+					this.streamListLinks[i].fillHeart = "red"
+				} else {
+					this.streamListLinks[i].fillHeart = "white"
+				}
 
 			} catch (e) {
 
@@ -136,6 +141,8 @@ export default {
 			<div class="photoList"> 
 				<StreamPhotoCard v-if="!loading" v-for="p in streamListLinks" :style="{backgroundColor: this.colorPosts}" style="margin-top:80px;"
 					:photo="p"
+					@refreshLike = "p.boolLike = $event"
+					@refreshLikeFill = "p.fillHeart = $event"
 				></StreamPhotoCard>
 			</div>
 
