@@ -218,26 +218,32 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts2">
-                            <b>Is it Banned? </b> <svg class="feather" 
+                            <b>Is it Banned? </b> 
+                            <svg class="feather" 
                                 v-if="!loading"     
                                 @click="banUnbanUser" 
                                 :style="{color: this.colorIconBanned}">
-                                <use :href="this.iconBanned"/></svg>
+                                <use :href="this.iconBanned"/>
+                            </svg>
                         </div> 
 
                         <div class="grid-child-posts2">
-                            <b>Am I Following it?</b><svg class="feather" 
+                            <b>Am I Following it?</b>
+                            <svg class="feather" 
                                 v-if="!loading" 
                                 @click="followUnfollowUser" 
                                 :style="{color: this.colorIconFollowing}">
-                                <use :href="this.iconFollowing"/></svg>
+                                <use :href="this.iconFollowing"/>
+                            </svg>
                         </div>
 
                         <div class="grid-child-posts2">
-                            <b>Is it my Follower?</b><svg class="feather" 
+                            <b>Is it my Follower?</b>
+                            <svg class="feather" 
                                 v-if="!loading"
                                 :style="{color: this.colorIconFollower}">
-                                <use :href="this.iconFollower"/></svg>
+                                <use :href="this.iconFollower"/>
+                            </svg>
                         </div>                          
                     </div>
                 </div>
