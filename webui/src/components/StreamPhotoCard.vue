@@ -262,7 +262,7 @@ export default {
                 <!-- View Photo Details Button -->
                 <div class="form-group2">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
-                    @click="goToViewPhotoDetails()" 
+                    @click="goToViewPhotoDetails" 
                     style="width: 200px; margin-top: 20px;"
                     :photo="this.photo"
                     > View Photo Details </button>

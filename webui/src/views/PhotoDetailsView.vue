@@ -163,7 +163,7 @@ export default {
 				// Saving the response in the "users" array.
 				this.likesList = response.data;
 
-				if (this.commentsList.length == 0){
+				if (this.likesList.length == 0){
 					this.errormsg = "There are no Likes to the Photo yet!";
 				}
 

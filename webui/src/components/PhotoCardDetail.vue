@@ -73,9 +73,6 @@ export default {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
                              
-                    // this.photoList = this.removeObjectWithId(this.photoList, this.photoid)
-                    // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
-
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
                 }
