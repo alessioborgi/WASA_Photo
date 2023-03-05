@@ -142,8 +142,13 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
 	log.Println("The photo name is: ", photo_path)
 
-	// Creatio of the Path URL.
+	// Creation of the Path URL. Save the photo in the "/tmp" folder.
 	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
+	// imageDir := "/var/tmp"
+	// folderName := "images"
+	// filenameImage := fmt.Sprintf("%s%s", photo_path, filepath.Ext(header.Filename))
+	// path := filepath.Join(imageDir, folderName, filenameImage)
+	// log.Println("The final path is: ", path)
 
 	// Creation of a Photo and values assignment.
 	var newPhoto api.Photo
@@ -167,6 +172,11 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Saving the photo in the Folder.
 	f, errPathCreation := os.Create(path)
+
+	// if !errors.Is(errPathCreation, nil) {
+	// 	ctx.Logger.WithError(errPathCreation)
+	// 	return
+	// }
 
 	if !errors.Is(errPathCreation, nil) {
 

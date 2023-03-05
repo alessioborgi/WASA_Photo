@@ -40,7 +40,6 @@ export default {
 
 			// Initializing a list that will handle the links to the photos.
 			photoListLinks: [],
-			photoListRaw: [],
 		}
 	},
 
@@ -155,13 +154,17 @@ export default {
 			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 			<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-			{{ this.photoListLinks }}
+			<!-- {{ this.photoListLinks }} -->
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
 				<PhotoCard v-if="!loading" v-for="p in photoListLinks" :style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 					:photo="p"
 					:userOwnerFlag = "!this.userOwnerFlag"
 					:usernameLogged = "this.usernameLogged"
+					:numberOfPhotos = "this.userProfile.numberOfPhotos"
+					:photoListCurrent = "this.photoListLinks"
+					@refreshNumberPhotos = "this.userProfile.numberOfPhotos = $event"
+					@refreshPhotos = "this.photoListLinks = $event"
 				></PhotoCard>
 			</div>
 

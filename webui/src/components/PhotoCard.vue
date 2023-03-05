@@ -5,7 +5,7 @@ import InfoMsg from '../components/InfoMsg.vue'
 
 export default {
 
-    props: ['photo', 'userOwnerFlag',],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'userOwnerFlag', 'numberOfPhotos', 'photoListCurrent'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -25,6 +25,9 @@ export default {
 
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,
+
+            // Initializing the newPhotoList.
+            newPhotoList : [],
 		}
 	},
 
@@ -66,11 +69,13 @@ export default {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
                              
-                    // this.photoList = this.removeObjectWithId(this.photoList, this.photoid)
-                    // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
-
+                    // Eliminate from the list the photo.
+                    this.newPhotoList = await this.removeObjectWithId(this.photoListCurrent, this.photo.photoid);
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
+                    this.$emit('refreshNumberPhotos', this.numberOfPhotos - 1);
+                    this.$emit('refreshPhotos', this.newPhotoList);
+
                 }
 
             } catch (e) {
@@ -83,6 +88,7 @@ export default {
             this.loading = false;
         },
 
+        // goToViewPhotoDetails: This function is used for redirecting the user to the specific photo's view.
         async goToViewPhotoDetails(idPhoto) {
 
             // Saving on the Local Cache the IdPhoto that we have to retrieve the information then in the next view.
@@ -92,9 +98,15 @@ export default {
             this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
         },
 
-        async removeObjectWithId(arr, photoid) {
+        // removeObjectWithId: This function is used for removing from the list of photos a specific one.
+        async removeObjectWithId(arr, id) {
             
-            return arr.filter((obj) => obj.photoid !== photoid);
+            const objWithIdIndex = arr.findIndex((obj) => obj.photoid === id);
+
+            if (objWithIdIndex > -1) {
+                arr.splice(objWithIdIndex, 1);
+            }
+            return arr;
         },
    
     },
