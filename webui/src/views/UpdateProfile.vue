@@ -528,6 +528,11 @@ export default {
 			<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="setUserProfile"> Update Profile </button>
 		</div>
         
+        <div>
+            <!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+        </div>
+        
     </div><!-- /.container -->
 </template>
 

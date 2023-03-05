@@ -3,7 +3,6 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-import MyProfileCard from '../components/MyProfileCard.vue'
 import StreamPhotoCard from '../components/StreamPhotoCard.vue'
 
 // Declaration of the export set.
@@ -12,7 +11,6 @@ export default {
 	components: {
 		ErrorMsg,
 		LoadingSpinner,
-		MyProfileCard,
 		StreamPhotoCard,
 	},
 

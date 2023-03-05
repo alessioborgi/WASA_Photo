@@ -2,12 +2,14 @@
 <script>
 
 import ErrorMsg from '../components/ErrorMsg.vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
 
 // Declaration of the export set.
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+        LoadingSpinner,
 	},
 
 	// Describing what are the Return variables.
@@ -194,6 +196,14 @@ export default {
         <div class="form-group2">
 		    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="uploadPhoto"> Upload New Photo </button>
 		</div>
+
+        <div>
+            <br>
+            <!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+			<LoadingSpinner v-if="loading"></LoadingSpinner>
+
+        </div>
     </div><!-- /.container -->
 </template>
 

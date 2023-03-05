@@ -9,7 +9,8 @@ import LoadingSpinner from '../components/LoadingSpinner.vue'
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+		LoadingSpinner,
 	},
 
 	// Describing what are the Return variables.
@@ -51,6 +52,12 @@ export default {
 				<div class="topMenuButtons"></div>
 
             </div>
+
+			<div>
+				<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
+				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+				<LoadingSpinner v-if="loading"></LoadingSpinner>
+			</div>
         
     </div><!-- /.container -->
 </template>

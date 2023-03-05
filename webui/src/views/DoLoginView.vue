@@ -72,8 +72,6 @@ export default {
     
     <div class="login">
 
-        <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
-
         <h1>WASA Photo LOGIN</h1>
         <img src="./img/wasa-logo.png" alt="">
 
@@ -88,8 +86,11 @@ export default {
             <LoadingSpinner v-if="loading"></LoadingSpinner>
         </form>
 
+        <div>
+            <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
+        </div>
     </div>
-
+    
 </template>
 
 <!-- Declaration of the style(scoped) to use. -->

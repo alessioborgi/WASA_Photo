@@ -8,7 +8,8 @@ import LoadingSpinner from '../components/LoadingSpinner.vue'
 export default {
 
 	components: {
-		ErrorMsg
+		ErrorMsg,
+        LoadingSpinner,
 	},
 
 	// Describing what are the Return variables.
