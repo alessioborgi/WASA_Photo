@@ -34,6 +34,9 @@ export default {
             // HERE WE MUST CHECK WHETHER THE USERNAME LOGGED IS EQUAL TO THE USERNAME OF THE COMMENTER
             // PROBLEM: HERE I HAVE THE FIXEDUSERNAME!!!
             userOwnerCommentFlag: false,
+
+            // Initializing newCommentsListFromComment for handling the new commentsList.
+            newCommentsListFromComment: [],
 		}
 	},
 
@@ -101,13 +104,13 @@ export default {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
                              
-                    // this.photoList = this.removeObjectWithId(this.photoList, this.photoid)
-                    // this.user.numberOfPhotos = this.user.numberOfPhotos - 1
+                    // Re-computing the commentsList.
+                    await this.getComments()
 
                     // Re-addressing the page to the personal profile page of a user.
-                    this.$router.replace({ path: `/users/${this.username}/photo/${this.photoid}` })
-                    this.$emit('refreshNumberCommentsFromComment', this.photo.numberComments - 1);
-                    // this.$emit('refreshComments');
+                    this.$router.push({ path: `/users/${this.username}/photo/${this.photoid}`})
+                    this.$emit('refreshNumberCommentsFromComment', this.numberComments - 1);
+                    this.$emit('refreshCommentsListFromComment', this.newCommentsListFromComment);
 
                 }
 
@@ -118,6 +121,47 @@ export default {
             }
 
             // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
+        // getComments: It returns the list of comments of a determinate photo.
+		async getComments(){
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            // ----- Getting Comments. -----
+            try {
+
+                // Getting the list of Comments from the Back-End.
+                // /users/:username/photos/:photoid/comments/.
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoid}/comments/`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                // Saving the response in the "users" array.
+                this.newCommentsListFromComment = response.data;
+
+                if (this.newCommentsListFromComment.length > 0){
+                    // Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
+                    this.newCommentsListFromComment.sort(function(a,b){
+
+                        return new Date(b.UploadDate) - new Date(a.UploadDate);
+                    })
+                } else {
+                    this.errormsg = "There are no Comments to the Photo yet!";
+                }
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
             this.loading = false;
         },
     },

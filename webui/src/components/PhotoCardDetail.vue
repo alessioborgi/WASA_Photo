@@ -5,7 +5,7 @@ import InfoMsg from './InfoMsg.vue'
 
 export default {
 
-    props: ['photo', 'commentsList', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -32,6 +32,9 @@ export default {
 
             // Initializing also a flag that handles whether we want or not to add up the Comment.
             newCommentBool: false,
+
+            // Initializing the newCommentsList.
+            newCommentsList: [],
 		}
 	},
 
@@ -108,6 +111,7 @@ export default {
             // Re-initializing variables to their default value.
             this.errormsg = "";
             this.loading = true;
+            this.newCommentsList = [],
 
             await this.addCommentAlert()
 
@@ -124,12 +128,11 @@ export default {
                 })
 
                 // Re-computing the commentsList.
-                await this.getComments();
-
+                await this.getComments()
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
                 this.$emit('refreshNumberComments', this.photo.numberComments + 1);
-                this.$emit('refreshCommentsList', this.commentsList);
+                this.$emit('refreshCommentsList', this.newCommentsList);
 
                 } catch (e) {
 
@@ -165,11 +168,11 @@ export default {
                 })
 
                 // Saving the response in the "users" array.
-                this.commentsList = response.data;
+                this.newCommentsList = response.data;
 
-                if (this.commentsList.length > 0){
+                if (this.newCommentsList.length > 0){
                     // Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
-                    this.commentsList.sort(function(a,b){
+                    this.newCommentsList.sort(function(a,b){
 
                         return new Date(b.UploadDate) - new Date(a.UploadDate);
                     })

@@ -342,7 +342,6 @@ export default {
 					<PhotoCardDetail v-if="!loading" 
 						:photo="this.photoData"
 						:style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
-						:commentsList = "this.commentsList"
 						:userOwnerFlag = "!this.userOwnerFlag"
 						@refreshNumberComments = "this.photoData.numberComments = $event"
 						@refreshCommentsList = "this.commentsList = $event"
@@ -375,6 +374,7 @@ export default {
 				:numberComments="this.photoData.numberComments"
 				:usersProfiles="this.usersProfiles"
 				@refreshNumberCommentsFromComment = "this.photoData.numberComments = $event"
+				@refreshCommentsListFromComment = "this.commentsList = $event"
 			></Comment>
 		</div>
 

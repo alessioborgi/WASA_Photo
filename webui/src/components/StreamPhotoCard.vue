@@ -160,8 +160,8 @@ export default {
         async goToViewPhotoDetails() {
 
             // Re-address the user to the right page.
-            // alert(`/users/${userToView}/photo/${this.photo.photoid}`)
             localStorage.setItem('usernameProfileToView', this.photo.username),
+            localStorage.setItem('idPhoto', this.photo.photoid),
             this.$router.push({ path: `/users/${this.photo.username}/photo/${this.photo.photoid}`})
         },
 
