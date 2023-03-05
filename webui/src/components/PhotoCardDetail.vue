@@ -5,7 +5,7 @@ import InfoMsg from './InfoMsg.vue'
 
 export default {
 
-    props: ['photo', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'commentsList', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
         InfoMsg
@@ -123,11 +123,13 @@ export default {
                     }
                 })
 
-                // Setting the uuid (Bearer Token) received as response by the Post action.
+                // Re-computing the commentsList.
+                await this.getComments();
 
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
                 this.$emit('refreshNumberComments', this.photo.numberComments + 1);
+                this.$emit('refreshCommentsList', this.commentsList);
 
                 } catch (e) {
 
@@ -141,6 +143,47 @@ export default {
             }
             
             // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
+        // getComments: It returns the list of comments of a determinate photo.
+		async getComments(){
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            // ----- Getting Comments. -----
+            try {
+
+                // Getting the list of Comments from the Back-End.
+                // /users/:username/photos/:photoid/comments/.
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/comments/`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                // Saving the response in the "users" array.
+                this.commentsList = response.data;
+
+                if (this.commentsList.length > 0){
+                    // Sorting the list of Profiles (newest to oldest) w.r.t. the dateOfCreation.
+                    this.commentsList.sort(function(a,b){
+
+                        return new Date(b.UploadDate) - new Date(a.UploadDate);
+                    })
+                } else {
+                    this.errormsg = "There are no Comments to the Photo yet!";
+                }
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
             this.loading = false;
         },
     },
