@@ -28,6 +28,10 @@ export default {
 
             // Initializing also a flag that handles whether we want or not to add up the Comment.
             newCommentBool: false,
+
+            // Initializing the photoBlob and the photoURL.
+            photoBlob: null,
+            photoUrl: "",
 		}
 	},
 
@@ -172,6 +176,39 @@ export default {
             localStorage.setItem('usernameProfileToView', this.photo.username),
             this.$router.push({ path: `/users/${this.photo.username}`})
         },
+
+        async getPhotoView() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+			try{
+
+				// Retrieving the Stream from the Back-end.
+                // "/users/:username/photos/:photoid/view"
+				let responsePhotoBlob = await this.$axios.get(`/users/${this.photo.username}/photos/${this.photo.photoid/view}`, { c: 'image/jpeg' }, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("BearerToken")
+					}
+				})
+
+				// Saving the list of links in the variable.
+				this.imgBlob = responsePhotoBlob.data;
+
+                // Create an object URL from the Blob object.
+                this.photoUrl = URL.createObjectURL(this.imgBlob);
+
+			} catch (e) {
+
+				// If an error is encountered, display it!
+				this.errormsg = e.toString();
+			}
+
+			// Setting again the Loading flag to false.
+            this.loading = false;
+
+        },
                   
     }
 }
@@ -186,7 +223,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.imgBlob }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>
@@ -200,7 +237,7 @@ export default {
                     <!-- In this other way it does not :( -->
                     <!-- <img src="Users/alessioborgi/Documents/GitHub/WASA_Photo/service/api/photos/u1-photo-0.png" alt="Person" class="card__image"/> -->
                     <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
-                    
+                    <!-- <img :src="this.photoUrl" alt="Person" class="card__image"> -->
                     <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
                     <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
