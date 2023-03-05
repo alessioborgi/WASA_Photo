@@ -139,7 +139,11 @@ export default {
 			{{ this.streamListLinks }}
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
-				<StreamPhotoCard v-if="!loading" v-for="p in streamListLinks" :style="{backgroundColor: this.colorPosts}" style="margin-top:80px;"
+				<StreamPhotoCard 
+					v-if="!loading" 
+					v-for="p in streamListLinks" 
+					:key="p.photoid"
+					:style="{backgroundColor: this.colorPosts}" style="margin-top:80px;"
 					:photo="p"
 					@refreshLike = "p.boolLike = $event"
 					@refreshLikeFill = "p.fillHeart = $event"

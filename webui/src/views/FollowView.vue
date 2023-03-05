@@ -477,14 +477,20 @@ export default {
                 <!-- ------------------------ FOLLOWINGS PART ------------------------  -->                
                 <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles in the followingsList -->
 				
-                <CardProfile v-if="!loading && flagFollow == false" v-for="u in followingsListProfiles" 
+                <CardProfile 
+                    v-if="!loading && flagFollow == false" 
+                    v-for="u in followingsListProfiles" 
+                    :key="u.fixedUsername"
                     :user="u"> 
                 </CardProfile>
                 
                 
                 <!-- ------------------------ FOLLOWERS PART ------------------------  -->                
                 <!-- In alternative, Display a sort of card for each of the User Profiles in the followersList -->
-                <CardProfile v-if="!loading && flagFollow == true" v-for="u in followersListProfiles" 
+                <CardProfile 
+                    v-if="!loading && flagFollow == true" 
+                    v-for="u in followersListProfiles" 
+                    :key="u.fixedUsername"
                     :user="u"> 
                 </CardProfile>
 

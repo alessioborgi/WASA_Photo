@@ -364,8 +364,10 @@ export default {
 		<!-- {{ this.commentsList }} -->
 		<!-- Comments List -->
 		<div class="commentsList">  
-			<Comment v-if="!loading && flagCommentsLikes == false" 
+			<Comment 
+				v-if="!loading && flagCommentsLikes == false" 
 				v-for="c in commentsList" 
+				:key="c.fixedUsername"
 				:style="{backgroundColor: this.colorPosts}" 
 				style="background-color: #c0f3b2 ; margin-top:80px;"
 				:comment="c"
@@ -380,8 +382,10 @@ export default {
 
 		<!-- {{ this.likesList }} -->
 		<div class="likesList">  
-			<Like v-if="!loading && flagCommentsLikes == true" 
+			<Like 
+				v-if="!loading && flagCommentsLikes == true" 
 				v-for="l in likesList" 
+				:key="l.fixedUsername"
 				:style="{backgroundColor: this.colorPosts}" 
 				style="background-color:#f3c3b2 ; margin-top:80px;"
 				:like="l"

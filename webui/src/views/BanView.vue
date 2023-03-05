@@ -301,7 +301,9 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<CardProfile v-if="!loading" v-for="u in bannedListProfiles" 
+				<CardProfile v-if="!loading" 
+                    v-for="u in bannedListProfiles" 
+                    :key="u.fixedUsername"
 				    :user="u"> 
 				</CardProfile>
 			</div>
