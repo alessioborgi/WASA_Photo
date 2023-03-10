@@ -137,7 +137,7 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	log.Println("The photo name is: ", photo_path)
 
 	// Creation of the Path URL.
-	path := fmt.Sprint("./service/api/photos/", photo_path, filepath.Ext(header.Filename))
+	path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
 
 	// Read the new content for the User from the request body.
 	var newUser api.User

@@ -119,7 +119,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	photoName := filename[strings.LastIndex(filename, "/")+1:]
 
 	// Constructing the path that will indicate what photo to delete.
-	path := fmt.Sprint("./service/api/photos/", photoName)
+	path := fmt.Sprint("./tmp/", photoName)
 
 	// Proceed in the photo Deletion also in the Photos.
 	e := os.Remove(path)
