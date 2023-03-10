@@ -1,14 +1,11 @@
 
 <script>
 
-import InfoMsg from './InfoMsg.vue'
-
 export default {
 
     props: ['like', 'userOwnerFlag'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
-        InfoMsg
     },
     
 	// Describing what are the Return variables.
