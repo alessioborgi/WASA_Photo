@@ -1,14 +1,11 @@
 
 <script>
 
-import InfoMsg from '../components/InfoMsg.vue'
-
 export default {
 
     props: ['user', 'userOwnerFlag'],
 
     components: {
-        InfoMsg
     },
     
 	// Describing what are the Return variables.
@@ -25,6 +22,7 @@ export default {
             
             // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
+
 		}
 	},
 
@@ -112,7 +110,7 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ userOwnerFlag }}  -->
+            <b> FIXEDUSERNAME: </b>{{ this.user }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
@@ -120,13 +118,23 @@ export default {
             <div class="imageLabel">
                 <div class="profileImage">
                     <!-- In this way works -->
-                    <!-- <img src="../../u1-photo-0.png" alt="Person" class="card__image"/> -->
-                    
+                    <img src="../../../tmp/u1-photo-0-photo-profile-tmp.jpeg" alt="Person" class="card__image"/>
+                    <!-- <img :src=user.profileImage alt="Person" class="card__image"/> -->
+
+
+
+
                     <!-- In this other way it does not :( -->
                     <!-- <img src="Users/alessioborgi/Documents/GitHub/WASA_Photo/service/api/photos/u1-photo-0.png" alt="Person" class="card__image"/> -->
-                    <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
                     
-                    <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
+                    
+                    
+                    <!-- <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image"> -->
+                    <!-- <img :src= user.photoProfile alt="Person" class="card__image" style="margin-left: 20px;"/> -->
+                    
+                    
+                    
+                    
                     <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
                 <div class="profileLabel">

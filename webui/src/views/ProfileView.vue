@@ -70,7 +70,7 @@ export default {
 				
 				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.userProfile = responseProfile.data;
-				this.userProfile.photoProfile = "../../../service/api/photos/u1-photo-1.jpg";
+				this.userProfile.photoProfile = "../../../tmp/u1-photo-0-photo-profile.jpg";
 
 			} catch (e) {
 
@@ -138,7 +138,9 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<MyProfileCard v-if="!loading" :user=this.userProfile 
+				<MyProfileCard 
+					v-if="!loading" 
+					:user=this.userProfile 
 					:style="{backgroundColor: this.colorBackground}" 
 					:userOwnerFlag = "this.userOwnerFlag"
 				></MyProfileCard>
