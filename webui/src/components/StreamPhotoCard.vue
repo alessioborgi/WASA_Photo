@@ -223,7 +223,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.photo.filename }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo.filename }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>

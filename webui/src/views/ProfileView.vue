@@ -164,7 +164,7 @@ export default {
 					v-if="!loading" 
 					v-for="p in photoListLinks" 
 					:key="p.photoid"
-					:style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
+					style="background-color:papayawhip; margin-top:80px;"
 					:photo="p"
 					:userOwnerFlag = "!this.userOwnerFlag"
 					:usernameLogged = "this.usernameLogged"

@@ -141,7 +141,7 @@ export default {
 					v-if="!loading" 
 					v-for="p in streamListLinks" 
 					:key="p.photoid"
-					:style="{backgroundColor: this.colorPosts}" style="margin-top:80px;"
+					style="background-color:papayawhip; margin-top:80px;"
 					:photo="p"
 					@refreshLike = "p.boolLike = $event"
 					@refreshLikeFill = "p.fillHeart = $event"
