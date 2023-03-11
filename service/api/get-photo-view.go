@@ -116,7 +116,7 @@ func (rt *_router) getPhotoView(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// If we arrive here, it means that we have no errors, and we can proceed to correctly return the photo.
-	log.Println("We can correctly return the Photo.")
+	log.Println("We can correctly return the Photo: ", photo.Filename)
 
 	// Open the image from the link.
 	img, err := os.Open(photo.Filename)
@@ -131,10 +131,10 @@ func (rt *_router) getPhotoView(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	defer img.Close()
-	// Send the image from the
+
+	// Send the image to the site by setting the header as Blob.
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "image/jpeg")
-	// io.Copy(w, img)
+	w.Header().Set("Content-Type", "blob")
 
 	_, errCopy := io.Copy(w, img)
 	if !errors.Is(errCopy, nil) {
