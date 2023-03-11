@@ -157,7 +157,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Finally, we can call the function that updates the UserProfile.
-	err = rt.db.SetUser(username.Name, newProfileJson.ToDatabase(), authorization_token)
+	_, err = rt.db.SetUser(username.Name, newProfileJson.ToDatabase(), authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.

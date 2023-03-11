@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
+func (db *appdbimpl) SetUser(username string, user User, uuid string) (string, error) {
 
 	// Selection of the User profile.
 	// Here, you have 4 options, stored in the "authorization" variable:
@@ -21,7 +21,7 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 	// Check whether the Username I am trying to update with the newUsername, does not exists.
 	if !errors.Is(errFixedUsername, nil) {
 		log.Println("Err: Error!")
-		return ErrBadRequest
+		return "", ErrBadRequest
 	}
 
 	// Let's now check whether the Username we want to insert is already present in the WASAPhoto Platform.
@@ -32,13 +32,13 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 	// if user_presence != "" && user_presence != NOTEXISTS {
 	if user_presence != "" && user_presence != NOTEXISTS && username != user.Username {
 		log.Println("Err: The newUsername is already a WASAPhoto Username. Error!")
-		return ErrBadRequest
+		return "", ErrBadRequest
 	}
 
 	// Check if strange errors occurs.
 	if !errors.Is(errUsername, nil) && !errors.Is(errUsername, ErrUserDoesNotExist) {
 		log.Println("Err: Strange error during the Check of User Presence")
-		return errUsername
+		return "", errUsername
 	}
 
 	// Set the fixedUsername of the new user.
@@ -51,7 +51,7 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 	if !errors.Is(errAuth, nil) {
 
 		// Check whether we have received some errors during the Authentication.
-		return errAuth
+		return "", errAuth
 	}
 
 	// We can now go checking whether you are authorized or not(i.e., whether you are the owner of the profile or not).
@@ -60,6 +60,23 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 		// If the uuid is requesting the action is the actual User Owner.
 		log.Println("The User is Authorized to change its own Profile Information.")
 
+		// The first thing to do is the following: get the user.photoProfile.
+		var oldPhotoPath string
+		err := db.c.QueryRow(`SELECT photoProfile
+							FROM Users
+							WHERE username == ?`, username).Scan(&oldPhotoPath)
+
+		// Check for the error during the Query.
+		if err != nil {
+
+			// If we have encountered some errors in the Query retrieval.
+			log.Println("Err: Unexpected Error! During the Query Retrieval!")
+			return "", err
+		}
+
+		// Otherwise we have retrieved the User Profile Correctly
+		log.Println("User Profile retrieved correctly!")
+
 		// Perform the Update of the User.
 		_, errUpdate := db.c.Exec(`UPDATE Users SET username=?, photoProfile=?, biography=?, name=?, surname=?, dateOfBirth=?, email=?, nationality=?, gender=? WHERE fixedUsername=?`,
 			user.Username, user.PhotoProfile, user.Biography, user.Name, user.Surname, user.DateOfBirth, user.Email, user.Nationality, user.Gender, fixedUsername)
@@ -67,10 +84,10 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 		// Check if some strage error occurred during the update.
 		if !errors.Is(errUpdate, nil) {
 			log.Println("Err: Error during Update.")
-			return errUpdate
+			return "", errUpdate
 		}
 
-		return nil
+		return oldPhotoPath, nil
 	}
 
 	// We can now see what to do if the Uuid that is requesting the action is not the User Owner.
@@ -78,17 +95,17 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) error {
 
 		// If the User was not "Authorized", i.e. it is not the Profile Owner, it must not be able to do this operation.
 		log.Println("Err: The Uuid you are providing is not Authorized to do this action.")
-		return ErrUserNotAuthorized
+		return "", ErrUserNotAuthorized
 	}
 
 	// Check if we have a NOTVALID auth, i.e., the Uuid is not present in the DB.
 	if authorization == NOTVALID {
 
 		log.Println("Err: The Uuid you are providing is not present.")
-		return ErrUserNotAuthorized
+		return "", ErrUserNotAuthorized
 	}
 
 	// If we arrive here, we encountered other types of problem.
 	log.Println("Err: Unexpected Error.")
-	return errAuth
+	return "", errAuth
 }

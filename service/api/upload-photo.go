@@ -138,12 +138,24 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// Getting the Photo Phrase from the MultipartFormData.
 	phrase := r.FormValue("phrase")
 
+	// START OF THE NEW PART.
 	// If I arrive here is all Ok. I can proceed to build up the path.
-	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
+	// Save the photo in the images folder.
+	imageDir := "/tmp"
+	folderName := "images"
+
+	photo_path := fmt.Sprintf("%s%s", fixedUsername+"-photo-"+fmt.Sprint(photoid), filepath.Ext(header.Filename))
 	log.Println("The photo name is: ", photo_path)
 
+	path := filepath.Join(imageDir, folderName, photo_path)
+
+	// END OF THE NEW PART.
+
+	// photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
+	// log.Println("The photo name is: ", photo_path)
+
 	// Creatio of the Path URL.
-	path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
+	// path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
 
 	// Creation of a Photo and values assignment.
 	var newPhoto api.Photo

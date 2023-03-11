@@ -133,11 +133,19 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	// If I arrive here is all Ok. I can proceed to build up the path.
-	photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
+	// photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
+	// log.Println("The photo name is: ", photo_path)
+
+	// // Creation of the Path URL.
+	// path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
+
+	imageDir := "/tmp"
+	folderName := "images"
+
+	photo_path := fmt.Sprintf("%s%s", fixedUsername+"-photo-"+fmt.Sprint(photoid), filepath.Ext(header.Filename))
 	log.Println("The photo name is: ", photo_path)
 
-	// Creation of the Path URL.
-	path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
+	path := filepath.Join(imageDir, folderName, photo_path)
 
 	// Read the new content for the User from the request body.
 	var newUser api.User
@@ -166,7 +174,7 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// We can therefore proceed in the User Update.
 	// Call the DB action and wait for its response.
-	err := rt.db.SetUser(username.Name, newUser.ToDatabase(), authorization_token)
+	filename, err := rt.db.SetUser(username.Name, newUser.ToDatabase(), authorization_token)
 	if errors.Is(err, database.ErrUserDoesNotExist) {
 
 		// In this case, we have that the Username that was requested to be updated, is not in the WASAPhoto Platform.
@@ -196,7 +204,23 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here, it means that the Username, has been correctly updated.
 
-	// I can therefore also save the PhotoProfile in local.
+	// I need now to take the old photo and delete it from the folder.
+	// Getting the photoName of the old photoProfile from the filename gived back from the DB.
+	log.Println("The PhotoProfile to be deleted is: ", filename)
+
+	if filename != "/tmp/images/No-Picture-Available.png" && filename != "" {
+
+		// Proceed in the photo Deletion in the folder.
+		e := os.Remove(filename)
+		if !errors.Is(e, nil) {
+
+			ctx.Logger.WithError(err).WithField("Photo", photoid).Error("Err: Can't delete photoId of Username from the Folder!")
+		}
+		log.Println("Photo Correctly Deleted from the Photos Folder!")
+
+	}
+
+	// I can therefore save the PhotoProfile in local tmp folder.
 	// Saving the photo in the Folder.
 	f, errPathCreation := os.Create(path)
 

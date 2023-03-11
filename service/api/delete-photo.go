@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -116,13 +115,10 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// We can also proceed to elimnate it from the folder photos.
 
 	// Getting the photoName from the filename gived back from the DB.
-	photoName := filename[strings.LastIndex(filename, "/")+1:]
-
-	// Constructing the path that will indicate what photo to delete.
-	path := fmt.Sprint("./tmp/", photoName)
+	log.Println("The Photo to be deleted is: ", filename)
 
 	// Proceed in the photo Deletion also in the Photos.
-	e := os.Remove(path)
+	e := os.Remove(filename)
 	if !errors.Is(e, nil) {
 
 		ctx.Logger.WithError(err).WithField("Photo", photoid).Error("Err: Can't delete photoId of Username from the Folder!")

@@ -69,7 +69,7 @@ type AppDatabase interface {
 	// PARTICULAR USER:
 	// (Security Required: Needs Uuid of the action requester).
 	// SetUser(), given the fixedUsername in input together with a newUsername, updates the User's Username.
-	SetUser(username string, user User, uuid string) error
+	SetUser(username string, user User, uuid string) (string, error)
 
 	// USER's PHOTO COLLECTION:
 	// (Security Required: Needs Uuid of the action requester).
