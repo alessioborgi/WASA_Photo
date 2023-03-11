@@ -349,6 +349,7 @@ export default {
 					:key="u.fixedUsername"
 				    :user="u" 
 					@refreshFollowing = "u.boolFollowing = $event"
+					@refreshNumberFollowing = "u.numberFollowing = $event"
 					@refreshBan = "u.boolBanned = $event"
 				></CardProfile>
 			</div>
