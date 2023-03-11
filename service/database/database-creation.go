@@ -213,14 +213,14 @@ var (
 )
 
 // Things to Remove DB
-// const (
-// 	delete_users    = `DROP TABLE Users;`
-// 	delete_bans     = `DROP TABLE Bans;`
-// 	delete_follows  = `DROP TABLE Follows;`
-// 	delete_photos   = `DROP TABLE Photos;`
-// 	delete_comments = `DROP TABLE Comments;`
-// 	delete_likes    = `DROP TABLE Likes;`
-// 	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
-// )
+const (
+	delete_users    = `DROP TABLE Users;`
+	delete_bans     = `DROP TABLE Bans;`
+	delete_follows  = `DROP TABLE Follows;`
+	delete_photos   = `DROP TABLE Photos;`
+	delete_comments = `DROP TABLE Comments;`
+	delete_likes    = `DROP TABLE Likes;`
+	delete_alessio  = `DELETE FROM Users WHERE fixedUsername=alessio01`
+)
 
-// var delete_tables = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
+var delete_tables = []string{delete_users, delete_bans, delete_follows, delete_photos, delete_comments, delete_likes}
