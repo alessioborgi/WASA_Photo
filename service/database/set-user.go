@@ -28,9 +28,16 @@ func (db *appdbimpl) SetUser(username string, user User, uuid string) (string, e
 	user_presence, errUsername := db.CheckUserPresence(user.Username)
 
 	// Check whether the Username I am trying to update with the newUsername, does not exists.
-	// Note that I check also whether the username inserted is the diverse from the last one.
-	// if user_presence != "" && user_presence != NOTEXISTS {
-	if user_presence != "" && user_presence != NOTEXISTS && username != user.Username {
+	// Here, the user must be first not null, then it must be not a present user, except for the case where it is actually the user owner.
+	// This means that it can change also some profile things, without necessarily changing the username.
+	if user_presence == "" {
+		log.Println("Err: The newUsername is empty. Error!")
+		return "", ErrBadRequest
+	}
+
+	if user_presence != NOTEXISTS && username != user.Username {
+		// If the username is not-existing, we are ok.
+		// We are ok also if the username is existing and it is the actual user owner. This means that the user is changing something and not the username in its profile.
 		log.Println("Err: The newUsername is already a WASAPhoto Username. Error!")
 		return "", ErrBadRequest
 	}
