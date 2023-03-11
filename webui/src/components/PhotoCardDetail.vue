@@ -32,6 +32,9 @@ export default {
 
             // Initializing the newCommentsList.
             newCommentsList: [],
+
+            // Initializing the image as a blob object, and declaring an object URL form it.
+            photoBlobLink: "",
 		}
 	},
 
@@ -186,7 +189,43 @@ export default {
             // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
             this.loading = false;
         },
+
+
+        async getPhotoView() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            try {
+                
+                // Getting the image view from the Back-End.
+                // /users/:username/photos/:photoid/view
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/view`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    },
+
+                    responseType: 'blob'
+                })
+
+                var photoBlob = response.data;
+                this.photoBlobLink = URL.createObjectURL(photoBlob);
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+            this.loading = false;
+        },
     },
+
+    mounted() {
+		this.getPhotoView()
+	}
 
 }
 
@@ -200,7 +239,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.photo.filename }} 
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo.filename }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
@@ -210,7 +249,7 @@ export default {
                 <div class="profileImage">
                     <!-- In this way works -->
                     <!-- <img src="../../../tmp/u1-photo-0-photo-profile.jpg" alt="Person" class="card__image"/> -->
-                    <img :src=this.photo.filename class="card__image" />
+                    <img :src=this.photoBlobLink class="card__image" />
                 </div>      
             </div>
             <div class="rightUpperPart">

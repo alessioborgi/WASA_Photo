@@ -29,6 +29,9 @@ export default {
             // Initializing the photoBlob and the photoURL.
             photoBlob: null,
             photoUrl: "",
+
+            // Initializing the image as a blob object, and declaring an object URL form it.
+            photoBlobLink: "",
 		}
 	},
 
@@ -206,7 +209,41 @@ export default {
             this.loading = false;
 
         },
-                  
+
+        async getPhotoView() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            try {
+                
+                // Getting the image view from the Back-End.
+                // /users/:username/photos/:photoid/view
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/view`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    },
+
+                    responseType: 'blob'
+                })
+
+                var photoBlob = response.data;
+                this.photoBlobLink = URL.createObjectURL(photoBlob);
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+            this.loading = false;
+        },
+    },
+
+    mounted() {
+        this.getPhotoView()          
     }
 }
 
@@ -229,14 +266,8 @@ export default {
             <div class="imageLabel">
                 <div class="profileImage">
                     <!-- In this way works -->
-                    <!-- <img src="../../u1-photo-0.png" alt="Person" class="card__image"/> -->
+                    <img :src=this.photoBlobLink alt="Person" class="card__image">
                     
-                    <!-- In this other way it does not :( -->
-                    <!-- <img src="Users/alessioborgi/Documents/GitHub/WASA_Photo/service/api/photos/u1-photo-0.png" alt="Person" class="card__image"/> -->
-                    <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
-                    <!-- <img :src="this.photoUrl" alt="Person" class="card__image"> -->
-                    <!-- <img :src= user.photoProfile alt="Person" class="card__image"/> -->
-                    <!-- <img src="http://localhost/WASA_Photo/service/api/photos" alt="Person" class="card__image"> -->
                 </div>
                           
             </div>

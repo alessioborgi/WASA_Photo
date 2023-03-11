@@ -24,7 +24,10 @@ export default {
             deleteProfileBool: false,
 
             // Initializing the photoIdView that will be the photoProfile photoID.
+            photoIdView: 0,
 
+            // Initializing the image as a blob object, and declaring an object URL form it.
+            photoBlobLink: "",
 		}
 	},
 
@@ -86,43 +89,31 @@ export default {
 			this.errormsg = "";
 			this.loading = true;
 
-			// try {
+            try {
+                // First, retrieve the id of the photo from the profileImage url.
+                this.photoIdView = (this.userProfile.photoProfile.split('-')[2]).split('.')[0]
 
-            //     // Getting first the PhotoID from the link.
-            //     let photoidView = 
-			// 	// Getting the image view from the Back-End.
-            //     // /users/:username/photos/:photoid/view
-			// 	let response = await this.$axios.get(`/users/${this.username}/photos/${this.user.photoProfile}`, {
-			// 		headers: {
-			// 			Authorization: "Bearer " + localStorage.getItem("BearerToken")
-			// 		}
-			// 	})
+                // Getting the image view from the Back-End.
+                // /users/:username/photos/:photoid/view
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoIdView}/view`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    },
 
-			// 	// Saving the response in the "bannedList" array.
-			// 	this.bannedList = response.data;
+                    responseType: 'blob'
+                })
 
-			// } catch (e) {
+                var photoBlob = response.data;
+                this.photoBlobLink = URL.createObjectURL(photoBlob);
 
-			// 	// If an error is encountered, display it!
-			// 	this.errormsg = e.toString();
-			// }
+            } catch (e) {
 
-			// // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
-			// this.loading = false;
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+			}
 
-
-
-
-            // try {
-            //     let response = await this.$axios.get("/images/?image_name=" + this.pic, { responseType: 'blob' })
-            //     // Get the image data as a Blob object
-            //     var imgBlob = response.data;
-            //     // Create an object URL from the Blob object
-            //     this.sp = URL.createObjectURL(imgBlob);
-            // } catch (e) {
-            //     this.errormsg = e.response.data.error.toString();
-            // }
-            // this.loading = false;
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+            this.loading = false;
         },
 
 
@@ -146,6 +137,14 @@ export default {
                             
     },
 
+    mounted() {
+
+        // Getting first the photo, provided that it is not the Default Photo (i.e., there is no photo!).
+        if (this.user.profileImage != "" ){
+		    this.getPhotoView()
+        }
+	}
+
 }
 
      
@@ -158,7 +157,10 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }} 
+            <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }}
+            <b> FIXEDUSERNAME: </b>{{ this.photoIdView }} 
+            <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }} 
+            
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
         </div>
@@ -167,7 +169,7 @@ export default {
                 <div class="profileImage">
                     <!-- In this way works -->
                     <!-- <img src="../../../../tmp/u1-photo-0-photo-profile.jpg" alt="Person" class="card__image"/> -->
-                    <img :src=this.user.photoProfile class="card__image" />
+                    <img :src=this.photoBlobLink class="card__image" />
                 </div>
                 <div class="profileLabel">
                     <p class="card__name" > <b>{{ user.username }}</b></p>
