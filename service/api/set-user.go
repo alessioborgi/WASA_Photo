@@ -208,7 +208,8 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	// Getting the photoName of the old photoProfile from the filename gived back from the DB.
 	log.Println("The PhotoProfile to be deleted is: ", filename)
 
-	if filename != "/tmp/images/No-Picture-Available.png" && filename != "" {
+	// Check whether the photoProfile that we are going to delete is the diverse from the actual "NoPhoto" we find when we create a new Profile.
+	if filename != "" {
 
 		// Proceed in the photo Deletion in the folder.
 		e := os.Remove(filename)
