@@ -206,22 +206,22 @@ func New(db *sql.DB) (AppDatabase, error) {
 	}
 
 	// Used to Turn On the foreign Key Mechanism.
-	// _, err1 := db.Exec(turn_on_fk)
-	// if !errors.Is(err1, nil) {
-	// 	log.Println("Error Encountered during the FK Turning on")
-	// } else {
-	// 	log.Println("FK correctly Turned On.")
-	// }
+	_, err1 := db.Exec(turn_on_fk)
+	if !errors.Is(err1, nil) {
+		log.Println("Error Encountered during the FK Turning on")
+	} else {
+		log.Println("FK correctly Turned On.")
+	}
 
 	// This code is only used during development if we do some change on the database schema.
-	for i := 0; i < len(delete_tables); i++ {
-		_, err := db.Exec(delete_tables[i])
-		if !errors.Is(err, nil) {
-			log.Println("Error Encountered during the Table Deletion", i)
-		} else {
-			log.Println("Table", i, "deleted correctly.")
-		}
-	}
+	// for i := 0; i < len(delete_tables); i++ {
+	// 	_, err := db.Exec(delete_tables[i])
+	// 	if !errors.Is(err, nil) {
+	// 		log.Println("Error Encountered during the Table Deletion", i)
+	// 	} else {
+	// 		log.Println("Table", i, "deleted correctly.")
+	// 	}
+	// }
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
