@@ -23,6 +23,8 @@ export default {
             // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
 
+            // Initializing the photoIdView that will be the photoProfile photoID.
+
 		}
 	},
 
@@ -77,6 +79,52 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         },
+
+        async getPhotoView() {
+
+            // Re-initializing variables to their default value.
+			this.errormsg = "";
+			this.loading = true;
+
+			// try {
+
+            //     // Getting first the PhotoID from the link.
+            //     let photoidView = 
+			// 	// Getting the image view from the Back-End.
+            //     // /users/:username/photos/:photoid/view
+			// 	let response = await this.$axios.get(`/users/${this.username}/photos/${this.user.photoProfile}`, {
+			// 		headers: {
+			// 			Authorization: "Bearer " + localStorage.getItem("BearerToken")
+			// 		}
+			// 	})
+
+			// 	// Saving the response in the "bannedList" array.
+			// 	this.bannedList = response.data;
+
+			// } catch (e) {
+
+			// 	// If an error is encountered, display it!
+			// 	this.errormsg = e.toString();
+			// }
+
+			// // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+			// this.loading = false;
+
+
+
+
+            // try {
+            //     let response = await this.$axios.get("/images/?image_name=" + this.pic, { responseType: 'blob' })
+            //     // Get the image data as a Blob object
+            //     var imgBlob = response.data;
+            //     // Create an object URL from the Blob object
+            //     this.sp = URL.createObjectURL(imgBlob);
+            // } catch (e) {
+            //     this.errormsg = e.response.data.error.toString();
+            // }
+            // this.loading = false;
+        },
+
 
         async goToSetUsername() {
 

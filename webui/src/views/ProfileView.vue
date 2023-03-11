@@ -70,7 +70,7 @@ export default {
 				
 				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.userProfile = responseProfile.data;
-				this.userProfile.photoProfile = "../../../../tmp/u1-photo-0.jpg";
+				// this.userProfile.photoProfile = "../../../../tmp/u1-photo-0.jpg";
 
 			} catch (e) {
 
