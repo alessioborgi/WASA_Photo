@@ -70,7 +70,7 @@ export default {
 				
 				// Let's add up to the "userProfiles" array the response of the profile. Note that it will be an array with only this element.
 				this.userProfile = responseProfile.data;
-				// this.userProfile.photoProfile = "../../../tmp/u1-photo-0-photo-profile.jpg";
+				this.userProfile.photoProfile = "../../../../tmp/u1-photo-0.jpg";
 
 			} catch (e) {
 
@@ -99,6 +99,13 @@ export default {
 				})
 
 				this.photoListLinks = responsePhotoList.data;
+				
+				// Modify the link to the Image.
+				for (let i = 0; i < this.photoListLinks.length; i++) {
+
+					this.photoListLinks[i].filename = "../../." + this.photoListLinks[i].filename
+				}
+				
 
 			} catch (e) {
 
@@ -110,6 +117,11 @@ export default {
             this.loading = false;
 		},
 
+		// getPhotoLinks Function: It retrieves the whole photolist(os links) of the username.
+	// 	async changePhotoLink(p) {
+
+	// 		let newLink = "../../." + p.
+	// 		let newPhoto = 
 	},
 	mounted() {
 		this.getUserProfile()
@@ -172,6 +184,7 @@ export default {
 					@refreshNumberPhotos = "this.userProfile.numberOfPhotos = $event"
 					@refreshPhotos = "this.photoListLinks = $event"
 				></PhotoCard>
+				<!-- :photo="p" -->
 			</div>
 
 		</div>

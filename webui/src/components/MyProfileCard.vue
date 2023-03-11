@@ -118,7 +118,7 @@ export default {
             <div class="imageLabel">
                 <div class="profileImage">
                     <!-- In this way works -->
-                    <!-- <img src="../../../tmp/u1-photo-0-photo-profile.jpg" alt="Person" class="card__image"/> -->
+                    <!-- <img src="../../../../tmp/u1-photo-0-photo-profile.jpg" alt="Person" class="card__image"/> -->
                     <img :src=this.user.photoProfile class="card__image" />
                 </div>
                 <div class="profileLabel">
