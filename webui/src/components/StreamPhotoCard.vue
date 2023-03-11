@@ -172,42 +172,8 @@ export default {
         async goToProfile() {
 
             // Re-address the user to the right page.
-            // alert(`/users/${userToView}/photo/${this.photo.photoid}`)
             localStorage.setItem('usernameProfileToView', this.photo.username),
             this.$router.push({ path: `/users/${this.photo.username}`})
-        },
-
-        async getPhotoView() {
-
-            // Re-initializing variables to their default value.
-            this.errormsg = "";
-            this.loading = true;
-
-			try{
-
-				// Retrieving the Stream from the Back-end.
-                // "/users/:username/photos/:photoid/view"
-				let responsePhotoBlob = await this.$axios.get(`/users/${this.photo.username}/photos/${this.photo.photoid/view}`, { c: 'image/jpeg' }, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("BearerToken")
-					}
-				})
-
-				// Saving the list of links in the variable.
-				this.imgBlob = responsePhotoBlob.data;
-
-                // Create an object URL from the Blob object.
-                this.photoUrl = URL.createObjectURL(this.imgBlob);
-
-			} catch (e) {
-
-				// If an error is encountered, display it!
-				this.errormsg = e.toString();
-			}
-
-			// Setting again the Loading flag to false.
-            this.loading = false;
-
         },
 
         async getPhotoView() {
@@ -220,7 +186,7 @@ export default {
                 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/view`, {
+                let response = await this.$axios.get(`/users/${this.photo.username}/photos/${this.photo.photoid}/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -257,7 +223,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.imgBlob }} 
+            <b> FIXEDUSERNAME: </b>{{ this.photo.filename }} 
             <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
 
         </div>
