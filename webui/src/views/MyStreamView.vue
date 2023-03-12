@@ -134,7 +134,7 @@ export default {
 			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 			<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-			{{ this.streamListLinks }}
+			<!-- {{ this.streamListLinks }} -->
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
 				<StreamPhotoCard 

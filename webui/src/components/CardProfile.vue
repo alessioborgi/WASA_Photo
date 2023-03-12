@@ -31,6 +31,8 @@ export default {
             iconBanned: this.user.boolBanned == true ? '/feather-sprite-v4.29.0.svg#lock' : '/feather-sprite-v4.29.0.svg#unlock',
             colorIconBanned: this.user.boolBanned == true ? 'red' : 'green',
 
+            // Initializing the image as a blob object, and declaring an object URL form it.
+            photoBlobLink: this.user.photoProfile == "" ? "https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" : this.user.photoProfile
         }
 	},
 
@@ -169,9 +171,42 @@ export default {
             localStorage.setItem('usernameProfileToView', userToView),
             this.$router.push({ path: `/users/${userToView}`})
         },
-    }
 
-    
+        async getPhotoView() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            try {
+                
+                // Getting the image view from the Back-End.
+                // /users/:username/photos/:photoid/view
+                let response = await this.$axios.get(`/users/${this.user.username}/photos/0/view`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    },
+
+                    responseType: 'blob'
+                })
+
+                var photoBlob = response.data;
+                this.photoBlobLink = URL.createObjectURL(photoBlob);
+
+            } catch (e) {
+
+                // If an error is encountered, display it!
+                this.errormsg = e.toString();
+            }
+
+            // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
+            this.loading = false;
+        },
+    },
+
+    mounted() {
+        this.getPhotoView()
+    }  
 }    
 </script>
     
@@ -193,7 +228,7 @@ export default {
             <div class="upperPart"> 
                 <div class="imageLabel">
                     <div class="profileImage">
-                        <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
+                        <img :src=this.photoBlobLink alt="Person" class="card__image">
                     </div>
                     <div class="profileLabel">
                         <p class="card__name" > <b>{{ user.username }}</b></p>
