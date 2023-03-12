@@ -150,6 +150,19 @@ export default {
 							</RouterLink>
 						</li>
 					</ul>
+
+					<h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-5 mb-1 text-muted text-uppercase">
+						<span>FUTURE OF WORK</span>
+					</h5>
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<RouterLink :to="'/users/'+username+'/futureWork/'" class="nav-link">
+								<!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#briefcase"/></svg> -->
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#coffee"/></svg>
+								Works
+							</RouterLink>
+						</li>
+					</ul>
 				</div>
 			</nav>
 

@@ -10,6 +10,8 @@ import NewPhotoView from '../views/NewPhotoView.vue'
 import PhotoDetailsView from '../views/PhotoDetailsView.vue'
 import MyStreamView from '../views/MyStreamView.vue'
 import AnalyticsView from '../views/AnalyticsView.vue'
+import FutureWorkView from '../views/FutureWorkView.vue'
+
 
 
 const router = createRouter({
@@ -26,6 +28,7 @@ const router = createRouter({
 		{path: '/users/:username/photo/:idphoto', component: PhotoDetailsView},
 		{path: '/users/:username/myStream/', component: MyStreamView},
 		{path: '/users/:username/analytics/', component: AnalyticsView},
+		{path: '/users/:username/futureWork/', component: FutureWorkView},
 	]
 })
 
