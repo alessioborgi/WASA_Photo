@@ -93,6 +93,7 @@ const (
 	number_photos = `CREATE TRIGGER number_Photos
 	AFTER INSERT
 	   ON Photos
+	   WHEN NEW.photoid != 0
 	BEGIN
 		UPDATE Users
 			SET numberOfPhotos = numberOfPhotos + 1
@@ -139,6 +140,7 @@ const (
 	number_photos_deletion = `CREATE TRIGGER number_Photos_Deletion
 	AFTER DELETE
 	   ON Photos
+	   WHEN OLD.photoid != 0
 	BEGIN
 		UPDATE Users
 			SET numberOfPhotos = numberOfPhotos - 1
