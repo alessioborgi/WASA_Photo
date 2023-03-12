@@ -133,7 +133,31 @@ export default {
 
             // Re-address the user to the right page.
             this.$router.push({ path: `/users/${this.username}/analytics/`})
-        },                         
+        }, 
+        
+        async goToNewPhoto() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/photo/`})
+        },
+
+        async goToBan() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/ban/`})
+        },
+
+        async goToFollow() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/follow/`})
+        }, 
+
+        async goToSearch() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/search/`})
+        }, 
                             
     },
 
@@ -231,7 +255,49 @@ export default {
                 <b>DateOfCreation</b> {{ user.dateOfCreation }} 
             </div>
 
-            <div class="grid-child-posts"></div>
+            <div class="grid-child-posts" style="margin-left: -365px;">
+                        <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
+                        <nav>
+                            <menu >
+                                <menuitem id="demo1" v-if="!loading && userOwnerFlag === true">
+                                    <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#list"/></svg></a>
+                                    <menu>
+
+                                        <menuitem>
+                                            <!-- <button @click="showAlert"> -->
+                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                    @click="goToNewPhoto">                                                
+                                                    <b>New Photo</b>
+                                            </button>
+                                        </menuitem>
+
+                                        <menuitem>
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="goToBan">
+                                                <b>Ban Dashboard</b>
+                                            </button>
+                                        </menuitem>
+
+                                        <menuitem>
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="goToFollow">
+                                                <b>Follow Dashboard</b>
+                                            </button>
+                                        </menuitem>
+
+                                        <menuitem>
+                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                @click="goToSearch">
+                                                <b>Search User</b>
+                                            </button>
+                                        </menuitem>
+
+                                    </menu>
+                                </menuitem>
+                            
+                            </menu>
+	                    </nav>                  
+            </div>
 
             <div class="grid-child-posts">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->

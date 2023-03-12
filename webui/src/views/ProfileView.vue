@@ -148,7 +148,7 @@ export default {
 			</div>
 
 			<!-- Divider Profile-Photos -->
-			<br><br><br><br><br><br><br><br>
+			<br><br><br><br><br><br><br><br><br><br><br><br>
 			<div class="divider">
 				<span></span><span>Posts</span><span></span>
 			</div>
