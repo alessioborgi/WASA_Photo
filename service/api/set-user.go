@@ -123,7 +123,7 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	// If we arrive here it means it has errFixedUsername=nil.
 
 	// Setting the photo id (that for all the photo Profiles is zero).
-	photoid := 0
+	photoid := "0"
 
 	// Constructing the photo path.
 	imageDir := "/tmp"
@@ -189,8 +189,94 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	// DELETION AND CREATION OF POST:
 	// If we arrive here, it means that the Username, has been correctly updated.
+	// I need now to first delete the post of the old version of the photoProfile and to create a new post.
 
+	// Call the DB action and wait for its response.
+	log.Println("THE FILENAME IS: ", filename)
+	if filename != "" {
+		_, errDeletionPhoto := rt.db.DeletePhoto(username.Name, photoid, authorization_token)
+		if errors.Is(errDeletionPhoto, database.ErrUserDoesNotExist) {
+
+			// In this case, we have that the Username that requested to delete its photo, is not in the WASAPhoto Platform.
+			w.WriteHeader(http.StatusBadRequest)
+			log.Println("Err: The fixedUsername that requested to delete the Photo, is not a WASAPhoto User.")
+			return
+		} else if errors.Is(errDeletionPhoto, database.ErrPhotoDoesNotExist) {
+
+			// In this case, we have that the Photo that was requested to be deleted, is not in the WASAPhoto Platform.
+			w.WriteHeader(http.StatusBadRequest)
+			log.Println("Err: The Photo that requested to be deleted the Photo, is not a WASAPhoto Photo.")
+			return
+		} else if errors.Is(errDeletionPhoto, database.ErrUserNotAuthorized) {
+
+			// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
+			w.WriteHeader(http.StatusUnauthorized)
+			log.Println("Err: The Uuid that requested to delete the Photo, is not the Profile Owner.")
+			return
+		} else if !errors.Is(errDeletionPhoto, nil) {
+
+			// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+			// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+			// the Username of the User that triggered the error.
+			w.WriteHeader(http.StatusInternalServerError)
+			ctx.Logger.WithError(errDeletionPhoto).WithField("Photo", 0).Error("Err: Can't delete photoId of Username!")
+			return
+		}
+	}
+
+	log.Println("The oldPhoto has been correclty deleted.")
+
+	// Let's pass to the Cretion of the photo Profile post again.
+	var newPhoto api.Photo
+	newPhoto.Photoid = 0
+	newPhoto.FixedUsername = fixedUsername
+	newPhoto.Filename = path
+	newPhoto.Phrase = "Photo Profile"
+
+	// Check whether we have that the newPhoto inserted respect its Regex.
+	if !api.ValidPhoto(newPhoto) {
+
+		// If no error occurs, check whether the newPhoto is a Valid Photo.
+		// In this case it is not. Thus reject it.
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The newPhoto received does not respect the Validation Process.")
+		return
+	}
+
+	log.Println("The newPhoto received PASSES the Validation Process.")
+
+	// Transforming it to a DB struct.
+	photodb := newPhoto.ToDatabase(rt.db)
+
+	// We can finally call the Upload of the photo.
+	errUploadPhoto := rt.db.UploadPhoto(username.Name, photodb, authorization_token)
+	if errors.Is(errUploadPhoto, database.ErrUserNotAuthorized) {
+
+		// In this case, we have that the Uuid is not the same as the Profile Owner, thus it cannot proceed.
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("Err: The Uuid that requested to update the Username, is not the Profile Owner.")
+		return
+	} else if errors.Is(errUploadPhoto, database.ErrBadRequest) {
+
+		// In this case we have already a user having the NewUsername as Username
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Err: The newUsername we are trying to insert is already present. ")
+		return
+	} else if !errors.Is(errUploadPhoto, nil) {
+		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user.
+		// Moreover, we add the error and an additional field (`Username`) to the log entry, so that we will receive
+		// the Username of the User that triggered the error.
+		w.WriteHeader(http.StatusInternalServerError)
+		ctx.Logger.WithError(errUploadPhoto).WithField("username", username.Name).Error("User not present in WASAPhoto. Can't update the Username.")
+		return
+	}
+
+	// If we arrive here, it means that the Photo has been correctly updated.
+	log.Println("The Photo has been correctly Updated!")
+
+	// DELETION AND CREATION OF PHOTO IN /tmp FOLDER:
 	// I need now to take the old photo and delete it from the folder.
 	// Getting the photoName of the old photoProfile from the filename gived back from the DB.
 	log.Println("The PhotoProfile to be deleted is: ", filename)

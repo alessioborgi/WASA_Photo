@@ -174,8 +174,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	// If we arrive here, there is no error and the newUser is Valid.
-	log.Println("The NewUser received has passed the Validation Process.")
+	// If we arrive here, there is no error and the newPhoto is Valid.
+	log.Println("The newPhotow received has passed the Validation Process.")
 
 	// Saving the photo in the Folder.
 	f, errPathCreation := os.Create(path)
