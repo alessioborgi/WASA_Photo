@@ -71,7 +71,7 @@ func (db *appdbimpl) GetPhotos(username string, uuid string) ([]Photo, error) {
 		// If the uuid is requesting the action is the actual User Owner, get the list of Photos.
 		photos, err := db.c.Query(`SELECT *
 			FROM Photos
-			WHERE fixedUsername = ?
+			WHERE fixedUsername = ? AND photoid != 0
 			ORDER BY uploadDate DESC`, fixedUsername)
 
 		// Check for the error during the Query.

@@ -124,7 +124,7 @@ export default {
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
                     this.colorIconFollowing = 'red';
                     this.$emit('refreshFollowing', false);
-                    this.$emit('refreshNumberFollowing', this.user.numberFollowing - 1);
+                    this.$emit('refreshNumberFollowers', this.user.numberFollowers - 1);
 
                 } catch (e) {
 
@@ -150,7 +150,7 @@ export default {
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
                     this.colorIconFollowing = 'green';
                     this.$emit('refreshFollowing', true);
-                    this.$emit('refreshNumberFollowing', this.user.numberFollowing + 1);
+                    this.$emit('refreshNumberFollowers', this.user.numberFollowers + 1);
 
                 } catch (e) {
 

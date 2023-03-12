@@ -45,6 +45,7 @@ func (db *appdbimpl) GetMyStream(username string, uuid string) ([]Photo, error) 
 		// If the User is the profile owner, it can get the list of Photos of its Stream.
 		photos, err := db.c.Query(`SELECT p.photoid, p.fixedUsername, p.filename, p.uploadDate, p.phrase, p.numberLikes, p.numberComments
 			FROM Photos as p JOIN (SELECT fixedUsernameFollowing FROM Follows WHERE fixedUsername == ?) as f ON p.fixedUsername = f.fixedUsernameFollowing
+			WHERE p.photoid != 0
 			ORDER BY p.uploadDate DESC`, fixedUsername)
 
 		// Check for the error during the Query.
