@@ -59,7 +59,7 @@ export default {
 					<b> FEEDBACK & ADVICES </b>
 					<br>"It is a very good implementation. If I had to suggest an Improvement to do, I would advise you to put the link to every actions the user can do also directly in the MyProfile page. Sometimes, providing redundancy in your application is not a bad thing, as in this case."
 					<br><br>
-					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
+					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
 				</div>
 			</div>
 
