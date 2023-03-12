@@ -122,23 +122,10 @@ func (rt *_router) setUser(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	// If we arrive here it means it has errFixedUsername=nil.
 
-	// Getting the last photo id.
-	photoid, errPhotoId := rt.db.GetLastPhotoId(username.Name)
-	if !errors.Is(errPhotoId, nil) {
+	// Setting the photo id (that for all the photo Profiles is zero).
+	photoid := 0
 
-		// I got an error on getting the last photoid.
-		w.WriteHeader(http.StatusInternalServerError)
-		ctx.Logger.WithError(errPhotoId).Error("Err: I got an error on getting back the last photoId!")
-		return
-	}
-
-	// If I arrive here is all Ok. I can proceed to build up the path.
-	// photo_path := fixedUsername + "-photo-" + fmt.Sprint(photoid)
-	// log.Println("The photo name is: ", photo_path)
-
-	// // Creation of the Path URL.
-	// path := fmt.Sprint("./tmp/", photo_path, filepath.Ext(header.Filename))
-
+	// Constructing the photo path.
 	imageDir := "/tmp"
 	folderName := "images"
 

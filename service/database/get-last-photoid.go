@@ -25,14 +25,14 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 
 	// If no strange error during the Query occurs, and the User exists, we already have the user registered.
 	// We can proceed to get the last photoId.
-	var photoid_existence int64 = 0
+	var photoid_existence int64 = 1
 
 	errPhotoId := db.c.QueryRow(`SELECT COUNT(photoid) FROM Photos WHERE fixedUsername = ?`, fixedUsername).Scan(&photoid_existence)
 	if errors.Is(errPhotoId, sql.ErrNoRows) || photoid_existence == 0 {
 
 		// If we have no rows, we return that the photoid must be 1
 		log.Println("No photos yet. Inserting First Photo!")
-		return 0, nil
+		return 1, nil
 	} else if !errors.Is(errPhotoId, nil) {
 
 		// If we encounter any other type of error, return error.
@@ -42,7 +42,7 @@ func (db *appdbimpl) GetLastPhotoId(username string) (int64, error) {
 
 		// If we arrive here we have that the photoid has been correclty retrieved. We can therefore return the photoid+1.
 		log.Println("photoid correctly retrieved from the Database.")
-		return photoid_existence, nil
+		return photoid_existence + 1, nil
 	}
 
 }
