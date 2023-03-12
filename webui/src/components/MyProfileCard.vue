@@ -143,6 +143,7 @@ export default {
         if (this.user.profileImage != "" ){
 		    this.getPhotoView()
         }
+
 	}
 
 }

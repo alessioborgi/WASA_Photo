@@ -76,7 +76,6 @@ export default {
                     this.$router.replace({ path: `/users/${this.username}` })
                     this.$emit('refreshNumberPhotos', this.numberOfPhotos - 1);
                     this.$emit('refreshPhotos', this.newPhotoList);
-
                 }
 
             } catch (e) {
