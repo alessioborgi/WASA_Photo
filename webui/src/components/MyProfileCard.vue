@@ -17,7 +17,7 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
             
             // Initializing variable for handling the deletion of the Profile.
@@ -91,11 +91,11 @@ export default {
 
             try {
                 // First, retrieve the id of the photo from the profileImage url.
-                this.photoIdView = (this.userProfile.photoProfile.split('-')[2]).split('.')[0]
+                // this.photoIdView = (this.userProfile.photoProfile.split('-')[2]).split('.')[0]
 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoIdView}/view`, {
+                let response = await this.$axios.get(`/users/${this.username}/photos/0/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -158,9 +158,9 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
-            <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }}
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }}
             <b> FIXEDUSERNAME: </b>{{ this.photoIdView }} 
-            <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }} 
+            <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }}  -->
             
             <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
 
