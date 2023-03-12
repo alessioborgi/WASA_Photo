@@ -52,14 +52,34 @@ export default {
 			</div>
 
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-			<div class="card" id="div1" style=" background-color:peachpuff">
+			<div class="card" id="div1" style=" background-color:lightsalmon">
+				<div class="grid-child-posts3" style=" font-size: 15px; margin-left:20px; margin-top: 30px;">
+					<svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
+					<b> HUMAN COMPUTER INTERACTION FOCUS (FEEDBACKS): </b> <br><br><br> 
+					<br> This section is dedicated to a <b>HCI (Human Computer Interaction)</b> focus. Indeed, I decided to link this project also to some of the concepts I have studied in this other course. <br><br>
+					I decided to go over the Project and to think at it as if it was a startup-project I was launching. For this reason, at the end of the prototyping part, I decided to ask to some <b>Pilots</b>, that in my case were my parents and a couple of friends to describe their experience with the Web App and to give the more feedbacks and advices they can. 
+					<br><br>
+					The Query techniques I have choosen are therefore very informal, but I gathered lots of advices that has helped me out to improve the User experience in the app. Indeed, even if the users tested (Pilots) were people I was very confident with, I decided to not give any input on the app and I asked to them to be the more transparent they could.
+					Of course, this is not a complete collection, but it helped me out to solve some problems I was not aware of. 
+					 
+				</div>
+			</div>
+			
+			<div class="divider">
+				<span></span><span>FEEDBACKS & ADVICES</span><span></span>
+			</div>
+
+			<div class="card" id="div1" style=" background-color:peachpuff; margin-top: 30px;">
 				<div class="grid-child-posts3" style=" font-size: 15px; margin-left:20px; margin-top: 30px;">
 					<svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT andrea71 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
 					<br>"It is a very good implementation. If I had to suggest an Improvement to do, I would advise you to put the link to every actions the user can do also directly in the MyProfile page. Sometimes, providing redundancy in your application is not a bad thing, as in this case."
 					<br><br>
-					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
+					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>   
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>I proceeded in creating a new menu Item containing all the remaining main actions, in such a way that the user can do whatever action from its Profile Page.
 				</div>
 			</div>
 
@@ -71,6 +91,9 @@ export default {
 					<br>"It's very similar to the Instagram App! As further implementation, what about considering the possibility to change the photo's caption? In my case, it happen that I post a photo and that I would like to change also the caption, also because maybe I misspell a word. In your implementation instead, you have to eliminate and reinsert the post."
 					<br><br>
 					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>
 				</div>
 			</div>
 
@@ -82,6 +105,9 @@ export default {
 					<br>"It's very cool! One thing I don't like so much is the color you set by-default depending on the sex. That could be improved by adding up the possibility to change the color to the user, in such a way he/she can put whatever it wants. It would be also a feature Instagram doesn't have, i.e., the customization."
 					<br><br>
 					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>I proceeded to create a "do not specify" option in such a way to also provide the possibility to choice to not define the sex. I put it as default. 
 				</div>
 			</div>
 
@@ -93,6 +119,9 @@ export default {
 					<br>"That's a very good achievement. What I would prefer is the fact that in the Follow Dashboard, if you have asked for the followings list and you decide to unfollow one of them, you get immediately deleted from the list the user. It could happen tha you press the button wrongly, and for re-following the user, you should necessary do the Search of the user again and press the following button again. The same if for the Ban Dashboard."
 					<br><br>
 					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>I proceeded in eliminating the immediate elimination of the user card from the ban and the follow dashboard. This was a thing I was not considering and, now, we can eliminate from the list only if we reload the List.
 				</div>
 			</div>
 
@@ -104,6 +133,9 @@ export default {
 					<br>"Very good! One thing I would change is the fact that when you have to update the profile, I may want to not change necessarily also the username. Therefore, eliminate this constraint! "
 					<br><br>
 					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>I proceeded in eliminating this constraint. I relised this only when I arrived at the front-end part. This was a dumb constraint because in most of the cases we may want to change only other things and also because if we wanted to chang the username, we go for the setUsername change.
 				</div>
 			</div>
 
@@ -115,17 +147,22 @@ export default {
 					<br>"That's impressive. Couldn't you add up a page where you explain how to do the things? For example, for every type of action, try to put a set of steps that you have to follow, in such a way to achieve the task. This would help also people like me that are less technological :) "
 					<br><br>
 					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b> 
 				</div>
 			</div>
 
 			<div class="card" id="div1" style=" background-color:peachpuff; margin-top: 31px;">
 				<div class="grid-child-posts3" style=" font-size: 15px; margin-left:20px; margin-top: 30px;">
 					<svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
-					<b> PILOT chicca78 </b> <br><br><br> 
+					<b> PILOT federico01 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"Very good! One thing I would change is the fact that when you have to update the profile, I may want to not change necessarily also the username. Therefore, eliminate this constraint! "
+					<br>"Very good! One thing I would change is the fact that the change of the user Profile information and the Photo Profile could be separate. I don't know whether is is difficult, but I would do it in two different pages. "
 					<br><br>
-					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
+					<svg class="feather" v-if="!loading" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
+					<br><br>
+					<b> ACTIONS & CHANGES AFTER THIS FEEDBACK </b>
+					<br>
 				</div>
 			</div>
 			
@@ -155,7 +192,7 @@ export default {
 	/* background-color: yellow; */
 	margin-top: 300px;
 	margin-bottom: 20px;
-	height: 23rem;
+	height: 31rem;
 	width: auto;
 	border-radius: 5px;
 	align-items: center;

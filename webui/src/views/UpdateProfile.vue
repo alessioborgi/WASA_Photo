@@ -481,19 +481,6 @@ export default {
                         </div>
                     </div>
 
-
-                    <!-- Image Change -->
-                    <!-- <br> -->
-                    <!-- <div class="form-group">
-                        <label class="col-md-4 control-label"><h3><b>Photo Profile</b></h3></label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="form-group"> -->
-                                <!-- The @change will call the function and it will triggered whenever we select a new file -->
-                                <!-- <input type="file" @change="onFileUpload">
-                            </div>
-                        </div>
-                    </div> -->
-
                     <!-- Image Change -->
                     <br>
                     <div class="form-group">
