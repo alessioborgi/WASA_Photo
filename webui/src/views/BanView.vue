@@ -66,7 +66,17 @@ export default {
 			} catch (e) {
 
 				// If an error is encountered, display it!
-				this.errormsg = e.toString();
+				if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the list of followings of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
 			}
 
             // ----- Getting Followers. -----
@@ -85,7 +95,17 @@ export default {
             } catch (e) {
 
                 // If an error is encountered, display it!
-                this.errormsg = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the list of followers of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
             }
 
             // ----- Getting Bans. -----
@@ -104,7 +124,17 @@ export default {
             } catch (e) {
 
                 // If an error is encountered, display it!
-                this.errormsg = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the list of bans of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
             }
 
             // ----- -----
@@ -141,7 +171,17 @@ export default {
             } catch (e) {
 
                 // If an error is encountered, display it!
-                this.errormsg = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the user profile of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
             }
 
             // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
@@ -177,7 +217,17 @@ export default {
 			} catch (e) {
 
 				// If an error is encountered, display it!
-				this.errormsg = e.toString();
+				if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the list of bans of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
 			}
 
 			// Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
@@ -242,6 +292,14 @@ export default {
                     // Let's handle the cases when the Error Occurs.
                     if (e.response && e.response.status === 400) {
                         this.errormsg = e.response.statusText + " You Have either typed a Username that is not respecting the Regex or the User is not Present in WASAPhoto! \n The typed USERNAME is: " + this.usernameToSearch;
+                    } else if (e.response && e.response.status === 403) {
+                        this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                    } else if (e.response && e.response.status === 204) {
+                        this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                    } else if (e.response && e.response.status === 500) {
+                        this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                    } else {
+                        this.errormsg = e.toString();
                     }
             }
 

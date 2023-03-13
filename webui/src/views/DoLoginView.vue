@@ -56,7 +56,14 @@ export default {
             } catch (e) {
 
                 // In case of error, retrieve it.
-                this.errormessage = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Form error, please check all fields and try again. If you think that this is an error, write an e-mail to us. This may be due to an incorrect insertion. Be sure to resepct the rules!" + e.toString();
+				} else if (e.response && e.response.status === 500) {
+					this.errormsg = "An Internal Error occurred. We are sorry for the inconvenient. Please try again later." + + e.toString();
+				} else {
+					this.errormsg = e.toString();
+				}
+
             }
 
             // Setting again the Loading flag to false.

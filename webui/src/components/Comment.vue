@@ -113,8 +113,19 @@ export default {
 
             } catch (e) {
 
-                // In case of error, retrieve it.
-                this.errormessage = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to uncomment a valid photo." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
+
+
             }
 
             // Setting again the Loading flag to false.
@@ -154,8 +165,17 @@ export default {
 
             } catch (e) {
 
-                // If an error is encountered, display it!
-                this.errormsg = e.toString();
+                if (e.response && e.response.status === 400) {
+					this.errormsg = "Request error, please Login before doing some action or ask to get the comments of a valid photo." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = e.toString();
+                }
             }
 
             // Once the entire operation has finished, re-set the "loading" flag to false, in such a way to continue.
