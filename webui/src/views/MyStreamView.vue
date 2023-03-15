@@ -28,7 +28,6 @@ export default {
 
 			// Initializing a list that will handle the links to the photos.
 			streamListLinks: [],
-			// responseLikeList: [],
 		}
 	},
 

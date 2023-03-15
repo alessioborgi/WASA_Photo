@@ -3,6 +3,7 @@
 
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
+import CardProfile from '../components/CardProfile.vue'
 
 // Declaration of the export set.
 export default {
@@ -10,6 +11,7 @@ export default {
 	components: {
 		ErrorMsg,
         LoadingSpinner,
+        CardProfile,
 	},
 
 	// Describing what are the Return variables.
