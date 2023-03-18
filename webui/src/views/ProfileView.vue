@@ -1,6 +1,5 @@
 <!-- Starting of the actual Search Page Handling. -->
 <script>
-
 import ErrorMsg from '../components/ErrorMsg.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import MyProfileCard from '../components/MyProfileCard.vue'
@@ -177,7 +176,7 @@ export default {
 			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 			<LoadingSpinner v-if="loading"></LoadingSpinner>
 
-			<!-- {{ this.photoListLinks }} -->
+			<!-- {{ this.userProfile }} -->
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
 			<div class="photoList"> 
 				<PhotoCard 
@@ -188,9 +187,9 @@ export default {
 					:photo="p"
 					:userOwnerFlag = "!this.userOwnerFlag"
 					:usernameLogged = "this.usernameLogged"
-					:numberOfPhotos = "this.userProfile.numberOfPhotos"
+					:userProfile = "this.userProfile"
 					:photoListCurrent = "this.photoListLinks"
-					@refreshNumberPhotos = "this.userProfile.numberOfPhotos = $event"
+					@refreshProfile = "this.userProfile = $event"
 					@refreshPhotos = "this.photoListLinks = $event"
 				></PhotoCard>
 				<!-- :photo="p" -->

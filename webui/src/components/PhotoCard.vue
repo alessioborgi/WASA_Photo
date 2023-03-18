@@ -1,9 +1,11 @@
 
 <script>
 
+import { eventBus } from "@/main.js"
+
 export default {
 
-    props: ['photo', 'userOwnerFlag', 'numberOfPhotos', 'photoListCurrent'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
+    props: ['photo', 'userOwnerFlag', 'userProfile', 'photoListCurrent'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}
 
     components: {
     },
@@ -73,8 +75,11 @@ export default {
                     this.newPhotoList = await this.removeObjectWithId(this.photoListCurrent, this.photo.photoid);
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
-                    this.$emit('refreshNumberPhotos', this.numberOfPhotos - 1);
+                    this.userProfile.numberOfPhotos = this.userProfile.numberOfPhotos - 1
+                    this.$emit('refreshProfile', this.userProfile);
                     this.$emit('refreshPhotos', this.newPhotoList);
+                    // eventBus.$emit("refreshNumberPhotos", this.numberOfPhotos - 1);
+
                 }
 
             } catch (e) {
@@ -320,12 +325,6 @@ export default {
     font-size: 9px;
 }
 
-
-.buttonsFollowBan{
-	float: left;
-  	width: 50%;
-}
-
 .feather {
 	color: #ff0000;
 }
@@ -350,30 +349,12 @@ export default {
 
 }
 
-.card__name {
-  align-items: center;
-  margin-right: auto;
-  margin-top: 15px;
-  text-align: center;
-  font-size: 1.25em;
-}
-
 .card__image {
   height: 350px;
   width: 350px;
   margin-top: 40px;
   border: 5px solid #272133;
   margin-left: -150px;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 20px;
-  font-size: 1.2em;
-  margin-left: 50px;
-  /* background-color: red; */
-  font-size: 15px;
 }
 
 .grid-container2 {

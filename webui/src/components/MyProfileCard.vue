@@ -202,6 +202,7 @@ export default {
     <div class="card" id="div1">
 
         <div class="usernameLabel">
+            <!-- {{ this.user }} -->
             <!-- <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }}
             <b> FIXEDUSERNAME: </b>{{ this.photoIdView }} 
             <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }}  -->
