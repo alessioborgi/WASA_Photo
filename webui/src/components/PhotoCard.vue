@@ -1,8 +1,6 @@
 
 <script>
 
-import { eventBus } from "@/main.js"
-
 export default {
 
     props: ['photo', 'userOwnerFlag', 'userProfile', 'photoListCurrent'],   //{ "photoid", "fixedUsername", "username", "filename", "uploadDate", "phrase", "numberLikes", "numberComments"}

@@ -24,8 +24,6 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios;
 
 app.component("ErrorMsg", ErrorMsg);
-
-
 app.component("LoadingSpinner", LoadingSpinner);
 app.component("CardProfile", CardProfile);
 app.component("MyProfileCard", MyProfileCard);
