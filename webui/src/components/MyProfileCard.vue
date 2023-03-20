@@ -286,28 +286,28 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                     @click="goToNewPhoto">                                                
                                                     <b>New Photo</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="goToBan">
                                                 <b>Ban Dashboard</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="goToFollow">
                                                 <b>Follow Dashboard</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="goToSearch">
                                                 <b>Search User</b>
                                             </button>
@@ -330,27 +330,27 @@ export default {
 
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
-                                                <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                                <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                     @click="goToSetUsername">                                                <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="goToUpdate">
                                                 <b>Update Profile</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="goToAnalytics">
                                                 <b>See Analytics</b>
                                             </button>
                                         </menuitem>
 
                                         <menuitem>
-                                            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" 
+                                            <button type="login-button" class="btn btn-primary btn-block btn-large" 
                                                 @click="deleteProfile">
                                                 <b>Delete Profile</b>
                                             </button>
