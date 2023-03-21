@@ -279,9 +279,9 @@ export default {
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2">
+                <div class="grid-container2" v-if="!loading">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading"
+                        <svg class="feather" 
                         style="fill: #ff0000;">
                         <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
@@ -289,7 +289,7 @@ export default {
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" 
+                        <svg class="feather"
                         style="color:green; fill:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
@@ -311,9 +311,9 @@ export default {
                     <b>Phrase</b> {{ photo.phrase }} 
                 </div>
 
-                <div class="grid-container2" style="margin-top: 80px;">
+                <div class="grid-container2" style="margin-top: 80px;" v-if="!loading">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" 
+                        <svg class="feather" 
                         @click="likeUnLikePhoto"
                         :style="{fill: this.photo.fillHeart}">
                         <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
@@ -321,7 +321,7 @@ export default {
                     </div>
 
                     <div class="grid-child-posts" style="width:300px;">
-                        <svg class="feather" v-if="!loading" 
+                        <svg class="feather" 
                         @click="addComment"
                         style="color:green; fill:white;">
                         <use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
@@ -330,8 +330,8 @@ export default {
                 </div>
 
                 <!-- View Photo Details Button -->
-                <div class="form-group2">
-                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                <div class="form-group2" v-if="!loading" >
+                    <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToViewPhotoDetails" 
                     style="width: 200px; margin-top: 20px;"
                     :photo="this.photo"
@@ -339,8 +339,8 @@ export default {
                 </div>
 
                 <!-- View Profile Button -->
-                <div class="form-group2">
-                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                <div class="form-group2" v-if="!loading" >
+                    <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToProfile" 
                     style="width: 250px; margin-left: 250px; margin-top: -43px;"
                     :photo="this.photo"

@@ -292,15 +292,15 @@ export default {
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2" style="margin-left: 50px;">
+                <div class="grid-container2" style="margin-left: 50px;" v-if="!loading">
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
+                        <svg class="feather"  style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
                         {{ photo.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <svg class="feather" v-if="!loading" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                        <svg class="feather" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
                         {{ photo.numberComments }} 
                     </div>
@@ -317,8 +317,8 @@ export default {
                 </div>
 
                 <!-- View Photo Details Button -->
-                <div class="form-group2" style="margin-left: 50px;">
-                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+                <div class="form-group2" style="margin-left: 50px;" v-if="!loading" >
+                    <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="addComment()" 
                     style="width: 250px; margin-top: 165px;"
                     :photo="this.photo"
@@ -326,8 +326,8 @@ export default {
                 </div>
 
                 <!-- Deletion -->
-                <div class="grid-child-posts3">
-                    <svg class="feather" v-if="!loading && userOwnerFlag !== true" 
+                <div class="grid-child-posts3" v-if="!loading && userOwnerFlag !== true">
+                    <svg class="feather"  
                         @click="deletePhoto" 
                         style="margin-left: 450px; margin-top: -180px; color:midnightblue">
                         <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
