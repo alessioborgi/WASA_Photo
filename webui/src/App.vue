@@ -97,7 +97,7 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" >
-								<svg class="feather" @click=""><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
 								Set Username
 							</RouterLink>
 						</li>

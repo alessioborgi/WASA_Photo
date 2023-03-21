@@ -20,6 +20,9 @@ export default {
 			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
             
+            // Creation of a Local Attribute to handle the "user" prop.
+            userProfile: this.user,
+
             // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
 
@@ -191,7 +194,7 @@ export default {
     mounted() {
 
         // Getting first the photo, provided that it is not the Default Photo (i.e., there is no photo!).
-        if (this.user.profileImage != "" ){
+        if (this.userProfile.profileImage != "" ){
 		    this.getPhotoView()
         }
 
@@ -210,11 +213,11 @@ export default {
 
         <div class="usernameLabel">
             <!-- {{ this.user }} -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.user.photoProfile }}
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userProfile.photoProfile }}
             <b> FIXEDUSERNAME: </b>{{ this.photoIdView }} 
             <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }}  -->
             
-            <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userProfile.fixedUsername }}  -->
 
         </div>
         <div class="upperPart"> 
@@ -225,28 +228,28 @@ export default {
                     <img :src=this.photoBlobLink class="card__image" />
                 </div>
                 <div class="profileLabel">
-                    <p class="card__name" > <b>{{ user.username }}</b></p>
+                    <p class="card__name" > <b>{{ this.userProfile.username }}</b></p>
                 </div>            
             </div>
             <div class="rightUpperPart">
 
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <b>Posts</b> {{ user.numberOfPhotos }}
+                        <b>Posts</b> {{ this.userProfile.numberOfPhotos }}
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followings</b> {{ user.numberFollowing }} 
+                        <b>Followings</b> {{ this.userProfile.numberFollowing }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followers</b> {{ user.numberFollowers }} 
+                        <b>Followers</b> {{ this.userProfile.numberFollowers }} 
                     </div>
                 </div>
 
 
                 <div class="grid-child-posts3">
-                    <b>Biography</b> {{ user.biography }} 
+                    <b>Biography</b> {{ this.userProfile.biography }} 
                 </div>
             </div>
                     
@@ -256,31 +259,31 @@ export default {
         <div class="grid-container">
 
             <div class="grid-child-posts">
-                <b>Name</b> {{ user.name }}
+                <b>Name</b> {{ this.userProfile.name }}
             </div>
 
             <div class="grid-child-posts">
-                <b>Surname</b> {{ user.surname }} 
+                <b>Surname</b> {{ this.userProfile.surname }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Nationality</b> {{ user.nationality }} 
+                <b>Nationality</b> {{ this.userProfile.nationality }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfBirth</b> {{ user.dateOfBirth }} 
+                <b>DateOfBirth</b> {{ this.userProfile.dateOfBirth }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Email</b> {{ user.email }} 
+                <b>Email</b> {{ this.userProfile.email }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Gender</b> {{ user.gender }} 
+                <b>Gender</b> {{ this.userProfile.gender }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfCreation</b> {{ user.dateOfCreation }} 
+                <b>DateOfCreation</b> {{ this.userProfile.dateOfCreation }} 
             </div>
 
             <div class="grid-child-posts" style="margin-left: -365px;">

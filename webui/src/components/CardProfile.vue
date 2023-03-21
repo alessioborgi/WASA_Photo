@@ -18,6 +18,9 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
+            // Creation of a Local Attribute to handle the "user" prop.
+            userProfile: this.user,
+
             // Initializing colorBackground of the Card depending on the Gender.
             colorBackground: this.user.gender == "male" ? '#c2e9fc' : this.user.gender == "female" ? '#fbd3f0' : '#cff6cc',
 
@@ -47,19 +50,19 @@ export default {
 
             // Let's handle first the case where the user is Banned.
             // We must therefore delete the Ban.
-            if (this.user.boolBanned == true) {
+            if (this.userProfile.boolBanned == true) {
 
                 try{
 
                     // Deleting the Ban: /users/:username/bans/:usernameBanned.
-                    await this.$axios.delete(`/users/${this.username}/bans/${this.user.username}`, {
+                    await this.$axios.delete(`/users/${this.username}/bans/${this.userProfile.username}`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolBanned = false;
+                    this.userProfile.boolBanned = false;
                     this.iconBanned = '/feather-sprite-v4.29.0.svg#unlock';
                     this.colorIconBanned = 'green';
                     this.$emit('refreshBan', false);
@@ -85,14 +88,14 @@ export default {
                 try{
 
                     // Deleting the Ban: /users/:username/bans/:usernameBanned.
-                    await this.$axios.put(`/users/${this.username}/bans/${this.user.username}`, {}, {
+                    await this.$axios.put(`/users/${this.username}/bans/${this.userProfile.username}`, {}, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolBanned = true;
+                    this.userProfile.boolBanned = true;
                     this.iconBanned = '/feather-sprite-v4.29.0.svg#lock';
                     this.colorIconBanned = 'red';
                     this.$emit('refreshBan', true);
@@ -129,23 +132,23 @@ export default {
 
             // Let's handle first the case where we are currently following the user.
             // We must therefore delete the Follow.
-            if (this.user.boolFollowing == true) {
+            if (this.userProfile.boolFollowing == true) {
 
                 try{
 
                     // Deleting the Follow: /users/:username/followings/:usernameFollowing.
-                    await this.$axios.delete("/users/"+this.username+"/followings/"+this.user.username, {
+                    await this.$axios.delete("/users/"+this.username+"/followings/"+this.userProfile.username, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolFollowing = false;
+                    this.userProfile.boolFollowing = false;
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
                     this.colorIconFollowing = 'red';
                     this.$emit('refreshFollowing', false);
-                    this.$emit('refreshNumberFollowers', this.user.numberFollowers - 1);
+                    this.$emit('refreshNumberFollowers', this.userProfile.numberFollowers - 1);
 
                 } catch (e) {
 
@@ -170,18 +173,18 @@ export default {
                 try{
 
                     // Adding the Follow: /users/:username/followings/:usernameFollowing.
-                    await this.$axios.put(`/users/${this.username}/followings/${this.user.username}`, {}, {
+                    await this.$axios.put(`/users/${this.username}/followings/${this.userProfile.username}`, {}, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.user.boolFollowing = true;
+                    this.userProfile.boolFollowing = true;
                     this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-check';
                     this.colorIconFollowing = 'green';
                     this.$emit('refreshFollowing', true);
-                    this.$emit('refreshNumberFollowers', this.user.numberFollowers + 1);
+                    this.$emit('refreshNumberFollowers', this.userProfile.numberFollowers + 1);
 
                 } catch (e) {
 
@@ -221,7 +224,7 @@ export default {
                 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.user.username}/photos/0/view`, {
+                let response = await this.$axios.get(`/users/${this.userProfile.username}/photos/0/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -267,8 +270,8 @@ export default {
         <!-- <div class="card" id="div1" :style="{backgroundColor: this.colorBackground}"> -->
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ user }}  -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ user.fixedUsername }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userProfile }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userProfile.fixedUsername }}  -->
 
         </div>
         
@@ -280,7 +283,7 @@ export default {
                         <img :src=this.photoBlobLink alt="Person" class="card__image">
                     </div>
                     <div class="profileLabel">
-                        <p class="card__name" > <b>{{ user.username }}</b></p>
+                        <p class="card__name" > <b>{{ this.userProfile.username }}</b></p>
                     </div>            
                 </div>
 
@@ -288,15 +291,15 @@ export default {
 
                     <div class="grid-container2">
                         <div class="grid-child-posts">
-                        <b>Posts</b> {{ user.numberOfPhotos }}
+                        <b>Posts</b> {{ this.userProfile.numberOfPhotos }}
                         </div>
 
                         <div class="grid-child-posts">
-                            <b>Followings</b> {{ user.numberFollowing }} 
+                            <b>Followings</b> {{ this.userProfile.numberFollowing }} 
                         </div>
 
                         <div class="grid-child-posts">
-                            <b>Followers</b> {{ user.numberFollowers }} 
+                            <b>Followers</b> {{ this.userProfile.numberFollowers }} 
                         </div>
                     </div>
 
@@ -336,35 +339,35 @@ export default {
         <div class="grid-container">
 
             <div class="grid-child-posts">
-                <b>Name</b> {{ user.name }}
+                <b>Name</b> {{ this.userProfile.name }}
             </div>
 
             <div class="grid-child-posts">
-                <b>Surname</b> {{ user.surname }} 
+                <b>Surname</b> {{ this.userProfile.surname }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Nationality</b> {{ user.nationality }} 
+                <b>Nationality</b> {{ this.userProfile.nationality }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfBirth</b> {{ user.dateOfBirth }} 
+                <b>DateOfBirth</b> {{ this.userProfile.dateOfBirth }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Email</b> {{ user.email }} 
+                <b>Email</b> {{ this.userProfile.email }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Gender</b> {{ user.gender }} 
+                <b>Gender</b> {{ this.userProfile.gender }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfCreation</b> {{ user.dateOfCreation }} 
+                <b>DateOfCreation</b> {{ this.userProfile.dateOfCreation }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Biography</b> {{ user.biography }} 
+                <b>Biography</b> {{ this.userProfile.biography }} 
             </div>
 
         </div>
@@ -372,7 +375,7 @@ export default {
         <!-- View Photo Details Button -->
         <div class="form-group2" style="margin-left: 50px;" v-if="!loading">
                     <button type="login-button" class="btn btn-primary btn-block btn-large"  
-                    @click="goToProfileView(this.user.username)" 
+                    @click="goToProfileView(this.userProfile.username)" 
                     style="width: 250px; margin-left: 600px; margin-top: 10px; "
                     > View {{this.user.username + "'s "}}Profile </button>
         </div>
