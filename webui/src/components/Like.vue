@@ -42,8 +42,8 @@ export default {
         <div class="rightUpperPart">
             
             <!-- Like Username -->
-            <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;">
-                <svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>                
+            <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;" v-if="!loading">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>                
                 <b>Liker </b> {{ like }} 
             </div>
             

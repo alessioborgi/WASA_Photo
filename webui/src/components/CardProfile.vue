@@ -370,8 +370,8 @@ export default {
         </div>
 
         <!-- View Photo Details Button -->
-        <div class="form-group2" style="margin-left: 50px;">
-                    <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" 
+        <div class="form-group2" style="margin-left: 50px;" v-if="!loading">
+                    <button type="login-button" class="btn btn-primary btn-block btn-large"  
                     @click="goToProfileView(this.user.username)" 
                     style="width: 250px; margin-left: 600px; margin-top: 10px; "
                     > View {{this.user.username + "'s "}}Profile </button>

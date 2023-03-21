@@ -326,7 +326,7 @@ export default {
                             </menu>
 	                    </nav>     
 
-                        <a><svg class="feather" style="margin-left:450px; margin-top: -100px;" @click="goToMyStream">
+                        <a><svg class="feather" style="margin-left:450px; margin-top: -100px;" @click="goToMyStream" v-if="!loading && userOwnerFlag === true">
                             <use href="/feather-sprite-v4.29.0.svg#home"/></svg>
                         </a>              
             </div>

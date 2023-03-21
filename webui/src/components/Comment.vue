@@ -204,7 +204,7 @@ export default {
     </div>
 
     <div class="upperPart"> 
-        <div class="rightUpperPart">
+        <div class="rightUpperPart" v-if="!loading">
 
             <!-- Grid for containing number of likes and of comments. -->
             <!-- Upload Date -->
@@ -219,14 +219,14 @@ export default {
             
             <!-- Phrase -->
             <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;">
-                <svg class="feather" v-if="!loading" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
+                <svg class="feather" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                 <b>Comment </b> {{ comment.Phrase }} 
             </div>
 
 
             <!-- Deletion -->
-            <div class="grid-child-posts3">
-                <svg class="feather" v-if="!loading && userOwnerCommentFlag == true" 
+            <div class="grid-child-posts3" v-if="!loading && userOwnerCommentFlag == true">
+                <svg class="feather"  
                     @click="deleteComment" 
                     style="margin-left: 650px; margin-top: -100px; color:midnightblue">
                     <use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
