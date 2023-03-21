@@ -170,8 +170,7 @@ nav > menu > menuitem menuitem menu {
    top:0; right:0;
 }
 /* User Styles Below Not Required */
-/* User Styles Below Not Required */
-/* User Styles Below Not Required */
+
 
 nav { 
    margin-top: 40px;
