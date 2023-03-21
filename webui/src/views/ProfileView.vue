@@ -55,7 +55,7 @@ export default {
 			try{
 
 				// Retrieving the Profile from the Back-end.
-				let responseProfile = await this.$axios.get("/users/"+this.username, {
+				let responseProfile = await this.$axios.get(`/users/${this.username}`, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("BearerToken")
 					}
@@ -157,8 +157,8 @@ export default {
 				<MyProfileCard 
 					v-if="!loading" 
 					:user=this.userProfile 
-					:style="{backgroundColor: this.colorBackground}" 
 					:userOwnerFlag = "this.userOwnerFlag"
+					:style="{backgroundColor: this.colorBackground}" 
 				></MyProfileCard>
 			</div>
 
