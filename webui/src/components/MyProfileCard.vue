@@ -283,7 +283,7 @@ export default {
                 <b>DateOfCreation</b> {{ user.dateOfCreation }} 
             </div>
 
-            <div class="grid-child-posts" style="margin-left: -400px;">
+            <div class="grid-child-posts" style="margin-left: -365px;">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
@@ -326,13 +326,13 @@ export default {
                             </menu>
 	                    </nav>     
 
-                        <a><svg class="feather" style="margin-left:450px; margin-top: -100px;" @click="goToMyStream" v-if="!loading && userOwnerFlag === true">
+                        <a><svg class="feather" style="margin-left:410px; margin-top: -100px;" @click="goToMyStream" v-if="!loading && userOwnerFlag === true">
                             <use href="/feather-sprite-v4.29.0.svg#home"/></svg>
                         </a>              
             </div>
                                                
 
-            <div class="grid-child-posts" style="margin-left: -80px;">
+            <div class="grid-child-posts" style="margin-left: -90px;">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
