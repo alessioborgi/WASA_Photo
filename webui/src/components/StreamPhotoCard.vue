@@ -20,6 +20,9 @@ export default {
             username: localStorage.getItem('Username'),
             BearerToken: localStorage.getItem('BearerToken'),
 
+            // Creation of a Local Attribute to handle the "photo" prop.
+            photoData: this.photo,
+
             // Initializing a newComment variable for handling the addition of the comment.
             newComment: "",
 
@@ -46,24 +49,24 @@ export default {
 
             // Let's handle first the case where we are currently liking the photo.
             // We must therefore delete the Like.
-            if (this.photo.boolLike == true) {
+            if (this.photoData.boolLike == true) {
 
                 try{
 
                     // Deleting the Like: /users/:username/photos/:photoid/likes/:usernameLiker.
-                    await this.$axios.delete(`/users/${this.photo.username}/photos/${this.photo.photoid}/likes/${this.username}`, {
+                    await this.$axios.delete(`/users/${this.photoData.username}/photos/${this.photoData.photoid}/likes/${this.username}`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.photo.boolLike = false;
+                    this.photoData.boolLike = false;
                     this.$emit('refreshLike', false);
-                    this.photo.fillHeart = "white";
-                    this.$emit('refreshLikeFill', this.photo.fillHeart);
-                    this.photo.numberLikes = this.photo.numberLikes - 1;
-                    this.$emit('refreshLikeNumber', this.photo.numberLikes);
+                    this.photoData.fillHeart = "white";
+                    this.$emit('refreshLikeFill', this.photoData.fillHeart);
+                    this.photoData.numberLikes = this.photoData.numberLikes - 1;
+                    this.$emit('refreshLikeNumber', this.photoData.numberLikes);
 
                 } catch (e) {
 
@@ -87,19 +90,19 @@ export default {
                 try{
 
                     // Adding the Follow: /users/:username/photos/:photoid/likes/:usernameLiker.                        
-                    await this.$axios.put(`/users/${this.photo.username}/photos/${this.photo.photoid}/likes/${this.username}`, {}, {
+                    await this.$axios.put(`/users/${this.photoData.username}/photos/${this.photoData.photoid}/likes/${this.username}`, {}, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
                     })
 
                     // Once we have done with it, we must simply update the flag.
-                    this.photo.boolLike = true;
+                    this.photoData.boolLike = true;
                     this.$emit('refreshLike', true);
-                    this.photo.fillHeart = "red";
-                    this.$emit('refreshLikeFill', this.photo.fillHeart);
-                    this.photo.numberLikes = this.photo.numberLikes + 1;
-                    this.$emit('refreshLikeNumber', this.photo.numberLikes);
+                    this.photoData.fillHeart = "red";
+                    this.$emit('refreshLikeFill', this.photoData.fillHeart);
+                    this.photoData.numberLikes = this.photoData.numberLikes + 1;
+                    this.$emit('refreshLikeNumber', this.photoData.numberLikes);
 
                 } catch (e) {
 
@@ -152,7 +155,7 @@ export default {
                 
                     // In the case the result is positive, we post the username received to the GO page.
                     // /users/:username/photos/:photoid/comments/
-                    await this.$axios.post(`/users/${this.photo.username}/photos/${this.photo.photoid}/comments/`, { phrase: this.newComment}, {
+                    await this.$axios.post(`/users/${this.photoData.username}/photos/${this.photoData.photoid}/comments/`, { phrase: this.newComment}, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("BearerToken")
                         }
@@ -162,7 +165,7 @@ export default {
 
                     // Re-addressing the page to the personal profile page of a user.
                     // this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
-                    this.$emit('refreshNumberComments', this.photo.numberComments + 1);
+                    this.$emit('refreshNumberComments', this.photoData.numberComments + 1);
 
                 } catch (e) {
 
@@ -192,16 +195,16 @@ export default {
         async goToViewPhotoDetails() {
 
             // Re-address the user to the right page.
-            localStorage.setItem('usernameProfileToView', this.photo.username),
-            localStorage.setItem('idPhoto', this.photo.photoid),
-            this.$router.push({ path: `/users/${this.photo.username}/photo/${this.photo.photoid}`})
+            localStorage.setItem('usernameProfileToView', this.photoData.username),
+            localStorage.setItem('idPhoto', this.photoData.photoid),
+            this.$router.push({ path: `/users/${this.photoData.username}/photo/${this.photoData.photoid}`})
         },
 
         async goToProfile() {
 
             // Re-address the user to the right page.
-            localStorage.setItem('usernameProfileToView', this.photo.username),
-            this.$router.push({ path: `/users/${this.photo.username}`})
+            localStorage.setItem('usernameProfileToView', this.photoData.username),
+            this.$router.push({ path: `/users/${this.photoData.username}`})
         },
 
         async getPhotoView() {
@@ -214,7 +217,7 @@ export default {
                 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.photo.username}/photos/${this.photo.photoid}/view`, {
+                let response = await this.$axios.get(`/users/${this.photoData.username}/photos/${this.photoData.photoid}/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -262,8 +265,8 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo.filename }}  -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ photo }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photoData.filename }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photoData }}  -->
 
         </div>
         
@@ -285,37 +288,37 @@ export default {
                         style="fill: #ff0000;">
                         <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
-                        {{ photo.numberLikes }} 
+                        {{ this.photoData.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
                         <svg class="feather"
                         style="color:green; fill:green"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
-                        {{ photo.numberComments }} 
+                        {{ this.photoData.numberComments }} 
                     </div>
                 </div>
 
                 <!-- Upload Date -->
                 <div class="grid-child-posts3" style="margin-top: 40px;">
-                    <b>Upload Date</b> {{ photo.uploadDate }} 
+                    <b>Upload Date</b> {{ this.photoData.uploadDate }} 
                 </div>
 
                 <!-- Username -->
                 <div class="grid-child-posts3" style="margin-top: 20px;">
-                    <b>Username</b> {{ photo.username }} 
+                    <b>Username</b> {{ this.photoData.username }} 
                 </div>
 
                 <!-- Phrase -->
                 <div class="grid-child-posts3" style="margin-top: 20px;">
-                    <b>Phrase</b> {{ photo.phrase }} 
+                    <b>Phrase</b> {{ this.photoData.phrase }} 
                 </div>
 
                 <div class="grid-container2" style="margin-top: 80px;" v-if="!loading">
                     <div class="grid-child-posts">
                         <svg class="feather" 
                         @click="likeUnLikePhoto"
-                        :style="{fill: this.photo.fillHeart}">
+                        :style="{fill: this.photoData.fillHeart}">
                         <use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Put Like</b> 
                     </div>
@@ -334,7 +337,7 @@ export default {
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToViewPhotoDetails" 
                     style="width: 200px; margin-top: 20px;"
-                    :photo="this.photo"
+                    :photo="this.photoData"
                     > View Photo Details </button>
                 </div>
 
@@ -343,8 +346,8 @@ export default {
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToProfile" 
                     style="width: 250px; margin-left: 250px; margin-top: -43px;"
-                    :photo="this.photo"
-                    > View {{this.photo.username}}'s Profile </button>
+                    :photo="this.photoData"
+                    > View {{this.photoData.username}}'s Profile </button>
                 </div>
                 
             </div>

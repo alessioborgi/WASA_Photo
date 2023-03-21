@@ -21,6 +21,9 @@ export default {
             username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
 
+            // Creation of a Local Attribute to handle the "photo" prop.
+            photoData: this.photo,
+
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,
 
@@ -64,13 +67,13 @@ export default {
 
                     // /users/:username/photos/:photoid
                     // await this.$axios.delete("/users/"+this.username+"/photos/"+this.photo.photoid, {
-                    await this.$axios.delete(`/users/${this.username}/photos/${this.photo.photoid}`, {
+                    await this.$axios.delete(`/users/${this.username}/photos/${this.photoData.photoid}`, {
                         headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
                              
                     // Eliminate from the list the photo.
-                    this.newPhotoList = await this.removeObjectWithId(this.photoListCurrent, this.photo.photoid);
+                    this.newPhotoList = await this.removeObjectWithId(this.photoListCurrent, this.photoData.photoid);
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
                     this.userProfile.numberOfPhotos = this.userProfile.numberOfPhotos - 1
@@ -107,7 +110,7 @@ export default {
             localStorage.setItem('idPhoto', idPhoto),
 
             // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
+            this.$router.push({ path: `/users/${this.username}/photo/${this.photoData.photoid}`})
         },
 
         // removeObjectWithId: This function is used for removing from the list of photos a specific one.
@@ -132,7 +135,7 @@ export default {
                 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/view`, {
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoData.photoid}/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -183,7 +186,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo.filename }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photoData.filename }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
@@ -204,32 +207,32 @@ export default {
                     <div class="grid-child-posts">
                         <svg class="feather" style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
-                        {{ photo.numberLikes }} 
+                        {{ this.photoData.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
                         <svg class="feather" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
-                        {{ photo.numberComments }} 
+                        {{ this.photoData.numberComments }} 
                     </div>
                 </div>
 
                 <!-- Upload Date -->
                 <div class="grid-child-posts3" style="margin-top: 50px; margin-left: 50px;">
-                    <b>Upload Date</b> {{ photo.uploadDate }} 
+                    <b>Upload Date</b> {{ this.photoData.uploadDate }} 
                 </div>
 
                 <!-- Phrase -->
                 <div class="grid-child-posts3" style="margin-left: 50px; margin-top: 10px;">
-                    <b>Phrase</b> {{ photo.phrase }} 
+                    <b>Phrase</b> {{ this.photoData.phrase }} 
                 </div>
 
                 <!-- View Photo Details Button -->
                 <div class="form-group2" style="margin-left: 50px;" v-if="!loading" >
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
-                    @click="goToViewPhotoDetails(this.photo.photoid)" 
+                    @click="goToViewPhotoDetails(this.photoData.photoid)" 
                     style="width: 250px; margin-top: 165px;"
-                    :photo="this.photo"
+                    :photo="this.photoData"
                     > View Photo Details </button>
                 </div>
 

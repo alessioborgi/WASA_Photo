@@ -21,6 +21,9 @@ export default {
 			usernameLogged: localStorage.getItem('Username'),
 			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
 
+            // Creation of a Local Attribute to handle the "photo" prop.
+            photoData: this.photo,
+
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,
 
@@ -71,7 +74,7 @@ export default {
 
                     // /users/:username/photos/:photoid
                     // await this.$axios.delete("/users/"+this.username+"/photos/"+this.photo.photoid, {
-                    await this.$axios.delete(`/users/${this.username}/photos/${this.photo.photoid}`, {
+                    await this.$axios.delete(`/users/${this.username}/photos/${this.photoData.photoid}`, {
                         headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }})
@@ -129,7 +132,7 @@ export default {
                 
                 // In the case the result is positive, we post the username received to the GO page.
                 // /users/:username/photos/:photoid/comments/
-                await this.$axios.post(`/users/${this.username}/photos/${this.photo.photoid}/comments/`, { phrase: this.newComment}, {
+                await this.$axios.post(`/users/${this.username}/photos/${this.photoData.photoid}/comments/`, { phrase: this.newComment}, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }
@@ -138,8 +141,8 @@ export default {
                 // Re-computing the commentsList.
                 await this.getComments()
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: `/users/${this.username}/photo/${this.photo.photoid}`})
-                this.$emit('refreshNumberComments', this.photo.numberComments + 1);
+                this.$router.push({ path: `/users/${this.username}/photo/${this.photoData.photoid}`})
+                this.$emit('refreshNumberComments', this.photoData.numberComments + 1);
                 this.$emit('refreshCommentsList', this.newCommentsList);
 
                 } catch (e) {
@@ -177,7 +180,7 @@ export default {
 
                 // Getting the list of Comments from the Back-End.
                 // /users/:username/photos/:photoid/comments/.
-                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/comments/`, {
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoData.photoid}/comments/`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     }
@@ -227,7 +230,7 @@ export default {
                 
                 // Getting the image view from the Back-End.
                 // /users/:username/photos/:photoid/view
-                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photo.photoid}/view`, {
+                let response = await this.$axios.get(`/users/${this.username}/photos/${this.photoData.photoid}/view`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("BearerToken")
                     },
@@ -276,7 +279,7 @@ export default {
     <div class="card" id="div1" >
 
         <div class="usernameLabel">
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.photo.filename }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.photoData.filename }}  -->
             <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
 
         </div>
@@ -296,24 +299,24 @@ export default {
                     <div class="grid-child-posts">
                         <svg class="feather"  style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
-                        {{ photo.numberLikes }} 
+                        {{ this.photoData.numberLikes }} 
                     </div>
 
                     <div class="grid-child-posts">
                         <svg class="feather" style="color:green; fill: green;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg>
                         <b> Comments</b> 
-                        {{ photo.numberComments }} 
+                        {{ this.photoData.numberComments }} 
                     </div>
                 </div>
 
                 <!-- Upload Date -->
                 <div class="grid-child-posts3" style="margin-top: 50px; margin-left: 50px;">
-                    <b>Upload Date</b> {{ photo.uploadDate }} 
+                    <b>Upload Date</b> {{ this.photoData.uploadDate }} 
                 </div>
 
                 <!-- Phrase -->
                 <div class="grid-child-posts3" style="margin-left: 50px; margin-top: 10px;">
-                    <b>Phrase</b> {{ photo.phrase }} 
+                    <b>Phrase</b> {{ this.photoData.phrase }} 
                 </div>
 
                 <!-- View Photo Details Button -->
@@ -321,7 +324,7 @@ export default {
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="addComment()" 
                     style="width: 250px; margin-top: 165px;"
-                    :photo="this.photo"
+                    :photo="this.photoData"
                     > Add Comment </button>
                 </div>
 
