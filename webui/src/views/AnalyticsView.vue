@@ -291,9 +291,9 @@ export default {
 				<span></span><span>Posts</span><span></span>
 			</div>
 			
-			<div class="card" id="div1" style=" background-color:peachpuff; margin-top: 31px;">
+			<div class="card" id="div1" style=" background-color:peachpuff; margin-top: 31px;" v-if="!loading">
 				<div class="grid-child-posts3" style=" font-size: 15px; margin-left:20px; margin-top: 30px;">
-					<svg class="feather" v-if="!loading"><use href="/feather-sprite-v4.29.0.svg#activity"/></svg>                
+					<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#activity"/></svg>                
 					<b> POSTS ANALYTICS </b> <br><br><br> 
 					<b> NUMBER OF POSTS </b> {{ this.userProfile.numberOfPhotos }}
 					<br><br><br>

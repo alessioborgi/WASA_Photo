@@ -330,11 +330,11 @@ export default {
 			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1">{{ username }}'s BAN</h1>
 
-			<div class="topMenu">
+			<div class="topMenu" v-if="!loading">
 
 				<!-- "Users List" Button -->
 				<div class="topMenuButtons">
-					<button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getBans"> Users List </button>
+					<button type="login-button" class="btn btn-primary btn-block btn-large" @click="getBans"> Users List </button>
 				</div>
 
 				<!-- WASA Photo Icon -->
@@ -348,7 +348,7 @@ export default {
 						<input type="text" id="usernameToSearch" v-model="usernameBanToSearch" placeholder="Search Username..." class="form-control">
 					</div>
 					<div class= "searchButton">
-						<svg class="feather" v-if="!loading" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+						<svg class="feather" @click="searchUsername" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 					</div>
 				</div>
 

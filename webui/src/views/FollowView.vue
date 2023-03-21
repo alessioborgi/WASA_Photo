@@ -507,13 +507,13 @@ export default {
 			<div class="topMenu">
 
                 <!-- Followings Menu left-Part -->
-                <div class="followingsMenu">
+                <div class="followingsMenu" v-if="!loading">
                     
                     <h2 class="h2">FOLLOWINGS</h2>
 
                     <!-- "Users List" Button -->
                     <div class="topMenuButtons">
-                        <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowings">  Followings List </button>
+                        <button type="login-button" class="btn btn-primary btn-block btn-large" @click="getFollowings">  Followings List </button>
                     </div>
 
                     <!-- "Search Username Field" -->
@@ -522,7 +522,7 @@ export default {
                             <input type="text" id="usernameFollowingsToSearch" onfocus="this.value=''" v-model="usernameFollowingsToSearch" placeholder="Search Following..." class="form-control">
                         </div>
                         <div class= "searchButton">
-                            <svg class="feather" v-if="!loading" @click="searchUsername(false)" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+                            <svg class="feather" @click="searchUsername(false)" ><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
                         </div>
                     </div>
                 </div>
@@ -533,13 +533,13 @@ export default {
 				</div>
 
                 <!-- Followings Menu left-Part -->
-                <div class="followingsMenu">
+                <div class="followingsMenu" v-if="!loading">
                     
                     <h2 class="h2">FOLLOWERS</h2>
 
                     <!-- "Users List" Button -->
                     <div class="topMenuButtons">
-                        <button type="login-button" class="btn btn-primary btn-block btn-large" v-if="!loading" @click="getFollowers">  Followers List </button>
+                        <button type="login-button" class="btn btn-primary btn-block btn-large" @click="getFollowers">  Followers List </button>
                     </div>
 
                     <!-- "Search Username Field" -->
@@ -548,7 +548,7 @@ export default {
                             <input type="text" id="usernameFollowersToSearch" onfocus="{{ this.value='' }}" v-model="usernameFollowersToSearch" placeholder="Search Follower..." class="form-control">
                         </div>
                         <div class= "searchButton">
-                            <svg class="feather" v-if="!loading" @click="searchUsername(true)"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+                            <svg class="feather" @click="searchUsername(true)"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
                         </div>
                     </div>
                 </div>

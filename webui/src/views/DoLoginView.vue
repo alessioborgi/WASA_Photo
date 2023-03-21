@@ -83,17 +83,17 @@ export default {
         <img src="./img/wasa-logo.png" alt="">
 
         <!-- Creation of the form for the Login. -->
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" v-if="!loading">
 
             <!-- Creation of the place where to type the Username. -->
             <input type="text" id="usernameLabel" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
 
             <!-- Creation of the Login Button linked to the doLogin action. -->
-            <button type="login-button" v-if="!loading" class="btn btn-primary btn-block btn-large" @click="doLogin">Login</button>
-            <LoadingSpinner v-if="loading"></LoadingSpinner>
+            <button type="login-button" class="btn btn-primary btn-block btn-large" @click="doLogin">Login</button>
         </form>
 
         <div>
+            <LoadingSpinner v-if="loading"></LoadingSpinner>
             <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
         </div>
     </div>
