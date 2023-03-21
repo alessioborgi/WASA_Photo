@@ -178,7 +178,14 @@ export default {
             // Re-address the user to the right page.
             this.$router.push({ path: `/search/`})
         }, 
-                            
+        
+        async goToMyStream() {
+
+            // Re-address the user to the right page.
+            this.$router.push({ path: `/users/${this.username}/myStream/`})
+        }, 
+
+        
     },
 
     mounted() {
@@ -276,7 +283,7 @@ export default {
                 <b>DateOfCreation</b> {{ user.dateOfCreation }} 
             </div>
 
-            <div class="grid-child-posts" style="margin-left: -365px;">
+            <div class="grid-child-posts" style="margin-left: -400px;">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
@@ -317,10 +324,15 @@ export default {
                                 </menuitem>
                             
                             </menu>
-	                    </nav>                  
-            </div>
+	                    </nav>     
 
-            <div class="grid-child-posts">
+                        <a><svg class="feather" style="margin-left:450px; margin-top: -100px;" @click="goToMyStream">
+                            <use href="/feather-sprite-v4.29.0.svg#home"/></svg>
+                        </a>              
+            </div>
+                                               
+
+            <div class="grid-child-posts" style="margin-left: -80px;">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
@@ -331,7 +343,8 @@ export default {
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
                                                 <button type="login-button" class="btn btn-primary btn-block btn-large" 
-                                                    @click="goToSetUsername">                                                <b>Set Username</b>
+                                                    @click="goToSetUsername">                                                
+                                                    <b>Set Username</b>
                                             </button>
                                         </menuitem>
 
