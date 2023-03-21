@@ -10,7 +10,8 @@ export default {
 		return {
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            username: localStorage.getItem('Username') == "" ? "NOT LOGGED" : localStorage.getItem('Username'),
+			usernameLogged: localStorage.getItem('Username'),
+			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
 		}
 	},
