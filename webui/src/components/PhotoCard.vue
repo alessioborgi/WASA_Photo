@@ -27,6 +27,9 @@ export default {
             // Initializing variable for handling the deletion of the Photo.
             deletePhotoBool: false,
 
+            // Creation of a Local Attribute to handle the "user" prop.
+            userProfile1: this.userProfile,
+
             // Initializing the newPhotoList.
             newPhotoList : [],
 
@@ -76,8 +79,8 @@ export default {
                     this.newPhotoList = await this.removeObjectWithId(this.photoListCurrent, this.photoData.photoid);
                     // Re-addressing the page to the personal profile page of a user.
                     this.$router.replace({ path: `/users/${this.username}` })
-                    this.userProfile.numberOfPhotos = this.userProfile.numberOfPhotos - 1
-                    this.$emit('refreshProfile', this.userProfile);
+                    this.userProfile1.numberOfPhotos = this.userProfile1.numberOfPhotos - 1
+                    this.$emit('refreshProfile', this.userProfile1);
                     this.$emit('refreshPhotos', this.newPhotoList);
                     // eventBus.$emit("refreshNumberPhotos", this.numberOfPhotos - 1);
 
