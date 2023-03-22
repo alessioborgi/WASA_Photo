@@ -169,7 +169,7 @@ export default {
                    
 
                     <!-- Send Button -->
-                    <div class="form-group2" v-if="!loading">
+                    <div class="form-group2">
 					    <button type="login-button" class="btn btn-primary btn-block btn-large" @click="setUsername"> Update Username </button>
 				    </div>
 

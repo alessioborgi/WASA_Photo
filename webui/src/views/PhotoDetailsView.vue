@@ -350,7 +350,7 @@ export default {
                     <h2 class="h2" style="margin-left:80px; margin-top: 50px; margin-bottom: -50px;">LIKES</h2>
 
                     <!-- "Users List" Button -->
-                    <div class="topMenuButtons" v-if="!loading">
+                    <div class="topMenuButtons">
                         <button type="login-button" class="btn btn-primary btn-block btn-large" 
 							@click="getLikes">  
 							Likes List 
@@ -374,7 +374,7 @@ export default {
 					</h2>
 
                     <!-- "Users List" Button -->
-                    <div class="topMenuButtons" v-if="!loading" >
+                    <div class="topMenuButtons">
                         <button type="login-button" class="btn btn-primary btn-block btn-large" 
 							@click="getComments">  
 							Comments List 

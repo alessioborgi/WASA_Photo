@@ -369,7 +369,7 @@ export default {
 			<div class="topMenu">
 
 				<!-- "Users List" Button -->
-				<div class="topMenuButtons" v-if="!loading">
+				<div class="topMenuButtons" >
 					<button type="login-button" class="btn btn-primary btn-block btn-large" @click="getUsers"> Users List </button>
 				</div>
 
@@ -383,7 +383,7 @@ export default {
 					<div class="formControl">
 						<input type="text" id="usernameToSearch" v-model="usernameToSearch" placeholder="Search Username..." class="form-control">
 					</div>
-					<div class= "searchButton" v-if="!loading" >
+					<div class= "searchButton" >
 						<svg class="feather" 
 							@click="searchUsername" 
 							style="color:floralwhite"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
