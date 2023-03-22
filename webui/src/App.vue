@@ -31,8 +31,11 @@ export default {
 		},
 
 		async setUsernameAgain() {
-			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
-			this.$router.replace({ path: `/users/${username}` })
+			localStorage.clear();
+			localStorage.setItem('usernameProfileToView', this.username);
+			localStorage.setItem('Username', this.username);
+			localStorage.setItem('BearerToken', this.BearerToken);
+			this.$router.replace({ path: `/users/${this.username}` })
 		},
 	},
 
