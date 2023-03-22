@@ -142,7 +142,6 @@ export default {
 			this.userOwnerFlag = true;
 	  		this.getUserProfile()
 	  		this.getPhotoLinks()
-      		// Update other component data here if necessary
     	},
   	},
 }
