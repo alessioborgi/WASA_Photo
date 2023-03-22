@@ -139,6 +139,7 @@ export default {
 	watch: {
     	'$route.params.username': function(newUsername) {
       		this.username = newUsername;
+			this.userOwnerFlag = true;
 	  		this.getUserProfile()
 	  		this.getPhotoLinks()
       		// Update other component data here if necessary
