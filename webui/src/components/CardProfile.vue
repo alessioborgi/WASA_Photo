@@ -304,7 +304,7 @@ export default {
                     </div>
 
 
-                    <div class="grid-container2" v-if="!loading" >
+                    <div class="grid-container2">
                         <div class="grid-child-posts2">
                             <b>Is it Banned? </b> 
                             <svg class="feather" 
@@ -373,7 +373,7 @@ export default {
         </div>
 
         <!-- View Photo Details Button -->
-        <div class="form-group2" style="margin-left: 50px;" v-if="!loading">
+        <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large"  
                     @click="goToProfileView(this.userProfile.username)" 
                     style="width: 250px; margin-left: 600px; margin-top: 10px; "

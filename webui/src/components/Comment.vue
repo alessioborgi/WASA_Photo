@@ -203,8 +203,8 @@ export default {
         <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerCommentFlag }}  -->
     </div>
 
-    <div class="upperPart"> 
-        <div class="rightUpperPart" v-if="!loading">
+    <div class="upperPart" v-if="!loading"> 
+        <div class="rightUpperPart">
 
             <!-- Grid for containing number of likes and of comments. -->
             <!-- Upload Date -->
@@ -225,7 +225,7 @@ export default {
 
 
             <!-- Deletion -->
-            <div class="grid-child-posts3" v-if="!loading && userOwnerCommentFlag == true">
+            <div class="grid-child-posts3" v-if="userOwnerCommentFlag == true">
                 <svg class="feather"  
                     @click="deleteComment" 
                     style="margin-left: 650px; margin-top: -100px; color:midnightblue">

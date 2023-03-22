@@ -282,7 +282,7 @@ export default {
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2" v-if="!loading">
+                <div class="grid-container2">
                     <div class="grid-child-posts">
                         <svg class="feather" 
                         style="fill: #ff0000;">
@@ -314,7 +314,7 @@ export default {
                     <b>Phrase</b> {{ this.photoData.phrase }} 
                 </div>
 
-                <div class="grid-container2" style="margin-top: 80px;" v-if="!loading">
+                <div class="grid-container2" style="margin-top: 80px;">
                     <div class="grid-child-posts">
                         <svg class="feather" 
                         @click="likeUnLikePhoto"
@@ -333,7 +333,7 @@ export default {
                 </div>
 
                 <!-- View Photo Details Button -->
-                <div class="form-group2" v-if="!loading" >
+                <div class="form-group2">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToViewPhotoDetails" 
                     style="width: 200px; margin-top: 20px;"
@@ -342,7 +342,7 @@ export default {
                 </div>
 
                 <!-- View Profile Button -->
-                <div class="form-group2" v-if="!loading" >
+                <div class="form-group2" >
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToProfile" 
                     style="width: 250px; margin-left: 250px; margin-top: -43px;"

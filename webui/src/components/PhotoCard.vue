@@ -206,7 +206,7 @@ export default {
             <div class="rightUpperPart">
 
                 <!-- Grid for containing number of likes and of comments. -->
-                <div class="grid-container2" style="margin-left: 50px;" v-if="!loading">
+                <div class="grid-container2" style="margin-left: 50px;">
                     <div class="grid-child-posts">
                         <svg class="feather" style="fill: #ff0000;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>
                         <b> Likes</b> 
@@ -231,7 +231,7 @@ export default {
                 </div>
 
                 <!-- View Photo Details Button -->
-                <div class="form-group2" style="margin-left: 50px;" v-if="!loading" >
+                <div class="form-group2" style="margin-left: 50px;">
                     <button type="login-button" class="btn btn-primary btn-block btn-large" 
                     @click="goToViewPhotoDetails(this.photoData.photoid)" 
                     style="width: 250px; margin-top: 165px;"

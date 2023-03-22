@@ -38,11 +38,11 @@ export default {
         <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
     </div>
 
-    <div class="upperPart"> 
+    <div class="upperPart" v-if="!loading"> 
         <div class="rightUpperPart">
             
             <!-- Like Username -->
-            <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;" v-if="!loading">
+            <div class="grid-child-posts3" style="margin-left:20px; margin-top: 30px;">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg>                
                 <b>Liker </b> {{ like }} 
             </div>
