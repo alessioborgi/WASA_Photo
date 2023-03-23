@@ -268,7 +268,11 @@ export default {
 
                 // Let's check whether you are actually following some User.
                 if (this.followingsList.length == 0){
-                    this.errormsg = "Err: You don't have followed any User yet!";
+                    if (this.username.length < 3){
+                        this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
+                    } else {
+                        this.errormsg = "Err: You don't have followed any User yet!";
+                    }
                 }
 
 			} catch (e) {
@@ -317,7 +321,11 @@ export default {
 
                 // Let's check whether there are actually some user that are following you.
                 if (this.followingsList.length == 0){
-                    this.errormsg = "Err: You don't have any Follower User yet!";
+                    if (this.username.length < 3){
+                        this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
+                    } else {
+                        this.errormsg = "Err: You don't have any Follower User yet!";
+                    }
                 }
 
 			} catch (e) {
@@ -388,14 +396,16 @@ export default {
                             // Let's add up to the "followersListProfiles" array the response of the profile. Note that it will be an array with only this element.
                             this.followersListProfiles.push(responseProfile.data);
                         } else {
-
-                            // This means the username we are searching for is not a Followers of mine.
-                            this.errormsg = "Err: The Username you are Searching for is not one of your Followers! Username: "+ this.usernameFollowersToSearch;
+                            if (this.username.length < 3){
+                                // If an error is encountered, display it! 
+                                // This means the username we are searching for is not a Followers of mine.
+                                this.errormsg = "Err: The Username you are Searching for is not one of your Followers! Username: "+ this.usernameFollowersToSearch;
+                            } else {
+                                this.errormsg = "Err: The Username you are Searching for is not one of your Following! Username: .";
+                            }
                         }
                     } else {
-
-                        // If an error is encountered, display it! 
-                        this.errormsg = "Err: The Username to Search for among Followers cannot be empty!";
+                        this.errormsg = "Err: The Username to Search for among Followers cannot be empty or it is not valid because it does not respect the Regex.";
                     }
                     
 
@@ -448,8 +458,13 @@ export default {
                             this.followingsListProfiles.push(responseProfile.data);
                         } else {
 
-                            // This means the username we are searching for is not a Following of mine.
-                            this.errormsg = "Err: The Username you are Searching for is not one of your Following! Username: "+ this.usernameFollowingsToSearch;
+                            if (this.username.length < 3){
+                                // If an error is encountered, display it! 
+                                this.errormsg = "Err: The Username to Search for among Followers cannot be empty or it is not valid because it does not respect the Regex.";
+                            } else {
+                                // This means the username we are searching for is not a Following of mine.
+                                this.errormsg = "Err: The Username you are Searching for is not one of your Following! Username: "+ this.usernameFollowingsToSearch;
+                            }
                         }
                     } else {
 

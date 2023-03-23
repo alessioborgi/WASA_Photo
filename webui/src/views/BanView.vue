@@ -78,7 +78,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
 			}
 
@@ -107,7 +107,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
             }
 
@@ -136,7 +136,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
             }
 
@@ -183,7 +183,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
             }
 
@@ -214,7 +214,11 @@ export default {
 
                 // Let's check whether you have banned some User.
                 if (this.bannedList.length == 0){
-                    this.errormsg = "Err: You don't have Banned any user!";
+                    if (this.username.length < 3){
+                        this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
+                    } else {
+                        this.errormsg = "Err: You don't have Banned any user!";
+                    }
                 }
 
 			} catch (e) {
@@ -229,7 +233,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
 			}
 
@@ -274,13 +278,18 @@ export default {
                         this.bannedListProfiles.push(responseProfile.data);
                     } else {
 
-                        // This means the username we are searching for is not a Followers of mine.
-                        this.errormsg = "Err: The Username you are Searching for is not one of your Bans! Username: "+ this.usernameBanToSearch;
+                        if (this.username.length < 3){
+
+                            // This means the username we are searching for is not a Followers of mine.
+                            this.errormsg = "Err: The Username you are Searching for is not one of your Bans! Username: "+ this.usernameBanToSearch;
+                        }
+                        
                     }
                 } else {
-
-                    // If an error is encountered, display it! 
-                    this.errormsg = "Err: The Username to Search for among Bans cannot be empty!";
+                    if (this.username.length < 3){
+                        // If an error is encountered, display it! 
+                        this.errormsg = "Err: The Username to Search for among Bans cannot be empty or it is not valid because it does not respect the Regex.";
+                    }
                 }
                     
 
@@ -302,7 +311,7 @@ export default {
                     } else if (e.response && e.response.status === 500) {
                         this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                     } else {
-                        this.errormsg = e.toString();
+                        this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                     }
             }
 

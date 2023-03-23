@@ -65,7 +65,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
             }
 
@@ -115,7 +115,7 @@ export default {
                 } else if (e.response && e.response.status === 500) {
                     this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
                 } else {
-                    this.errormsg = e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                 }
             }
 
