@@ -533,7 +533,7 @@ export default {
 				</div>
 
                 <!-- Followings Menu left-Part -->
-                <div class="followingsMenu" v-if="!loading">
+                <div class="followingsMenu">
                     
                     <h2 class="h2">FOLLOWERS</h2>
 
