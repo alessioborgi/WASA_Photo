@@ -522,7 +522,7 @@ export default {
 			<div class="topMenu">
 
                 <!-- Followings Menu left-Part -->
-                <div class="followingsMenu" v-if="!loading">
+                <div class="followingsMenu">
                     
                     <h2 class="h2">FOLLOWINGS</h2>
 
@@ -579,26 +579,24 @@ export default {
 
                 <!-- ------------------------ FOLLOWINGS PART ------------------------  -->                
                 <!-- If instead, it is all ok, Display a sort of card for each of the User Profiles in the followingsList -->
-				
-                <CardProfile 
-                    v-if="!loading && flagFollow == false" 
-                    v-for="u in followingsListProfiles" 
-                    :key="u.fixedUsername"
-                    :user="u"> 
-                </CardProfile>
-                
-                
+				<div v-if="!loading && flagFollow == false" >
+                    <CardProfile 
+                        v-for="u in followingsListProfiles" 
+                        :key="u.fixedUsername"
+                        :user="u"> 
+                    </CardProfile>
+                </div>                
                 <!-- ------------------------ FOLLOWERS PART ------------------------  -->                
                 <!-- In alternative, Display a sort of card for each of the User Profiles in the followersList -->
-                <CardProfile 
-                    v-if="!loading && flagFollow == true" 
-                    v-for="u in followersListProfiles" 
-                    :key="u.fixedUsername"
-                    :user="u"> 
-                </CardProfile>
-
+                <div v-if="!loading && flagFollow == true" >
+                    <CardProfile 
+                        v-for="u in followersListProfiles" 
+                        :key="u.fixedUsername"
+                        :user="u"> 
+                    </CardProfile>
+                </div>
                 <LoadingSpinner v-if="loading"></LoadingSpinner>
-
+                
 			</div>
 	</div>
 </template>

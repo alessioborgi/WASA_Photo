@@ -81,13 +81,13 @@ export default {
 <!-- Actual Page for handling the page setting. -->
 <template>
     
-    <div class="login">
+    <div class="login" v-if="!loading">
 
         <h1>WASA Photo LOGIN</h1>
         <img src="./img/wasa-logo.png" alt="">
 
         <!-- Creation of the form for the Login. -->
-        <form method="post" class="login-form" v-if="!loading">
+        <form method="post" class="login-form">
 
             <!-- Creation of the place where to type the Username. -->
             <input type="text" id="usernameLabel" v-model="username" placeholder="Insert Username..." required="required" class="form-control">
