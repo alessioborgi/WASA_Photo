@@ -136,14 +136,16 @@ export default {
 		this.getPhotoLinks()
 	},
 
-	watch: {
-    	'$route.params.username': function(newUsername) {
-      		this.username = newUsername;
-			this.userOwnerFlag = true;
-	  		this.getUserProfile()
-	  		this.getPhotoLinks()
-    	},
-  	},
+	// watch: {
+    // 	'$route.params.username': function(newUsername) {
+	// 		this.username= newUsername;
+	// 		this.userOwnerFlag = true;
+	// 		localStorage.setItem('usernameProfileToView', this.newUsername);
+	// 		localStorage.setItem('Username', this.newUsername);
+	//   		this.getUserProfile()
+	//   		this.getPhotoLinks()
+    // 	},
+  	// },
 }
 </script>
 

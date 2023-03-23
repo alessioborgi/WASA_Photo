@@ -145,7 +145,7 @@ export default {
    
    <div>
 			<!-- Let's handle first the upper part that will be the static one. -->
-			<h1 class="h1">{{ username }}'s NEW PHOTO</h1>
+			<h1 class="h1">{{ this.username }}'s NEW PHOTO</h1>
             {{ this.file }}
 			<div class="topMenu">
 
@@ -205,6 +205,7 @@ export default {
         <!-- Upload Photo Button -->
         <div class="form-group2" v-if="!loading">
 		    <button type="login-button" class="btn btn-primary btn-block btn-large" @click="uploadPhoto"> Upload New Photo </button>
+            {{ this.username }}
 		</div>
 
         <div>

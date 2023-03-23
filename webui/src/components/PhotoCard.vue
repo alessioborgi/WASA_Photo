@@ -17,7 +17,7 @@ export default {
 			loading: false,
 
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
-            // username: localStorage.getItem('Username'),
+            usernameLogged: localStorage.getItem('Username'),
             username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
 
@@ -190,7 +190,7 @@ export default {
 
         <div class="usernameLabel">
             <!-- <b> FIXEDUSERNAME: </b>{{ this.photoData.filename }}  -->
-            <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
+            <!-- <b> FIXEDUSERNAME: </b>{{ this.userProfile }}  -->
 
         </div>
         
