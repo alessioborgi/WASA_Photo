@@ -90,17 +90,21 @@ export default {
                     }
                 })
 
+                // alert("we are here")
+                alert(`/users/${this.newUsername}`)
+
                 // Setting the new username received as the new username saved in the local cache.
                 localStorage.setItem('Username', this.newUsername),
                 localStorage.setItem('usernameProfileToView', this.newUsername)
-                this.username = this.newUsername;
-                this.userProfile.username = this.newUsername;
+                // this.username = this.newUsername;
+                // this.userProfile.username = this.newUsername;
                                 
-                this.$emit('refreshProfile', this.username);
+                // this.$emit('refreshProfile', this.username);
 
                 // Re-addressing the page to the personal profile page of a user.
-                this.$router.push({ path: `/users/${this.username}` })
                 this.newUsername = "";
+                // this.$router.replace({ path: `/users/${this.newUsername}` })
+                
 
 
             } catch (e) {
