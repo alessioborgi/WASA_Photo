@@ -18,25 +18,61 @@ export default {
 
 	methods: {
 		
-		// replaceLogin Function: It fills the "users" array with the usernames present in the DB.
-		async replaceLogin() {
-
-				// Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: '/session/' })
-		},
-
-		// setLocalStorage Function: It will free-up the two localStorage settings (username and bearerauth).
-		async setLocalStorage() {
+		async goToLogin() {
 			localStorage.clear();
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.replace({ path: `/session/` })
+		},
+		async goToLogout() {
+			localStorage.clear();
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.replace({ path: `/session/` })
+		},
+		async goToMyProfile() {
+			this.username = this.usernameLogged;
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}` })
 		},
 
-		async setUsernameAgain() {
-			// localStorage.setItem('usernameProfileToView', this.usernameLogged);
-			// localStorage.setItem('Username', this.usernameLogged);
-			// localStorage.setItem('BearerToken', this.BearerToken);
+		async goToMyStream() {
 			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
-			this.$router.replace({ path: `/users/${username}` })
+			this.$router.push({ path: `/users/${this.username}/myStream/` })
 		},
+		async goToSetUsername() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/newUsername/` })
+		},
+		async goToUpdateProfile() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/update/` })
+		},
+		async goToBan() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.replace({ path: `/users/${this.username}/ban/` })
+		},
+		async goToFollow() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/follow/` })
+		},
+		async goToNewPhoto() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/photo/` })
+		},
+
+		async goToSearch() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/search/` })
+		},
+		async goToAnalytics() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/analytics/` })
+		},
+
+		async goToFutureWork() {
+			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
+			this.$router.push({ path: `/users/${this.username}/futureWork/` })
+		},
+		
 	},
 
 }
@@ -59,17 +95,17 @@ export default {
 						<span>Menu</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item">
-							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in" @click="{{ this.$router.replace({ path: '/session/' }); }}"/></svg>
+						<li class="nav-item" @click="goToLogin">
+							<!-- <RouterLink to="/session/" class="nav-link"> -->
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
 								Login
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink to="/session/" class="nav-link">
-								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out" @click="setLocalStorage()"/></svg>
+						<li class="nav-item" @click="goToLogout">
+							<!-- <RouterLink to="/session/" class="nav-link"> -->
+								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
 								Logout
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 
@@ -80,17 +116,17 @@ export default {
 						<span>PERSONAL PROFILE</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item" @click="setUsernameAgain">
-							<RouterLink :to="'/users/'+username" class="nav-link" >
+						<li class="nav-item" @click="goToMyProfile">
+							<!-- <RouterLink :to="'/users/'+username" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
 								My Profile
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/myStream/'" class="nav-link" >
+						<li class="nav-item" @click="goToMyStream">
+							<!-- <RouterLink :to="'/users/'+username+'/myStream/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
 								My Stream
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 
@@ -100,35 +136,35 @@ export default {
 						<span>ACTIONS</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" >
+						<li class="nav-item" @click="goToSetUsername">
+							<!-- <RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
 								Set Username
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/update/'" class="nav-link" >
+						<li class="nav-item" @click="goToUpdateProfile">
+							<!-- <RouterLink :to="'/users/'+username+'/update/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
 								Update Profile
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" >
+						<li class="nav-item" @click="goToBan">
+							<!-- <RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
 								Ban
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" >
+						<li class="nav-item" @click="goToFollow">
+							<!-- <RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 								Follow
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" >
+						<li class="nav-item" @click="goToNewPhoto">
+							<!-- <RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" > -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
 								New Photo
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 
@@ -136,11 +172,11 @@ export default {
 						<span>GENERAL</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item">
-							<RouterLink to="/search/" class="nav-link">
+						<li class="nav-item" @click="goToSearch">
+							<!-- <RouterLink to="/search/" class="nav-link"> -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 								Search
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 
@@ -148,11 +184,11 @@ export default {
 						<span>STATISTICS</span>
 					</h5>
 					<ul class="nav flex-column">
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/analytics/'" class="nav-link">
+						<li class="nav-item" @click="goToAnalytics">
+							<!-- <RouterLink :to="'/users/'+username+'/analytics/'" class="nav-link"> -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
 								Analytics
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 
@@ -160,12 +196,12 @@ export default {
 						<span>FUTURE OF WORK</span>
 					</h5>
 					<ul class="nav flex-column">
-						<li class="nav-item">
-							<RouterLink :to="'/users/'+username+'/futureWork/'" class="nav-link">
+						<li class="nav-item" @click="goToFutureWork">
+							<!-- <RouterLink :to="'/users/'+username+'/futureWork/'" class="nav-link"> -->
 								<!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#briefcase"/></svg> -->
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#coffee"/></svg>
 								Works
-							</RouterLink>
+							<!-- </RouterLink> -->
 						</li>
 					</ul>
 				</div>

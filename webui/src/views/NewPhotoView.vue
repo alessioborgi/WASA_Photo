@@ -71,6 +71,8 @@ export default {
                 // Saving the Photo's Id got in response.
                 this.idPhoto = response.data;
 
+                // localStorage.getItem("usernameProfileToView", this.username)
+                alert(localStorage.getItem("usernameProfileToView"))
                 // Re-addressing the page to the personal profile page of a user.
                 this.$router.push({ path: `/users/${this.username}` })
 
