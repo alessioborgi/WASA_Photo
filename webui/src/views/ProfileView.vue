@@ -39,6 +39,9 @@ export default {
 
 			// Initializing a list that will handle the links to the photos.
 			photoListLinks: [],
+
+			// Initializing the variable that will take the new username.
+            newUsername: "",
 		}
 	},
 
@@ -129,7 +132,6 @@ export default {
 			// Setting again the Loading flag to false.
             this.loading = false;
 		},
-
 	},
 	mounted() {
 		this.getUserProfile()
