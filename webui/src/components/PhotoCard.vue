@@ -240,7 +240,7 @@ export default {
                 </div>
 
                 <!-- Deletion -->
-                <div class="grid-child-posts3" v-if="!loading && userOwnerFlag !== true" >
+                <div class="grid-child-posts3" v-if="userOwnerFlag !== true" >
                     <svg class="feather" 
                         @click="deletePhoto" 
                         style="margin-left: 450px; margin-top: -190px; color:midnightblue">

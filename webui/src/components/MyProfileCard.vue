@@ -282,11 +282,11 @@ export default {
                 <b>DateOfCreation</b> {{ this.user.dateOfCreation }} 
             </div>
 
-            <div class="grid-child-posts" style="margin-left: -365px;">
+            <div class="grid-child-posts" style="margin-left: -365px;" v-if="!loading && userOwnerFlag === true">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
-                                <menuitem id="demo1" v-if="!loading && userOwnerFlag === true">
+                                <menuitem id="demo1">
                                     <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#list"/></svg></a>
                                     <menu>
 
@@ -325,17 +325,17 @@ export default {
                             </menu>
 	                    </nav>     
 
-                        <a><svg class="feather" style="margin-left:410px; margin-top: -100px;" @click="goToMyStream" v-if="!loading && userOwnerFlag === true">
+                        <a><svg class="feather" style="margin-left:410px; margin-top: -100px;" @click="goToMyStream">
                             <use href="/feather-sprite-v4.29.0.svg#home"/></svg>
                         </a>              
             </div>
                                                
 
-            <div class="grid-child-posts" style="margin-left: -90px;">
+            <div class="grid-child-posts" style="margin-left: -90px;" v-if="!loading && userOwnerFlag === true">
                         <!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings" @click="replaceLogin"/></svg> -->
                         <nav>
                             <menu >
-                                <menuitem id="demo1" v-if="!loading && userOwnerFlag === true">
+                                <menuitem id="demo1">
                                     <a><svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg></a>
                                     <menu>
 

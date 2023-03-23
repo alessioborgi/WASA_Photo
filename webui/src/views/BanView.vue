@@ -330,7 +330,7 @@ export default {
 			<!-- Let's handle first the upper part that will be the static one. -->
 			<h1 class="h1">{{ username }}'s BAN</h1>
 
-			<div class="topMenu" v-if="!loading">
+			<div class="topMenu">
 
 				<!-- "Users List" Button -->
 				<div class="topMenuButtons">

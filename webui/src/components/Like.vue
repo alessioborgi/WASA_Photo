@@ -38,7 +38,7 @@ export default {
         <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerFlag }}  -->
     </div>
 
-    <div class="upperPart" v-if="!loading"> 
+    <div class="upperPart"> 
         <div class="rightUpperPart">
             
             <!-- Like Username -->

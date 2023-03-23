@@ -203,7 +203,7 @@ export default {
         <!-- <b> FIXEDUSERNAME: </b>{{ this.userOwnerCommentFlag }}  -->
     </div>
 
-    <div class="upperPart" v-if="!loading"> 
+    <div class="upperPart"> 
         <div class="rightUpperPart">
 
             <!-- Grid for containing number of likes and of comments. -->
