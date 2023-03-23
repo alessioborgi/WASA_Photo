@@ -155,9 +155,8 @@ export default {
 
 			<!-- {{ this.streamListLinks }} -->
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
-			<div class="photoList"> 
+			<div class="photoList" v-if="!loading" > 
 				<StreamPhotoCard 
-					v-if="!loading" 
 					v-for="p in streamListLinks" 
 					:key="p.photoid"
 					style="background-color:papayawhip; margin-top:80px;"

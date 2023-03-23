@@ -401,15 +401,16 @@ export default {
 				<LoadingSpinner v-if="loading"></LoadingSpinner>
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<CardProfile 
-					v-if="!loading" 
-					v-for="u in usersProfiles" 
-					:key="u.fixedUsername"
-				    :user="u" 
-					@refreshFollowing = "u.boolFollowing = $event"
-					@refreshNumberFollowers = "u.numberFollowers = $event"
-					@refreshBan = "u.boolBanned = $event"
-				></CardProfile>
+				<div v-if="!loading" >
+					<CardProfile 
+						v-for="u in usersProfiles" 
+						:key="u.fixedUsername"
+						:user="u" 
+						@refreshFollowing = "u.boolFollowing = $event"
+						@refreshNumberFollowers = "u.numberFollowers = $event"
+						@refreshBan = "u.boolBanned = $event"
+					></CardProfile>
+				</div>
 			</div>
 	</div>
 </template>

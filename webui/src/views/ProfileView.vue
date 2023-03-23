@@ -163,11 +163,10 @@ export default {
 			<img src="./img/wasa-logo.png" alt="" class="img">
 
 			<!-- Let's now handle the dynamic part. -->
-			<div class="result">
+			<div class="result" v-if="!loading">
 
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Profiles(Depending on we are asking the whole list or just one). -->
-				<MyProfileCard 
-					v-if="!loading" 
+				<MyProfileCard  
 					:user=this.userProfile 
 					:userOwnerFlag = "this.userOwnerFlag"
 					:style="{backgroundColor: this.colorBackground}" 

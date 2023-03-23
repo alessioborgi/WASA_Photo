@@ -365,7 +365,7 @@ export default {
 
 
 			<!-- Let's now handle the dynamic part. -->
-			<div class="result" v-if="!loading" >
+			<div class="result" v-if="!loading">
 
 				<!-- Let's report the Error Message(if any), and the Loading Spinner if needed. -->
 				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>

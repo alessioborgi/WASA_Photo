@@ -389,8 +389,8 @@ export default {
 		<div>
 			<div class="result" style="margin-top: 300px;">
 				<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
-				<div class="photoList" > 
-					<PhotoCardDetail v-if="!loading" 
+				<div class="photoList" v-if="!loading" > 
+					<PhotoCardDetail 
 						:photo="this.photoData"
 						:style="{backgroundColor: this.colorPosts}" style="background-color:papayawhip; margin-top:80px;"
 						:userOwnerFlag = "!this.userOwnerFlag"
