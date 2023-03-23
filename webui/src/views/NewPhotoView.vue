@@ -80,7 +80,7 @@ export default {
 
                 // If an error is encountered, display it!
                 if (e.response && e.response.status === 400) {
-					this.errormsg = "Request error, please Login before doing some action or ask to post a photo to a valid user." + e.toString();
+					this.errormsg = "Request error, The newPhoto received does not respect the Validation Process. This means that maybe you forgot to fill out the 'phrase'. By default, the phrase must be longer than 3 chanracters in WASAPhoto Implementation. Please control that!" + e.toString();
                 } else if (e.response && e.response.status === 403) {
                     this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
                 } else if (e.response && e.response.status === 204) {

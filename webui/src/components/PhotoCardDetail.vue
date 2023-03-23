@@ -48,7 +48,6 @@ export default {
 
             if (confirm("Your Photo will be deleted from your Personal Profile. Are you sure?")){
                 this.deletePhotoBool = true;
-                alert("Photo Correctly Deleted");
             } else {
                 this.deletePhotoBool = false;
                 alert("Photo still present!")
