@@ -23,7 +23,6 @@ const router = createRouter({
 		{path: '/users/:username/ban/', component: BanView},
 		{path: '/users/:username/follow/', component: FollowView},
 		{path: '/users/:username/update/', component: UpdateView},
-		{path: '/users/:username/newUsername/', component: NewUsernameView},
 		{path: '/users/:username/photo/', component: NewPhotoView},
 		{path: '/users/:username/photo/:idphoto', component: PhotoDetailsView},
 		{path: '/users/:username/myStream/', component: MyStreamView},

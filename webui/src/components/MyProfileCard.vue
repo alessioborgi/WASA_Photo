@@ -135,11 +135,77 @@ export default {
         },
 
 
-        async goToSetUsername() {
+		async changeUsernameAlert() {
 
-            // Re-address the user to the right page.
-            this.$router.push({ path: `/users/${this.username}/newUsername/`})
+            this.newUsername = "";
+            this.newUsername = prompt("Please enter the new Username:");
+
+            if (this.newUsername.length < 3) {
+                alert("You cannot change the Username because you have inserted an empty or a less than 3 characters username. It does not respect the Regex!")
+            } else{
+                if (confirm("The username will be updated to: " + this.newUsername)){} 
+            }
         },
+
+        // setUsername: This method is used for changing the Username. 
+        async setUsername() {
+
+            // Re-initializing variables to their default value.
+            this.errormsg = "";
+            this.loading = true;
+
+            await this.changeUsernameAlert();
+
+            try {
+                
+                // In the case the result is positive, we post the username received to the GO page.
+
+                await this.$axios.patch(`/users/${this.username}`, { username: this.newUsername}, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("BearerToken")
+                    }
+                })
+
+                // Setting the new username received as the new username saved in the local cache.
+                this.username = this.newUsername;
+                this.user.username = this.newUsername;
+                this.usernameLogged = this.newUsername;
+                localStorage.setItem('Username', this.newUsername),
+                localStorage.setItem('usernameProfileToView', this.newUsername)
+                // Re-addressing the page to the personal profile page of a user.
+                this.newUsername = "";
+                // Re-address the user to the right page.
+                // await this.
+                // alert("Redirecting!" + this.username)
+                this.$router.replace({ path: `/users/${this.user.username}`})
+
+            } catch (e) {
+
+                // In case of error, retrieve it.
+                if (e.response && e.response.status === 400) {
+                    this.errormsg = "Request error, please Login before doing some action or ask to update the username of a valid user." + e.toString();
+                } else if (e.response && e.response.status === 403) {
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                } else if (e.response && e.response.status === 204) {
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                } else if (e.response && e.response.status === 500) {
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                } else {
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
+                }
+            }
+
+            // Setting again the Loading flag to false.
+            this.loading = false;
+        },
+
+
+
+        // async goToSetUsername() {
+
+        //     // Re-address the user to the right page.
+        //     this.$router.push({ path: `/users/${this.username}/newUsername/`})
+        // },
 
         async goToUpdate() {
 
@@ -342,7 +408,7 @@ export default {
                                         <menuitem>
                                             <!-- <button @click="showAlert"> -->
                                                 <button type="login-button" class="btn btn-primary btn-block btn-large" 
-                                                    @click="goToSetUsername">                                                
+                                                    @click="setUsername">                                                
                                                     <b>Set Username</b>
                                             </button>
                                         </menuitem>

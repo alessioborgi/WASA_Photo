@@ -38,10 +38,6 @@ export default {
 			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
 			this.$router.push({ path: `/users/${this.username}/myStream/` })
 		},
-		async goToSetUsername() {
-			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
-			this.$router.push({ path: `/users/${this.username}/newUsername/` })
-		},
 		async goToUpdateProfile() {
 			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
 			this.$router.push({ path: `/users/${this.username}/update/` })
@@ -136,12 +132,6 @@ export default {
 						<span>ACTIONS</span>
 					</h6>
 					<ul class="nav flex-column">
-						<li class="nav-item" @click="goToSetUsername" style="margin-left: 10px; margin-top: 10px; margin-right: 10px;">
-							<!-- <RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" > -->
-								<svg class="feather" style="color:#4a77d4;  margin-right: 10px; "><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
-								<b>Set Username</b>
-							<!-- </RouterLink> -->
-						</li>
 						<li class="nav-item" @click="goToUpdateProfile" style="margin-left: 10px; margin-top: 10px; margin-right: 10px;">
 							<!-- <RouterLink :to="'/users/'+username+'/update/'" class="nav-link" > -->
 								<svg class="feather" style="color:#4a77d4;  10px;margin-right: 10px;  "><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
