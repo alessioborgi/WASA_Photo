@@ -17,7 +17,7 @@ export default {
     data: function() {
         return {
             // Variables handling the eventual error message and the Loading of the action.
-            errormessage: "",
+            errormsg: "",
             loading: false,
 
             // Logged user Info.
@@ -39,19 +39,23 @@ export default {
 
             try {
                 
-                // In the case the result is positive, we post the username received to the GO page.
-                let response = await this.$axios.post("/session/", { 
-                    username: this.username 
-                });
-                
-                // Setting the uuid (Bearer Token) received as response by the Post action.
-                this.uuid  = response.data,
-                localStorage.setItem('BearerToken', this.uuid),
-                localStorage.setItem('Username', this.username),
-                localStorage.setItem('usernameProfileToView', this.username),
-			    
-                // Re-addressing the page to the personal profile page of a user.
-                this.$router.replace({ path: `/users/${this.username}` })
+                // if (this.username.length < 3 ) {
+                //     this.errormsg = "Please insert a valid Username. It must be non-empty, it must be more than 3 letters, and it must be a different username w.r.t. the already present ones. It should respect the following Regex: [a-zA-Z0-9._]{5,20}$"
+                // } else {
+                    // In the case the result is positive, we post the username received to the GO page.
+                    let response = await this.$axios.post("/session/", { 
+                        username: this.username 
+                    });
+                    
+                    // Setting the uuid (Bearer Token) received as response by the Post action.
+                    this.uuid  = response.data,
+                    localStorage.setItem('BearerToken', this.uuid),
+                    localStorage.setItem('Username', this.username),
+                    localStorage.setItem('usernameProfileToView', this.username),
+                    
+                    // Re-addressing the page to the personal profile page of a user.
+                    this.$router.replace({ path: `/users/${this.username}` })
+                // }
 
             } catch (e) {
 
@@ -94,7 +98,7 @@ export default {
 
         <div>
             <LoadingSpinner v-if="loading"></LoadingSpinner>
-            <ErrorMsg v-if="errormessage" :msg="errormessage"></ErrorMsg>
+            <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         </div>
     </div>
     
