@@ -185,9 +185,8 @@ export default {
 
 			<!-- {{ this.userProfile }} -->
 			<!-- If instead, it is all ok, Display a sort of card for each of the User Photo(Depending on we are asking the whole list or just one). -->
-			<div class="photoList"> 
-				<PhotoCard 
-					v-if="!loading" 
+			<div class="photoList" v-if="!loading" > 
+				<PhotoCard  
 					v-for="p in photoListLinks" 
 					:key="p.photoid"
 					style="background-color:papayawhip; margin-top:80px;"
