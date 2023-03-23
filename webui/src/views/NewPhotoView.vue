@@ -80,13 +80,13 @@ export default {
 
                 // If an error is encountered, display it!
                 if (e.response && e.response.status === 400) {
-					this.errormsg = "Request error, The newPhoto received does not respect the Validation Process. This means that maybe you forgot to fill out the 'phrase'. By default, the phrase must be longer than 3 chanracters in WASAPhoto Implementation. Please control that!" + e.toString();
+					this.errormsg = "Request error, The newPhoto received does not respect the Validation Process. This means that maybe you have forgotten to fill out the 'phrase'. By default, the phrase must be longer than 3 chanracters in WASAPhoto Implementation. Please control that! VUE ERROR DETAILS:" + e.toString();
                 } else if (e.response && e.response.status === 403) {
-                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner. VUE ERROR DETAILS: " + e.toString();
                 } else if (e.response && e.response.status === 204) {
-                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked. VUE ERROR DETAILS:" + e.toString();
                 } else if (e.response && e.response.status === 500) {
-                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later. VUE ERROR DETAILS:" + e.toString();
                 } else {
                     this.errormsg = e.toString();
                 }
