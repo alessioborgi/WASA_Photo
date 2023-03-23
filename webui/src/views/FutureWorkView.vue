@@ -74,7 +74,7 @@ export default {
 					<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT andrea71 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"It is a very good implementation. If I had to suggest an Improvement to do, I would advise you to put the link to every actions the user can do also directly in the MyProfile page. Sometimes, providing redundancy in your application is not a bad thing, as in this case."
+					<br>"It is a very good implementation. If I had to suggest an Improvement to do, I would advise you to put the link to every actions the user can do also directly in the MyProfile page. Sometimes, providing redundancy in your application is not a bad thing, as in this case. I think that is very important for the user to be in its Profile Page and it can do all from the Card you have for your Profile. You could put two menus, and one button for the Stream."
 					<br><br>
 					<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#check"/></svg>   
 					<br><br>
@@ -102,7 +102,7 @@ export default {
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT alice05 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"It's very cool! One thing I don't like so much is the color you set by-default depending on the sex. That could be improved by adding up the possibility to change the color to the user, in such a way he/she can put whatever it wants. It would be also a feature Instagram doesn't have, i.e., the customization."
+					<br>"It's very cool! One thing I don't like so much is the color you set by-default depending on the sex. That could be improved by adding up the possibility to change the color to the user, in such a way he/she can put whatever it wants. It would be also a feature Instagram doesn't have, the customization. This could be a reason in plus, to download your app instead of Instagram!"
 					<br><br>
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
 					<br><br>
@@ -130,7 +130,7 @@ export default {
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT chicca78 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"Very good! One thing I would change is the fact that when you have to update the profile, I may want to not change necessarily also the username. Therefore, eliminate this constraint! "
+					<br>"Very good! One thing I would change is the fact that when you have to update the profile, I may want to not change necessarily also the username. Therefore, eliminate this constraint! Indeed, in most of the cases I modify the profile, I never change the username, or at least in my case. I havent's changed it never."
 					<br><br>
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#check"/></svg>                
 					<br><br>
@@ -144,7 +144,7 @@ export default {
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT aurora46 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"That's impressive. Couldn't you add up a page where you explain how to do the things? For example, for every type of action, try to put a set of steps that you have to follow, in such a way to achieve the task. This would help also people like me that are less technological :) "
+					<br>"That's impressive. Couldn't you add up a page where you explain how to do the things? For example, for every type of action, try to put a set of steps that you have to follow, in such a way to achieve the task. This would help also people like me that are less technological :) What you could do is also one sort of animation that explain you how to use the app at the very start, like in almost all new apps nowadays."
 					<br><br>
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
 					<br><br>
@@ -157,7 +157,7 @@ export default {
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#pen-tool"/></svg>                
 					<b> PILOT federico01 </b> <br><br><br> 
 					<b> FEEDBACK & ADVICES </b>
-					<br>"Very good! One thing I would change is the fact that the change of the user Profile information and the Photo Profile could be separate. I don't know whether is is difficult, but I would do it in two different pages. "
+					<br>"Very good! One thing I would change is the fact that the change of the user Profile information and the Photo Profile could be separate. I don't know whether is is difficult, but I would do it in two different pages. Indeed, if I change one, this doesn't mean I want also to change the other. Changing photo profile is also more often done wrt the change of profile information."
 					<br><br>
 					<svg class="feather" ><use href="/feather-sprite-v4.29.0.svg#loader"/></svg>                
 					<br><br>
