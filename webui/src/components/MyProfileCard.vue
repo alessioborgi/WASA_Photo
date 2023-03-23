@@ -169,7 +169,6 @@ export default {
                 // Setting the new username received as the new username saved in the local cache.
                 this.username = this.newUsername;
                 this.user.username = this.newUsername;
-                this.usernameLogged = this.newUsername;
                 localStorage.setItem('Username', this.newUsername),
                 localStorage.setItem('usernameProfileToView', this.newUsername)
                 // Re-addressing the page to the personal profile page of a user.

@@ -148,6 +148,9 @@ export default {
 	  		this.getUserProfile()
 	  		this.getPhotoLinks()
     	},
+		'$route.params.usernameLogged': function(newUsername) {
+			this.usernameLogged= newUsername;
+    	},
   	},
 }
 </script>
