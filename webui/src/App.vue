@@ -97,13 +97,13 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item" @click="goToLogin">
 							<!-- <RouterLink to="/session/" class="nav-link"> -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
 								Login
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToLogout">
 							<!-- <RouterLink to="/session/" class="nav-link"> -->
-								<svg class="feather" :style="{feather:'red'}"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
 								Logout
 							<!-- </RouterLink> -->
 						</li>
@@ -118,13 +118,13 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item" @click="goToMyProfile">
 							<!-- <RouterLink :to="'/users/'+username" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#instagram"/></svg>
 								My Profile
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToMyStream">
 							<!-- <RouterLink :to="'/users/'+username+'/myStream/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
 								My Stream
 							<!-- </RouterLink> -->
 						</li>
@@ -138,31 +138,31 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item" @click="goToSetUsername">
 							<!-- <RouterLink :to="'/users/'+username+'/newUsername/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#edit-2"/></svg>
 								Set Username
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToUpdateProfile">
 							<!-- <RouterLink :to="'/users/'+username+'/update/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#edit"/></svg>
 								Update Profile
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToBan">
 							<!-- <RouterLink :to="'/users/'+username+'/ban/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#lock"/></svg>
 								Ban
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToFollow">
 							<!-- <RouterLink :to="'/users/'+username+'/follow/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 								Follow
 							<!-- </RouterLink> -->
 						</li>
 						<li class="nav-item" @click="goToNewPhoto">
 							<!-- <RouterLink :to="'/users/'+username+'/photo/'" class="nav-link" > -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#image"/></svg>
 								New Photo
 							<!-- </RouterLink> -->
 						</li>
@@ -174,7 +174,7 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item" @click="goToSearch">
 							<!-- <RouterLink to="/search/" class="nav-link"> -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
 								Search
 							<!-- </RouterLink> -->
 						</li>
@@ -186,7 +186,7 @@ export default {
 					<ul class="nav flex-column">
 						<li class="nav-item" @click="goToAnalytics">
 							<!-- <RouterLink :to="'/users/'+username+'/analytics/'" class="nav-link"> -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px;"><use href="/feather-sprite-v4.29.0.svg#bar-chart"/></svg>
 								Analytics
 							<!-- </RouterLink> -->
 						</li>
@@ -199,7 +199,7 @@ export default {
 						<li class="nav-item" @click="goToFutureWork">
 							<!-- <RouterLink :to="'/users/'+username+'/futureWork/'" class="nav-link"> -->
 								<!-- <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#briefcase"/></svg> -->
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#coffee"/></svg>
+								<svg class="feather" style="color:#4a77d4; margin-left: 10px; margin-top: 10px; "><use href="/feather-sprite-v4.29.0.svg#coffee"/></svg>
 								Works
 							<!-- </RouterLink> -->
 						</li>
