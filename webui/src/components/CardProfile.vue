@@ -377,7 +377,7 @@ export default {
                     <button type="login-button" class="btn btn-primary btn-block btn-large"  
                     @click="goToProfileView(this.userProfile.username)" 
                     style="width: 250px; margin-left: 600px; margin-top: 10px; "
-                    > View {{this.user.username + "'s "}}Profile </button>
+                    > View {{this.userProfile.username + "'s "}}Profile </button>
         </div>
 
     </div>

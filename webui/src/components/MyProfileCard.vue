@@ -19,6 +19,9 @@ export default {
 			// Retrieving from the Cache the Username and the Bearer Authenticaiton Token.
 			username: localStorage.getItem('Username') == localStorage.getItem('usernameProfileToView') ? localStorage.getItem('Username') : localStorage.getItem('usernameProfileToView'),
             BearerToken: localStorage.getItem('BearerToken'),
+
+            // Creation of a Local Attribute to handle the "user" prop.
+            userProfile: this.user,
             
             // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
@@ -168,7 +171,7 @@ export default {
 
                 // Setting the new username received as the new username saved in the local cache.
                 this.username = this.newUsername;
-                this.user.username = this.newUsername;
+                this.userProfile.username = this.newUsername;
                 localStorage.setItem('Username', this.newUsername),
                 localStorage.setItem('usernameProfileToView', this.newUsername)
                 // Re-addressing the page to the personal profile page of a user.
@@ -176,7 +179,7 @@ export default {
                 // Re-address the user to the right page.
                 // await this.
                 // alert("Redirecting!" + this.username)
-                this.$router.replace({ path: `/users/${this.user.username}`})
+                this.$router.replace({ path: `/users/${this.userProfile.username}`})
 
             } catch (e) {
 
@@ -197,14 +200,6 @@ export default {
             // Setting again the Loading flag to false.
             this.loading = false;
         },
-
-
-
-        // async goToSetUsername() {
-
-        //     // Re-address the user to the right page.
-        //     this.$router.push({ path: `/users/${this.username}/newUsername/`})
-        // },
 
         async goToUpdate() {
 
@@ -254,7 +249,7 @@ export default {
     mounted() {
 
         // Getting first the photo, provided that it is not the Default Photo (i.e., there is no photo!).
-        if (this.user.profileImage != "" ){
+        if (this.userProfile.profileImage != "" ){
 		    this.getPhotoView()
         }
 
@@ -289,28 +284,28 @@ export default {
                     <img :src=this.photoBlobLink class="card__image" />
                 </div>
                 <div class="profileLabel">
-                    <p class="card__name" > <b>{{ this.user.username }}</b></p>
+                    <p class="card__name" > <b>{{ this.userProfile.username }}</b></p>
                 </div>            
             </div>
             <div class="rightUpperPart">
 
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <b>Posts</b> {{ this.user.numberOfPhotos }}
+                        <b>Posts</b> {{ this.userProfile.numberOfPhotos }}
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followings</b> {{ this.user.numberFollowing }} 
+                        <b>Followings</b> {{ this.userProfile.numberFollowing }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followers</b> {{ this.user.numberFollowers }} 
+                        <b>Followers</b> {{ this.userProfile.numberFollowers }} 
                     </div>
                 </div>
 
 
                 <div class="grid-child-posts3">
-                    <b>Biography</b> {{ this.user.biography }} 
+                    <b>Biography</b> {{ this.userProfile.biography }} 
                 </div>
             </div>
                     
@@ -320,31 +315,31 @@ export default {
         <div class="grid-container">
 
             <div class="grid-child-posts">
-                <b>Name</b> {{ this.user.name }}
+                <b>Name</b> {{ this.userProfile.name }}
             </div>
 
             <div class="grid-child-posts">
-                <b>Surname</b> {{ this.user.surname }} 
+                <b>Surname</b> {{ this.userProfile.surname }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Nationality</b> {{ this.user.nationality }} 
+                <b>Nationality</b> {{ this.userProfile.nationality }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfBirth</b> {{ this.user.dateOfBirth }} 
+                <b>DateOfBirth</b> {{ this.userProfile.dateOfBirth }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Email</b> {{ this.user.email }} 
+                <b>Email</b> {{ this.userProfile.email }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Gender</b> {{ this.user.gender }} 
+                <b>Gender</b> {{ this.userProfile.gender }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfCreation</b> {{ this.user.dateOfCreation }} 
+                <b>DateOfCreation</b> {{ this.userProfile.dateOfCreation }} 
             </div>
 
             <div class="grid-child-posts" style="margin-left: -365px;" v-if="!loading && userOwnerFlag === true">
