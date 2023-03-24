@@ -414,9 +414,8 @@ export default {
 
 		<!-- {{ this.commentsList }} -->
 		<!-- Comments List -->
-		<div class="commentsList">  
+		<div class="commentsList" v-if="!loading && flagCommentsLikes == false" >  
 			<Comment 
-				v-if="!loading && flagCommentsLikes == false" 
 				v-for="c in commentsList" 
 				:key="c.fixedUsername"
 				:style="{backgroundColor: this.colorPosts}" 
@@ -432,9 +431,8 @@ export default {
 		</div>
 
 		<!-- {{ this.likesList }} -->
-		<div class="likesList">  
+		<div class="likesList" v-if="!loading && flagCommentsLikes == true" >  
 			<Like 
-				v-if="!loading && flagCommentsLikes == true" 
 				v-for="l in likesList" 
 				:key="l.fixedUsername"
 				:style="{backgroundColor: this.colorPosts}" 
