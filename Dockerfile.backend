@@ -1,28 +1,33 @@
 ##### DOCKER FILE FOR THE BACKEND PART (GO) #####
 
-# Importing Go.
+# Importing Go and add an alias to it.
 FROM golang:1.19.1 AS builder
 
-# Copying the Go code from the source code. 
+# Copying the Go code from the source code. Thus, first change directory and then copy all from the current directory, 
+# to the current directory inside the container.
 WORKDIR /src/
 COPY . .
 
-# Creating the Executables (by compiling go). 
+# Here we have the whole project inside the container. Thus we need to create the Executables (by compiling go). 
+# With the -o, we say to put the compiled file inside the folder /app/webapi.
 RUN go build -o /app/webapi ./cmd/webapi
 
 
 
 
+# Multistage-Build
 
-# Creation of the Final Container. 
+# Each FROM will create a new section in the file, a new container. Only the last one will be executed.
+# Creation of the Final Container, by starting from the debian:bullseye Image (that is a Base Image).
 FROM debian:bullseye
 
 # Communicate to Docker what Ports are exposed. (3000 and 4000).
 EXPOSE 3000 4000
 
-# Copying the executable from the builder image. 
+# First changing the folder(always inside the container).
+# Copying the executable from the builder image (the one created in the above container). 
 WORKDIR /app/
 COPY --from=builder /app/webapi ./
 
-# Save the executable command.
+# Adding the possibility that the Image now will start by putting this command.
 CMD ["/app/webapi"]

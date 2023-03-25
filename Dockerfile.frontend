@@ -7,7 +7,7 @@ FROM node:lts as builder
 WORKDIR /app
 COPY webui webui
 
-# Creating the Executables for HTML/CSS/JS (by compiling them and trasforming them into plain). 
+# Creating the Compiled version of the Source Code for HTML/CSS/JS (by compiling them and trasforming them into plain). 
 WORKDIR /app/webui
 RUN npm run build-prod
 
