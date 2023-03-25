@@ -66,7 +66,7 @@ export default {
 
 		async goToFutureWork() {
 			localStorage.setItem('usernameProfileToView', localStorage.getItem('Username'));
-			this.$router.push({ path: `/users/${this.username}/futureWork/` })
+			this.$router.push({ path: `/futureWork/` })
 		},
 		
 	},

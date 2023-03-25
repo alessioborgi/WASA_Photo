@@ -26,7 +26,7 @@ const router = createRouter({
 		{path: '/users/:username/photo/:idphoto', component: PhotoDetailsView},
 		{path: '/users/:username/myStream/', component: MyStreamView},
 		{path: '/users/:username/analytics/', component: AnalyticsView},
-		{path: '/users/:username/futureWork/', component: FutureWorkView},
+		{path: '/futureWork/', component: FutureWorkView},
 	]
 })
 
