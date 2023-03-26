@@ -225,7 +225,7 @@ export default {
 
 
             <!-- Deletion -->
-            <div class="grid-child-posts3" v-if="userOwnerCommentFlag == true">
+            <div class="grid-child-posts3" v-if="this.userOwnerCommentFlag === true">
                 <svg class="feather"  
                     @click="deleteComment" 
                     style="margin-left: 650px; margin-top: -100px; color:midnightblue">

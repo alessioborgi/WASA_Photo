@@ -421,7 +421,7 @@ export default {
 				:style="{backgroundColor: this.colorPosts}" 
 				style="background-color: #c0f3b2 ; margin-top:80px;"
 				:comment="c"
-				:userOwnerFlag = !this.userOwnerFlag
+				:userOwnerFlag = this.userOwnerFlag
 				:photoid="this.photoData.photoid"
 				:numberComments="this.photoData.numberComments"
 				:usersProfiles="this.usersProfiles"
