@@ -21,7 +21,12 @@ export default {
             BearerToken: localStorage.getItem('BearerToken'),
 
             // Creation of a Local Attribute to handle the "user" prop.
-            userProfile: this.user,
+            userProfile: { fixedUsername: this.user.fixedUsername, username: this.user.username, photoProfile: this.user.photoProfile, 
+                           biography: this.user.biography, dateOfCreation: this.user.dateOfCreation, numberOfPhotos: this.user.numberOfPhotos, 
+                           numberFollowers: this.user.numberFollowers, numberFollowing: this.user.numberFollowing, name: this.user.name, 
+                           surname: this.user.surname, dateOfBirth: this.user.dateOfBirth, email: this.user.email, nationality: this.user.nationality, 
+                           gender: this.user.gender,  boolFollowing: this.user.boolFollowing, boolFollower: this.user.boolFollower, boolBanned: this.user.boolBanned },
+            // userProfile: this.user,
             
             // Initializing variable for handling the deletion of the Profile.
             deleteProfileBool: false,
@@ -268,7 +273,7 @@ export default {
 
         <div class="usernameLabel">
             <!-- {{ this.user }}
-            {{ this.user }} -->
+            {{ this.userProfile }} -->
             <!-- <b> FIXEDUSEkRNAME: </b>{{ this.user.photoProfile }}
             <b> FIXEDUSERNAME: </b>{{ this.photoIdView }} 
             <b> FIXEDUSERNAME: </b>{{ this.photoBlobLink }}  -->
@@ -284,28 +289,28 @@ export default {
                     <img :src=this.photoBlobLink class="card__image" />
                 </div>
                 <div class="profileLabel">
-                    <p class="card__name" > <b>{{ this.userProfile.username }}</b></p>
+                    <p class="card__name" > <b>{{ this.user.username }}</b></p>
                 </div>            
             </div>
             <div class="rightUpperPart">
 
                 <div class="grid-container2">
                     <div class="grid-child-posts">
-                        <b>Posts</b> {{ this.userProfile.numberOfPhotos }}
+                        <b>Posts</b> {{ this.user.numberOfPhotos }}
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followings</b> {{ this.userProfile.numberFollowing }} 
+                        <b>Followings</b> {{ this.user.numberFollowing }} 
                     </div>
 
                     <div class="grid-child-posts">
-                        <b>Followers</b> {{ this.userProfile.numberFollowers }} 
+                        <b>Followers</b> {{ this.user.numberFollowers }} 
                     </div>
                 </div>
 
 
                 <div class="grid-child-posts3">
-                    <b>Biography</b> {{ this.userProfile.biography }} 
+                    <b>Biography</b> {{ this.user.biography }} 
                 </div>
             </div>
                     
@@ -315,31 +320,31 @@ export default {
         <div class="grid-container">
 
             <div class="grid-child-posts">
-                <b>Name</b> {{ this.userProfile.name }}
+                <b>Name</b> {{ this.user.name }}
             </div>
 
             <div class="grid-child-posts">
-                <b>Surname</b> {{ this.userProfile.surname }} 
+                <b>Surname</b> {{ this.user.surname }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Nationality</b> {{ this.userProfile.nationality }} 
+                <b>Nationality</b> {{ this.user.nationality }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfBirth</b> {{ this.userProfile.dateOfBirth }} 
+                <b>DateOfBirth</b> {{ this.user.dateOfBirth }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Email</b> {{ this.userProfile.email }} 
+                <b>Email</b> {{ this.user.email }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>Gender</b> {{ this.userProfile.gender }} 
+                <b>Gender</b> {{ this.user.gender }} 
             </div>
 
             <div class="grid-child-posts">
-                <b>DateOfCreation</b> {{ this.userProfile.dateOfCreation }} 
+                <b>DateOfCreation</b> {{ this.user.dateOfCreation }} 
             </div>
 
             <div class="grid-child-posts" style="margin-left: -365px;" v-if="!loading && userOwnerFlag === true">
