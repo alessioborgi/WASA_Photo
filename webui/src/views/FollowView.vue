@@ -320,7 +320,7 @@ export default {
                 }
 
                 // Let's check whether there are actually some user that are following you.
-                if (this.followingsList.length == 0){
+                if (this.followersList.length == 0){
                     if (this.username.length < 3){
                         this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
                     } else {

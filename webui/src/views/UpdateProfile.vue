@@ -62,15 +62,15 @@ export default {
 
                 // If an error is encountered, display it!
                 if (e.response && e.response.status === 400) {
-					this.errormsg = "Request error, please Login before doing some action or ask to get the profile of a valid user." + e.toString();
+					this.errormsg = "Request error, please Login before doing some action or ask to get the profile of a valid user. Check also whether you have filled all the spaces!" + e.toString();
                 } else if (e.response && e.response.status === 403) {
-                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner." + e.toString();
+                    this.errormsg = "An Unauthorized Action has been blocked. You are not allowed to do this action because you are not the profile's owner. Check also whether you have filled all the spaces!" + e.toString();
                 } else if (e.response && e.response.status === 204) {
-                    this.errormsg = "In the Internal DB there is not anymore the content you have asked." + e.toString();
+                    this.errormsg = "In the Internal DB there is not anymore the content you have asked. Check also whether you have filled all the spaces!" + e.toString();
                 } else if (e.response && e.response.status === 500) {
-                    this.errormsg = "An internal error occurred. We will be notified. Please try again later." + e.toString();
+                    this.errormsg = "An internal error occurred. We will be notified. Please try again later. Check also whether you have filled all the spaces!" + e.toString();
                 } else {
-                    this.errormsg = "Please Login before with an Authorized profile to view this page. " + e.toString();
+                    this.errormsg = "Please Login before with an Authorized profile to view this page. Check also whether you have filled all the spaces!" + e.toString();
                 }
             }
 
