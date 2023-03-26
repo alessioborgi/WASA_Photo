@@ -97,7 +97,11 @@ export default {
                     // Once we have done with it, we must simply update the flag.
                     this.userProfile.boolBanned = true;
                     this.iconBanned = '/feather-sprite-v4.29.0.svg#lock';
+                    this.iconFollowing = '/feather-sprite-v4.29.0.svg#user-plus';
+                    this.iconFollower = '/feather-sprite-v4.29.0.svg#user-x';
                     this.colorIconBanned = 'red';
+                    this.colorIconFollowing = 'red';
+                    this.colorIconFollower = 'red';
                     this.$emit('refreshBan', true);
 
                 } catch (e) {
