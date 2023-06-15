@@ -1,4 +1,4 @@
-# Fantastic coffee (decaffeinated)
+# WASA Photo
 
 This repository contains the basic structure for [Web and Software Application](http://gamificationlab.uniroma1.it/en/wasa/) homework project.
 It has been described in class.
