@@ -1,10 +1,26 @@
 # WASA Photo
 
-This repository contains the basic structure for [Web and Software Application](http://gamificationlab.uniroma1.it/en/wasa/) homework project.
-It has been described in class.
+**Copyright © 2023 Alessio Borgi**
 
-"Fantastic coffee (decaffeinated)" is a simplified version for the WASA course, not suitable for a production environment.
-The full version can be found in the "Fantastic Coffee" repository.
+**PROJECT SCOPE**: Build a complete Web Architecture for an Instagram-Like Platform, from the API Documentation, passing through the Backend and the Frontend, and ending with the Containerizzation.
+
+**PROJECT RESULTS**:
+- OpenAPI Documentation.
+- Go Backend.
+- JavaScript+VueJS+Axios+HTML+CSS Frontend.
+- Docker Containerizzzation. 
+- Agile Development and Iterative Behaviour on the site development based on User Feedbacks. 
+- 25 API Developed.
+	- Possibility to Authenticate the user using a Bearer Token.
+	- Possibility to Create, Modify, Retrieve, Delete an User Account. 	 
+	- Possibility to Follow, UnFollow another User Account.
+	- Possibility to view Followers, Following and Banned Accounts.
+	- Possibility to Ban, UnBan another User Account.
+	- Possibility to Upload, Delete a Photo onto a User Account.
+	- Possibility to Like, UnLike, Comment, UnComment a User Account's Photo.
+	- Possibility to Scroll all the Stream of photos related to users we follow and possiblity to interact with them (Comment, Like, etc...)
+
+**PROJECT REPOSITORY**: https://github.com/alessioborgi/WASA_Photo
 
 ## Project structure
 
