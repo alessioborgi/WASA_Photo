@@ -2,7 +2,7 @@
 
 **Copyright © 2023 Alessio Borgi**
 
-**PROJECT SCOPE**: Build a complete Web Architecture for an Instagram-Like Platform, from the API Documentation, passing through the Backend and the Frontend, and ending with the Containerisation.
+**PROJECT SCOPE**: Build a complete Web Architecture for an Instagram-like platform, from the API Documentation, passing through the Backend and the Frontend, and ending with the Containerisation. This is a web application for photo sharing, offering an Instagram-like experience. Users can upload, explore, and interact with photos in a community-driven environment. Equipped with features such as user profiles, feeds, likes, and comments, WASA Photo fosters creativity and social interaction in a seamless and responsive interface.
 
 **PROJECT RESULTS**:
 - OpenAPI Documentation.
