@@ -2,7 +2,7 @@
 
 **Copyright © 2023 Alessio Borgi**
 
-**PROJECT SCOPE**: Build a complete Web Architecture for an Instagram-Like Platform, from the API Documentation, passing through the Backend and the Frontend, and ending with the Containerizzation.
+**PROJECT SCOPE**: Build a complete Web Architecture for an Instagram-Like Platform, from the API Documentation, passing through the Backend and the Frontend, and ending with the Containerisation.
 
 **PROJECT RESULTS**:
 - OpenAPI Documentation.
